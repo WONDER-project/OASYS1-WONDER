@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <scheme description="LaB6 from 11-BM Beamline" title="LaB6 - 11BM" version="2.0">
 	<nodes>
-		<node id="0" name="Load Diffraction Pattern" position="(57.0, 69.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_diffraction_pattern.OWDiffractionPattern" title="Load Diffraction Pattern" version="" />
-		<node id="1" name="FFT Parameters" position="(240.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fft_parameters.OWFFTParameters" title="FFT Parameters" version="" />
-		<node id="2" name="Crystal Structure" position="(347.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure" version="" />
-		<node id="3" name="Chebyshev Background" position="(443.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background" version="" />
-		<node id="4" name="Calibration Peak Shift" position="(514.0, 176.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift" version="" />
-		<node id="5" name="Fitter" position="(619.0, 82.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="6" name="Instrumental Profile" position="(580.0, 311.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile" version="" />
-		<node id="7" name="Fitter" position="(686.0, 410.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter (1)" version="" />
-		<node id="8" name="Crystal Structure" position="(87.0, 382.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure (Final)" version="" />
-		<node id="9" name="Chebyshev Background" position="(225.0, 383.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background (Final)" version="" />
-		<node id="10" name="Calibration Peak Shift" position="(355.0, 384.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift (Final)" version="" />
-		<node id="11" name="Instrumental Profile" position="(474.0, 384.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile (Final)" version="" />
-		<node id="12" name="Incident Radiation" position="(150.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_radiation.OWRadiation" title="Incident Radiation" version="" />
+		<node id="0" name="Load Diffraction Pattern" position="(57.0, 69.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_diffraction_pattern.OWDiffractionPattern" title="Load Diffraction Pattern" version="" />
+		<node id="1" name="FFT Parameters" position="(240.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fft_parameters.OWFFTParameters" title="FFT Parameters" version="" />
+		<node id="2" name="Crystal Structure" position="(347.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure" version="" />
+		<node id="3" name="Chebyshev Background" position="(443.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background" version="" />
+		<node id="4" name="Calibration Peak Shift" position="(514.0, 176.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift" version="" />
+		<node id="5" name="Fitter" position="(619.0, 82.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="6" name="Instrumental Profile" position="(580.0, 311.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile" version="" />
+		<node id="7" name="Fitter" position="(686.0, 410.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter (1)" version="" />
+		<node id="8" name="Crystal Structure" position="(87.0, 382.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure (Final)" version="" />
+		<node id="9" name="Chebyshev Background" position="(225.0, 383.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background (Final)" version="" />
+		<node id="10" name="Calibration Peak Shift" position="(355.0, 384.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift (Final)" version="" />
+		<node id="11" name="Instrumental Profile" position="(474.0, 384.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile (Final)" version="" />
+		<node id="12" name="Incident Radiation" position="(150.0, 70.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_radiation.OWRadiation" title="Incident Radiation" version="" />
 	</nodes>
 	<links>
 		<link enabled="true" id="0" sink_channel="Fit Global Parameters" sink_node_id="2" source_channel="Fit Global Parameters" source_node_id="1" />

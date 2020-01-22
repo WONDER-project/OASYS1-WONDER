@@ -1,26 +1,26 @@
 <?xml version='1.0' encoding='utf-8'?>
 <scheme description="" title="" version="2.0">
 	<nodes>
-		<node id="0" name="Incident Radiation" position="(215.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_radiation.OWRadiation" title="Incident Radiation" version="" />
-		<node id="1" name="FFT Parameters" position="(351.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fft_parameters.OWFFTParameters" title="FFT Parameters" version="" />
-		<node id="2" name="Chebyshev Background" position="(251.0, 212.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background" version="" />
-		<node id="3" name="Fitter" position="(630.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="4" name="Fitter" position="(398.0, 212.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="5" name="Load Diffraction Pattern" position="(81.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_diffraction_pattern.OWDiffractionPattern" title="Data + Noise" version="" />
-		<node id="6" name="Crystal Structure" position="(108.0, 213.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure" version="" />
-		<node id="7" name="Size" position="(501.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_size.OWSize" title="Size" version="" />
-		<node id="8" name="Incident Radiation" position="(211.0, 355.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_radiation.OWRadiation" title="Incident Radiation" version="" />
-		<node id="9" name="FFT Parameters" position="(343.0, 354.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fft_parameters.OWFFTParameters" title="FFT Parameters" version="" />
-		<node id="10" name="Fitter" position="(630.0, 357.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="11" name="Fitter" position="(395.0, 512.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="12" name="Load Diffraction Pattern" position="(72.0, 355.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_diffraction_pattern.OWDiffractionPattern" title="Data No Noise" version="" />
-		<node id="13" name="Crystal Structure" position="(110.0, 512.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure" version="" />
-		<node id="14" name="Size" position="(504.0, 357.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_size.OWSize" title="Size (Fixed Truncation)" version="" />
-		<node id="15" name="Chebyshev Background" position="(251.0, 512.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Constant Background" version="" />
-		<node id="16" name="Size" position="(763.0, 355.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_size.OWSize" title="Size" version="" />
-		<node id="17" name="Fitter" position="(908.0, 354.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="18" name="Size" position="(768.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_size.OWSize" title="Size" version="" />
-		<node id="19" name="Fitter" position="(911.0, 66.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="0" name="Incident Radiation" position="(215.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_radiation.OWRadiation" title="Incident Radiation" version="" />
+		<node id="1" name="FFT Parameters" position="(351.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fft_parameters.OWFFTParameters" title="FFT Parameters" version="" />
+		<node id="2" name="Chebyshev Background" position="(251.0, 212.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background" version="" />
+		<node id="3" name="Fitter" position="(630.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="4" name="Fitter" position="(398.0, 212.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="5" name="Load Diffraction Pattern" position="(81.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_diffraction_pattern.OWDiffractionPattern" title="Data + Noise" version="" />
+		<node id="6" name="Crystal Structure" position="(108.0, 213.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure" version="" />
+		<node id="7" name="Size" position="(501.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_size.OWSize" title="Size" version="" />
+		<node id="8" name="Incident Radiation" position="(211.0, 355.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_radiation.OWRadiation" title="Incident Radiation" version="" />
+		<node id="9" name="FFT Parameters" position="(343.0, 354.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fft_parameters.OWFFTParameters" title="FFT Parameters" version="" />
+		<node id="10" name="Fitter" position="(630.0, 357.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="11" name="Fitter" position="(395.0, 512.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="12" name="Load Diffraction Pattern" position="(72.0, 355.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_diffraction_pattern.OWDiffractionPattern" title="Data No Noise" version="" />
+		<node id="13" name="Crystal Structure" position="(110.0, 512.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_crystal_structure.OWCrystalStructure" title="Crystal Structure" version="" />
+		<node id="14" name="Size" position="(504.0, 357.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_size.OWSize" title="Size (Fixed Truncation)" version="" />
+		<node id="15" name="Chebyshev Background" position="(251.0, 512.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_chebyshev_background.OWChebyshevBackground" title="Constant Background" version="" />
+		<node id="16" name="Size" position="(763.0, 355.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_size.OWSize" title="Size" version="" />
+		<node id="17" name="Fitter" position="(908.0, 354.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="18" name="Size" position="(768.0, 65.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_size.OWSize" title="Size" version="" />
+		<node id="19" name="Fitter" position="(911.0, 66.0)" project_name="Orange3-WONDER-1" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter" version="" />
 	</nodes>
 	<links>
 		<link enabled="true" id="0" sink_channel="Fit Global Parameters" sink_node_id="4" source_channel="Fit Global Parameters" source_node_id="2" />
