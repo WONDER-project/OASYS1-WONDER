@@ -44,6 +44,7 @@
 		<node id="40" name="Incident Radiation" position="(1067.0, 580.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.view.widgets.ow_radiation.OWRadiation" title="Fix Radiation (1)" version="" />
 		<node id="41" name="Fitter" position="(906.0, 758.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.view.widgets.ow_fitter.OWFitter" title="Fitter (1)" version="" />
 		<node id="42" name="Zero Error Peak Shift" position="(620.0, 647.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.view.widgets.ow_zero_error_peak_shift.OWZeroErrorPeakShift" title="Zero Error Peak Shift (1)" version="" />
+		<node id="43" name="GSASII Crystal Structure" position="(1200.0, 283.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.view.widgets.ow_crystal_structure_gsasii.OWCrystalStructureGSASII" title="GSASII Recalculate" version="" />
 	</nodes>
 	<links>
 		<link enabled="true" id="0" sink_channel="Fit Global Parameters" sink_node_id="5" source_channel="Fit Global Parameters" source_node_id="4" />
@@ -75,19 +76,20 @@
 		<link enabled="true" id="26" sink_channel="Fit Global Parameters" sink_node_id="6" source_channel="Fit Global Parameters" source_node_id="29" />
 		<link enabled="true" id="27" sink_channel="Fit Global Parameters" sink_node_id="19" source_channel="Fit Global Parameters" source_node_id="30" />
 		<link enabled="true" id="28" sink_channel="Fit Global Parameters" sink_node_id="30" source_channel="Fit Global Parameters" source_node_id="1" />
-		<link enabled="true" id="29" sink_channel="Fit Global Parameters" sink_node_id="21" source_channel="Fit Global Parameters" source_node_id="25" />
-		<link enabled="true" id="30" sink_channel="Fit Global Parameters" sink_node_id="32" source_channel="Fit Global Parameters" source_node_id="31" />
-		<link enabled="true" id="31" sink_channel="Fit Global Parameters" sink_node_id="33" source_channel="Fit Global Parameters" source_node_id="34" />
-		<link enabled="true" id="32" sink_channel="Fit Global Parameters" sink_node_id="35" source_channel="Fit Global Parameters" source_node_id="33" />
-		<link enabled="true" id="33" sink_channel="Fit Global Parameters" sink_node_id="38" source_channel="Fit Global Parameters" source_node_id="37" />
-		<link enabled="true" id="34" sink_channel="Fit Global Parameters" sink_node_id="39" source_channel="Fit Global Parameters" source_node_id="32" />
-		<link enabled="true" id="35" sink_channel="Fit Global Parameters" sink_node_id="40" source_channel="Fit Global Parameters" source_node_id="39" />
-		<link enabled="true" id="36" sink_channel="Fit Global Parameters" sink_node_id="41" source_channel="Fit Global Parameters" source_node_id="36" />
-		<link enabled="true" id="37" sink_channel="Fit Global Parameters" sink_node_id="37" source_channel="Fit Global Parameters" source_node_id="41" />
-		<link enabled="true" id="38" sink_channel="Fit Global Parameters" sink_node_id="42" source_channel="Fit Global Parameters" source_node_id="35" />
-		<link enabled="true" id="39" sink_channel="Fit Global Parameters" sink_node_id="31" source_channel="Fit Global Parameters" source_node_id="42" />
-		<link enabled="true" id="40" sink_channel="Fit Global Parameters" sink_node_id="36" source_channel="Fit Global Parameters" source_node_id="40" />
-		<link enabled="true" id="41" sink_channel="Fit Global Parameters" sink_node_id="34" source_channel="Fit Global Parameters" source_node_id="2" />
+		<link enabled="true" id="29" sink_channel="Fit Global Parameters" sink_node_id="32" source_channel="Fit Global Parameters" source_node_id="31" />
+		<link enabled="true" id="30" sink_channel="Fit Global Parameters" sink_node_id="33" source_channel="Fit Global Parameters" source_node_id="34" />
+		<link enabled="true" id="31" sink_channel="Fit Global Parameters" sink_node_id="35" source_channel="Fit Global Parameters" source_node_id="33" />
+		<link enabled="true" id="32" sink_channel="Fit Global Parameters" sink_node_id="38" source_channel="Fit Global Parameters" source_node_id="37" />
+		<link enabled="true" id="33" sink_channel="Fit Global Parameters" sink_node_id="39" source_channel="Fit Global Parameters" source_node_id="32" />
+		<link enabled="true" id="34" sink_channel="Fit Global Parameters" sink_node_id="40" source_channel="Fit Global Parameters" source_node_id="39" />
+		<link enabled="true" id="35" sink_channel="Fit Global Parameters" sink_node_id="41" source_channel="Fit Global Parameters" source_node_id="36" />
+		<link enabled="true" id="36" sink_channel="Fit Global Parameters" sink_node_id="37" source_channel="Fit Global Parameters" source_node_id="41" />
+		<link enabled="true" id="37" sink_channel="Fit Global Parameters" sink_node_id="42" source_channel="Fit Global Parameters" source_node_id="35" />
+		<link enabled="true" id="38" sink_channel="Fit Global Parameters" sink_node_id="31" source_channel="Fit Global Parameters" source_node_id="42" />
+		<link enabled="true" id="39" sink_channel="Fit Global Parameters" sink_node_id="36" source_channel="Fit Global Parameters" source_node_id="40" />
+		<link enabled="true" id="40" sink_channel="Fit Global Parameters" sink_node_id="34" source_channel="Fit Global Parameters" source_node_id="2" />
+		<link enabled="true" id="41" sink_channel="Fit Global Parameters" sink_node_id="43" source_channel="Fit Global Parameters" source_node_id="25" />
+		<link enabled="true" id="42" sink_channel="Fit Global Parameters" sink_node_id="21" source_channel="Fit Global Parameters" source_node_id="43" />
 	</links>
 	<annotations>
 		<text font-family="Helvetica" font-size="16" id="0" rect="(24.0, 145.0, 150.0, 44.0)">Wonder 1</text>
@@ -137,5 +139,40 @@
 		<properties format="literal" node_id="40">{'is_automatic_run': True, 'is_multiple_wavelength': [0], 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x01\xf3\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x01\xf3\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'use_single_parameter_set': 1, 'wavelength': [0.08269817], 'wavelength_2': [0.0], 'wavelength_2_fixed': [1], 'wavelength_2_function': [0], 'wavelength_2_function_value': [''], 'wavelength_2_has_max': [0], 'wavelength_2_has_min': [1], 'wavelength_2_max': [0.0], 'wavelength_2_min': [0.0], 'wavelength_3': [0.0], 'wavelength_3_fixed': [1], 'wavelength_3_function': [0], 'wavelength_3_function_value': [''], 'wavelength_3_has_max': [0], 'wavelength_3_has_min': [1], 'wavelength_3_max': [0.0], 'wavelength_3_min': [0.0], 'wavelength_4': [0.0], 'wavelength_4_fixed': [1], 'wavelength_4_function': [0], 'wavelength_4_function_value': [''], 'wavelength_4_has_max': [0], 'wavelength_4_has_min': [1], 'wavelength_4_max': [0.0], 'wavelength_4_min': [0.0], 'wavelength_5': [0.0], 'wavelength_5_fixed': [1], 'wavelength_5_function': [0], 'wavelength_5_function_value': [''], 'wavelength_5_has_max': [0], 'wavelength_5_has_min': [1], 'wavelength_5_max': [0.0], 'wavelength_5_min': [0.0], 'wavelength_fixed': [True], 'wavelength_function': [0], 'wavelength_function_value': [''], 'wavelength_has_max': [0], 'wavelength_has_min': [1], 'wavelength_max': [0.0], 'wavelength_min': [0.0], 'weight_2': [0.0], 'weight_2_fixed': [1], 'weight_2_function': [0], 'weight_2_function_value': [''], 'weight_2_has_max': [0], 'weight_2_has_min': [1], 'weight_2_max': [0.0], 'weight_2_min': [0.0], 'weight_3': [0.0], 'weight_3_fixed': [1], 'weight_3_function': [0], 'weight_3_function_value': [''], 'weight_3_has_max': [0], 'weight_3_has_min': [1], 'weight_3_max': [0.0], 'weight_3_min': [0.0], 'weight_4': [0.0], 'weight_4_fixed': [1], 'weight_4_function': [0], 'weight_4_function_value': [''], 'weight_4_has_max': [0], 'weight_4_has_min': [1], 'weight_4_max': [0.0], 'weight_4_min': [0.0], 'weight_5': [0.0], 'weight_5_fixed': [1], 'weight_5_function': [0], 'weight_5_function_value': [''], 'weight_5_has_max': [0], 'weight_5_has_min': [1], 'weight_5_max': [0.0], 'weight_5_min': [0.0], 'xray_tube_key': ['CuKa2']}</properties>
 		<properties format="literal" node_id="41">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': '', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': 1, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 5, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00Z\x00\x00\x00\x17\x00\x00\x05\x81\x00\x00\x02\xbf\x00\x00\x00Z\x00\x00\x00-\x00\x00\x05\x81\x00\x00\x02\xbf\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x00Z\x00\x00\x00-\x00\x00\x05\x81\x00\x00\x02\xbf', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 0, 'show_wss_gof': 1}</properties>
 		<properties format="literal" node_id="42">{'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'shift': -0.003, 'shift_fixed': 0, 'shift_function': 0, 'shift_function_value': '', 'shift_has_max': True, 'shift_has_min': 1, 'shift_max': 0.005, 'shift_min': -0.005}</properties>
+		<properties format="pickle" node_id="43">gAN9cQAoWAEAAABhcQFdcQJHP9JVAM3bP6xhWAcAAABhX2ZpeGVkcQNdcQRLAGFYCgAAAGFfZnVu
+Y3Rpb25xBV1xBksAYVgQAAAAYV9mdW5jdGlvbl92YWx1ZXEHXXEIWAAAAABxCWFYCQAAAGFfaGFz
+X21heHEKXXELSwBhWAkAAABhX2hhc19taW5xDF1xDUsBYVgFAAAAYV9tYXhxDl1xD0cAAAAAAAAA
+AGFYBQAAAGFfbWlucRBdcRFHAAAAAAAAAABhWAgAAABjaWZfZmlsZXESXXETWFYAAAAvVXNlcnMv
+bHJlYnVmZmkvRG9jdW1lbnRzL1dvcmtzcGFjZS9Xb25kZXIvT3JhbmdlMy1XT05ERVIvVXNlX0Nh
+c2VzL0ZlTW9NQ1gvRmVfYmNjLmNpZnEUYVgHAAAAZm9ybXVsYXEVXXEWWAkAAABGZTk4NU1vMTVx
+F2FYFgAAAGludGVuc2l0eV9zY2FsZV9mYWN0b3JxGF1xGUc/6p6z79wbdGFYHAAAAGludGVuc2l0
+eV9zY2FsZV9mYWN0b3JfZml4ZWRxGl1xG0sAYVgfAAAAaW50ZW5zaXR5X3NjYWxlX2ZhY3Rvcl9m
+dW5jdGlvbnEcXXEdSwBhWCUAAABpbnRlbnNpdHlfc2NhbGVfZmFjdG9yX2Z1bmN0aW9uX3ZhbHVl
+cR5dcR9oCWFYHgAAAGludGVuc2l0eV9zY2FsZV9mYWN0b3JfaGFzX21heHEgXXEhSwBhWB4AAABp
+bnRlbnNpdHlfc2NhbGVfZmFjdG9yX2hhc19taW5xIl1xI0sBYVgaAAAAaW50ZW5zaXR5X3NjYWxl
+X2ZhY3Rvcl9tYXhxJF1xJUcAAAAAAAAAAGFYGgAAAGludGVuc2l0eV9zY2FsZV9mYWN0b3JfbWlu
+cSZdcSdHAAAAAAAAAABhWBAAAABpc19hdXRvbWF0aWNfcnVucSiIWAUAAABsaW1pdHEpXXEqR7/w
+AAAAAAAAYVgKAAAAbGltaXRfdHlwZXErXXEsSwBhWAsAAAByZWZsZWN0aW9uc3EtXXEuWKUDAAAx
+LCAxLCAwLCBjcnlzdGFsX3N0cnVjdHVyZV8xX2ludGVuc2l0eTEgMTAwMC4wLCBtaW4gMWUtMDYK
+MiwgMCwgMCwgY3J5c3RhbF9zdHJ1Y3R1cmVfMV9pbnRlbnNpdHkyIDEwMDAuMCwgbWluIDFlLTA2
+CjIsIDEsIDEsIGNyeXN0YWxfc3RydWN0dXJlXzFfaW50ZW5zaXR5MyAxMDAwLjAsIG1pbiAxZS0w
+NgoyLCAyLCAwLCBjcnlzdGFsX3N0cnVjdHVyZV8xX2ludGVuc2l0eTQgMTAwMC4wLCBtaW4gMWUt
+MDYKMywgMSwgMCwgY3J5c3RhbF9zdHJ1Y3R1cmVfMV9pbnRlbnNpdHk1IDEwMDAuMCwgbWluIDFl
+LTA2CjIsIDIsIDIsIGNyeXN0YWxfc3RydWN0dXJlXzFfaW50ZW5zaXR5NiAxMDAwLjAsIG1pbiAx
+MC4wCjMsIDIsIDEsIGNyeXN0YWxfc3RydWN0dXJlXzFfaW50ZW5zaXR5NyAxMDAwLjAsIG1pbiAx
+ZS0wNgo0LCAwLCAwLCBjcnlzdGFsX3N0cnVjdHVyZV8xX2ludGVuc2l0eTggMTAwMC4wLCBtaW4g
+MTAuMAo0LCAxLCAxLCBjcnlzdGFsX3N0cnVjdHVyZV8xX2ludGVuc2l0eTkgMTAwMC4wLCBtaW4g
+MWUtMDYKNCwgMiwgMCwgY3J5c3RhbF9zdHJ1Y3R1cmVfMV9pbnRlbnNpdHkxMCAxMDAwLjAsIG1p
+biAxZS0wNgozLCAzLCAyLCBjcnlzdGFsX3N0cnVjdHVyZV8xX2ludGVuc2l0eTExIDEwMDAuMCwg
+bWluIDFlLTA2CjQsIDIsIDIsIGNyeXN0YWxfc3RydWN0dXJlXzFfaW50ZW5zaXR5MTIgMTAwMC4w
+LCBtaW4gMWUtMDYKNCwgMywgMSwgY3J5c3RhbF9zdHJ1Y3R1cmVfMV9pbnRlbnNpdHkxMyAxMDAw
+LjAsIG1pbiAxZS0wNgo1LCAyLCAxLCBjcnlzdGFsX3N0cnVjdHVyZV8xX2ludGVuc2l0eTE0IDEw
+MDAuMCwgbWluIDFlLTA2CjQsIDQsIDAsIGNyeXN0YWxfc3RydWN0dXJlXzFfaW50ZW5zaXR5MTUg
+MTAwMC4wLCBtaW4gMWUtMDYKNSwgMywgMCwgY3J5c3RhbF9zdHJ1Y3R1cmVfMV9pbnRlbnNpdHkx
+NiAxMDAwLjAsIG1pbiAxZS0wNgpxL2FYEwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxMGNzaXAKX3Vu
+cGlja2xlX3R5cGUKcTFYDAAAAFB5UXQ1LlF0Q29yZXEyWAoAAABRQnl0ZUFycmF5cTNDQgHZ0MsA
+AwAAAAAAKQAAABcAAAImAAAC6AAAACkAAAAtAAACJgAAAugAAAAAAgAAAA/wAAAAKQAAAC0AAAIm
+AAAC6HE0hXE1h3E2UnE3WAgAAABzeW1tZXRyeXE4XXE5SwFhdS4=
+</properties>
 	</node_properties>
 </scheme>
