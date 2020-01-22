@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QWidget, QGridLayout, QFileDialog, QMessageBox, QLab
 
 from orangewidget import gui as orangegui
 
-OW_IS_DEVELOP = False if not "ORANGEDEVELOP" in os.environ.keys() else str(os.environ.get('ORANGEDEVELOP')) == "1"
+OW_IS_DEVELOP = False if not "OASYSDEVELOP" in os.environ.keys() else str(os.environ.get('OASYSDEVELOP')) == "1"
 
 current_module = sys.modules[__name__]
 gui_point_size=12
