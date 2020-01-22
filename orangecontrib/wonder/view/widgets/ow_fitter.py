@@ -8,8 +8,8 @@ from silx.gui.plot.PlotWindow import PlotWindow
 from silx.gui.plot.LegendSelector import LegendsDockWidget
 from silx.gui import qt
 
-from Orange.widgets.settings import Setting
-from Orange.widgets import gui as orangegui
+from orangewidget.settings import Setting
+from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget, OW_IS_DEVELOP
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog, EmittingStream

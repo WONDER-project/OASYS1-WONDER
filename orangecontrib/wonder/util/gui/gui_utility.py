@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, QObject, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QGridLayout, QFileDialog, QMessageBox, QLabel, QComboBox, QTextEdit, QPushButton, QDialog, \
     QVBoxLayout, QScrollArea, QDialogButtonBox
 
-from Orange.widgets import gui as orange_gui
+from orangewidget import gui as orangegui
 
 OW_IS_DEVELOP = False if not "ORANGEDEVELOP" in os.environ.keys() else str(os.environ.get('ORANGEDEVELOP')) == "1"
 
@@ -27,7 +27,7 @@ class gui:
            toggleButton=False, value="", default=False, autoDefault=True,
            buttonType=QPushButton, **misc):
 
-        button = orange_gui.button(widget, master, label, callback=callback, width=width, height=height,
+        button = orangegui.button(widget, master, label, callback=callback, width=width, height=height,
                                    toggleButton=toggleButton, value=value, default=default, autoDefault=autoDefault,
                                    buttonType=buttonType, **misc)
 
@@ -42,7 +42,7 @@ class gui:
         lbl = QLabel(label, widget)
         if labelWidth:
             lbl.setFixedSize(labelWidth, lbl.sizeHint().height())
-        orange_gui.miscellanea(lbl, None, widget, **misc)
+        orangegui.miscellanea(lbl, None, widget, **misc)
 
         font = lbl.font()
         font.setPointSize(current_module.gui_point_size)
@@ -62,7 +62,7 @@ class gui:
         qapp.setFont(font)
 
         # change orange gui label font
-        orange_gui.widgetLabel = cls.widgetLabel
+        orangegui.widgetLabel = cls.widgetLabel
 
     @classmethod
     def lineEdit(cls, widget, master, value, label=None, labelWidth=None,
@@ -70,7 +70,7 @@ class gui:
              valueType=str, validator=None, controlWidth=None,
              callbackOnType=False, focusInCallback=None, **misc):
 
-        ledit = orange_gui.lineEdit(widget=widget,
+        ledit = orangegui.lineEdit(widget=widget,
                                     master=master,
                                     value=value,
                                     label=label,
@@ -96,7 +96,7 @@ class gui:
     @classmethod
     def widgetBox(cls, widget, box=None, orientation='vertical', margin=None, spacing=4, height=None, width=None, **misc):
 
-        box = orange_gui.widgetBox(widget, box, orientation, margin, spacing, **misc)
+        box = orangegui.widgetBox(widget, box, orientation, margin, spacing, **misc)
         box.layout().setAlignment(Qt.AlignTop)
 
         if not height is None:
@@ -108,7 +108,7 @@ class gui:
 
     @classmethod
     def tabWidget(cls, widget, height=None, width=None):
-        tabWidget = orange_gui.tabWidget(widget)
+        tabWidget = orangegui.tabWidget(widget)
 
         if not height is None:
             tabWidget.setFixedHeight(height)
@@ -122,7 +122,7 @@ class gui:
     @classmethod
     def createTabPage(cls, tabWidget, name, widgetToAdd=None, canScroll=False, height=None, width=None, isImage=False):
 
-        tab = orange_gui.createTabPage(tabWidget, name, widgetToAdd, canScroll)
+        tab = orangegui.createTabPage(tabWidget, name, widgetToAdd, canScroll)
         tab.layout().setAlignment(Qt.AlignTop)
 
         if not height is None:

@@ -32,8 +32,7 @@ CLASSIFIERS = [
 ]
 
 KEYWORDS = [
-    'oasys1 add-on',
-    'oasys1-wonder-1'
+    'oasys1',
 ]
 
 PACKAGES = find_packages()
@@ -56,12 +55,16 @@ elif platform.startswith("win"):
 elif platform.startswith("linux"):
     INSTALL_REQUIRES.append('GSAS-II-WONDER-linux')
 
+NAMESPACE_PACKAGES = ["orangecontrib", "orangecontrib.wonder", "orangecontrib.wonder.view", "orangecontrib.wonder.widgets"]
+
+
 ENTRY_POINTS = {
-    'orange.widgets':
-        ('Wonder 1 = orangecontrib.wonder.view.wonder',
-         ),
-    'orange3.addon':
-        ('Orange3-WONDER-1 = orangecontrib.wonder',)
+    'oasys.addons': ("WONDER 1 = orangecontrib.wonder",),
+    'oasys.widgets': (
+        "Wonder 1 = orangecontrib.wonder.view.widgets",
+    ),
+    #'oasys.menus': ("wondermenu = orangecontrib.wonder.menu",)
+
 }
 
 from distutils.core import setup
@@ -82,7 +85,6 @@ if __name__ == '__main__':
         keywords=KEYWORDS,
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
-        namespace_packages=['orangecontrib'],
-        #namespace_packages=NAMESPACE_PACAKGES,
+        namespace_packages=NAMESPACE_PACKAGES,
         entry_points=ENTRY_POINTS
     )

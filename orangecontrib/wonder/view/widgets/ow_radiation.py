@@ -3,8 +3,8 @@ import os, sys, numpy, copy
 from PyQt5.QtWidgets import QMessageBox, QApplication
 from PyQt5.QtCore import Qt
 
-from Orange.widgets.settings import Setting
-from Orange.widgets import gui as orangegui
+from orangewidget.settings import Setting
+from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog
@@ -726,7 +726,7 @@ class OWRadiation(OWGenericWidget):
             self.weight_5_function       = copy.deepcopy(bkp_weight_5_function      )
             self.weight_5_function_value = copy.deepcopy(bkp_weight_5_function_value)
 
-from Orange.widgets.gui import OWComponent
+from orangewidget.gui import OWComponent
 from PyQt5 import QtWidgets
 
 class RadiationBox(QtWidgets.QWidget, OWComponent):

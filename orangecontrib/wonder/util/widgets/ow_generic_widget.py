@@ -1,10 +1,9 @@
 import sys, numpy, os
 
-from Orange.widgets import gui as orange_gui
-from Orange.widgets import widget
+from oasys.widgets import widget
 
-from Orange.widgets.settings import Setting
-from Orange.widgets import gui as orangegui
+from orangewidget import gui as orangegui
+from orangewidget.settings import Setting
 
 from PyQt5.QtWidgets import QApplication, QSizePolicy
 from PyQt5.QtCore import QRect
@@ -111,7 +110,7 @@ class OWGenericWidget(widget.OWWidget):
         self.general_options_box = gui.widgetBox(self.controlArea, "General Options", addSpace=True, orientation="horizontal")
 
         if show_automatic_box :
-            orange_gui.checkBox(self.general_options_box, self, 'is_automatic_run', 'Automatic')
+            orangegui.checkBox(self.general_options_box, self, 'is_automatic_run', 'Automatic')
 
         gui.button(self.general_options_box, self, "Reset Fields", callback=self.callResetSettings)
         gui.button(self.general_options_box, self, "Show Available Parameters", callback=self.show_available_parameters)

@@ -1,7 +1,2 @@
-numpy
-scipy
-matplotlib
-h5py
-numba
-silx
-Orange3>=3.22
+numba>=0.47.0
+oasys1>=1.2.29

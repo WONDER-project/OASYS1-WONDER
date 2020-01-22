@@ -6,8 +6,8 @@ from PyQt5.QtGui import QDoubleValidator
 
 from silx.gui.plot.PlotWindow import PlotWindow
 
-from Orange.widgets.settings import Setting
-from Orange.widgets import gui as orangegui
+from orangewidget.settings import Setting
+from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog
@@ -424,7 +424,7 @@ class OWDiffractionPattern(OWGenericWidget):
             self.twotheta_has_max = copy.deepcopy(bkp_twotheta_has_max)
 
 
-from Orange.widgets.gui import OWComponent
+from orangewidget.gui import OWComponent
 from PyQt5 import QtWidgets
 
 class DiffractionPatternBox(QtWidgets.QWidget, OWComponent):

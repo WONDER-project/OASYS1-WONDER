@@ -3,8 +3,8 @@ import os, sys, numpy, copy
 from PyQt5.QtWidgets import QMessageBox, QApplication
 
 
-from Orange.widgets.settings import Setting
-from Orange.widgets import gui as orangegui
+from orangewidget.settings import Setting
+from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog
@@ -687,7 +687,7 @@ class OWChebyshevBackground(OWGenericWidget):
 
 
 
-from Orange.widgets.gui import OWComponent
+from orangewidget.gui import OWComponent
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
