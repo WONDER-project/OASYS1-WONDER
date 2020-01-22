@@ -8,14 +8,14 @@ from silx.gui.plot.PlotWindow import PlotWindow
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from oasys.widgets import gui as oasysgui
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.util import congruence
-from orangecontrib.wonder.model.diffraction_pattern import DiffractionPattern, DiffractionPatternFactory, DiffractionPatternLimits
+from orangecontrib.wonder.model.diffraction_pattern import DiffractionPatternFactory, DiffractionPatternLimits
 from orangecontrib.wonder.controller.fit.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.controller.fit.init.fit_initialization import FitInitialization
-from orangecontrib.wonder.controller.fit.fit_parameter import FitParameter
 
 class OWDiffractionPattern(OWGenericWidget):
 
@@ -237,9 +237,9 @@ class OWDiffractionPattern(OWGenericWidget):
 
     def remove(self):
         if self.diffraction_pattern_tabs.count() <= 1:
-            QtWidgets.QMessageBox.critical(self, "Error",
+            QMessageBox.critical(self, "Error",
                                        "Remove not possible, Fit process needs at least 1 element",
-                                       QtWidgets.QMessageBox.Ok)
+                                       QMessageBox.Ok)
         else:
             current_index = self.diffraction_pattern_tabs.currentIndex()
 
@@ -424,10 +424,12 @@ class OWDiffractionPattern(OWGenericWidget):
             self.twotheta_has_max = copy.deepcopy(bkp_twotheta_has_max)
 
 
-from orangewidget.gui import OWComponent
-from PyQt5 import QtWidgets
 
-class DiffractionPatternBox(QtWidgets.QWidget, OWComponent):
+
+from PyQt5.QtWidgets import QVBoxLayout
+from orangecontrib.wonder.util.gui.gui_utility import InnerBox
+
+class DiffractionPatternBox(InnerBox):
 
     filename = "<input file>"
     twotheta_min = 0.0
@@ -453,12 +455,12 @@ class DiffractionPatternBox(QtWidgets.QWidget, OWComponent):
                  twotheta_has_min = 0,
                  twotheta_max = 0.0,
                  twotheta_has_max = 0):
-        super(DiffractionPatternBox, self).__init__(parent)
-        OWComponent.__init__(self)
+        super(DiffractionPatternBox, self).__init__()
 
-        self.setLayout(QtWidgets.QVBoxLayout())
+
+        self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
-        self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
+        self.setFixedWidth(widget.CONTROL_AREA_WIDTH-35)
         self.setFixedHeight(500)
 
         self.widget = widget
@@ -470,26 +472,26 @@ class DiffractionPatternBox(QtWidgets.QWidget, OWComponent):
         self.twotheta_max                = twotheta_max
         self.twotheta_has_max            = twotheta_has_max
 
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH
+        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH-45
 
-        container = gui.widgetBox(parent, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-35)
+        parent.layout().addWidget(self)
+        container = self
 
-        file_box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH-35)
+        file_box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH)
 
-        self.le_filename = gui.lineEdit(file_box, self, value="filename", valueType=str, label="File", labelWidth=50,
-                                        callback=widget.dump_filename)
+        self.le_filename = gui.lineEdit(file_box, self, value="filename", valueType=str, label="File", labelWidth=50, callback=widget.dump_filename, orientation="horizontal")
 
         orangegui.button(file_box, self, "...", callback=self.open_folders)
 
-        box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH - 35, spacing=0)
+        box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH)
 
         orangegui.checkBox(box, self, "twotheta_has_min", "2\u03b8 min [deg]", labelWidth=350, callback=widget.dump_twotheta_has_min)
-        gui.lineEdit(box, self, "twotheta_min", "", labelWidth=5, valueType=float, validator=QDoubleValidator(), callback=self.set_twotheta_min)
+        gui.lineEdit(box, self, "twotheta_min", " ", labelWidth=5, valueType=float, validator=QDoubleValidator(), callback=self.set_twotheta_min, orientation="horizontal")
 
-        box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH - 35, spacing=0)
+        box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH)
 
         orangegui.checkBox(box, self, "twotheta_has_max", "2\u03b8 max [deg]", labelWidth=350, callback=widget.dump_twotheta_has_max)
-        gui.lineEdit(box, self, "twotheta_max", "", labelWidth=5, valueType=float, validator=QDoubleValidator(), callback=self.set_twotheta_max)
+        gui.lineEdit(box, self, "twotheta_max", " ", labelWidth=5, valueType=float, validator=QDoubleValidator(), callback=self.set_twotheta_max, orientation="horizontal")
 
         self.is_on_init = False
 

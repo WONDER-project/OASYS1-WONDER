@@ -1,4 +1,4 @@
-from orangecontrib.wonder import Singleton, synchronized_method
+from orangecontrib.wonder.util import Singleton, synchronized_method
 
 @Singleton
 class FitterListener():

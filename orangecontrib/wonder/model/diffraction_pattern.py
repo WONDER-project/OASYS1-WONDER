@@ -143,7 +143,8 @@ class DiffractionPatternFactoryInterface():
         filename, file_extension = os.path.splitext(file_name)
         return file_extension
 
-from orangecontrib.wonder import Singleton
+from orangecontrib.wonder.util import Singleton
+
 import sys
 
 def predicate(class_name):

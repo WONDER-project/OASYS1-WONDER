@@ -121,12 +121,12 @@ class OWGenericWidget(widget.OWWidget):
 
         return flag
 
-    def create_box(self, parent_box, var, label=None, disable_function=False, add_callback=False, label_width=40, min_value=None, min_accepted=True, max_value=None, max_accepted=True):
-        self.create_box_in_widget(self, parent_box, var, label, disable_function, add_callback, label_width, min_value, min_accepted, max_value, max_accepted)
+    def create_box(self, parent_box, var, label=None, disable_function=False, add_callback=False, label_width=40, min_value=None, min_accepted=True, max_value=None, max_accepted=True, trim=50):
+        OWGenericWidget.create_box_in_widget(self, parent_box, var, label, disable_function, add_callback, label_width, min_value, min_accepted, max_value, max_accepted, trim)
 
     @classmethod
-    def create_box_in_widget(cls, widget, parent_box, var, label=None, disable_function=False, add_callback=False, label_width=40, min_value=None, min_accepted=True, max_value=None, max_accepted=True):
-        box = gui.widgetBox(parent_box, "", orientation="horizontal", width=widget.CONTROL_AREA_WIDTH - 50, height=25)
+    def create_box_in_widget(cls, widget, parent_box, var, label=None, disable_function=False, add_callback=False, label_width=40, min_value=None, min_accepted=True, max_value=None, max_accepted=True, trim=50):
+        box = gui.widgetBox(parent_box, "", orientation="horizontal", width=widget.CONTROL_AREA_WIDTH - trim, height=25)
 
         box_value_width = 100 - (label_width-40)
 
@@ -138,8 +138,8 @@ class OWGenericWidget(widget.OWWidget):
         box_function_value = gui.widgetBox(box, "", orientation="horizontal", height=25)
 
         gui.widgetLabel(box_label, var if label is None else label)
-        if add_callback: le_var = gui.lineEdit(box_value, widget, var, "", valueType=float, validator=QDoubleValidator(), callback=getattr(widget, "callback_" + var))
-        else: le_var = gui.lineEdit(box_value, widget, var, "", valueType=float, validator=QDoubleValidator())
+        if add_callback: le_var = gui.lineEdit(box_value, widget, var, " ", labelWidth=0, valueType=float, validator=QDoubleValidator(), callback=getattr(widget, "callback_" + var))
+        else: le_var = gui.lineEdit(box_value, widget, var, " ", labelWidth=0, valueType=float, validator=QDoubleValidator())
 
         def set_flags():
             fixed = getattr(widget, var + "_fixed") == 1
@@ -196,9 +196,9 @@ class OWGenericWidget(widget.OWWidget):
 
         if add_callback:
             cb_min = orangegui.checkBox(box_min_max, widget, var + "_has_min", "min", callback=getattr(widget, "callback_" + var))
-            gui.lineEdit(box_min_max, widget, var + "_min", "", valueType=float, validator=min_validator, callback=set_min)
+            gui.lineEdit(box_min_max, widget, var + "_min", " ", labelWidth=0, valueType=float, validator=min_validator, callback=set_min)
             cb_max = orangegui.checkBox(box_min_max, widget, var + "_has_max", "max", callback=getattr(widget, "callback_" + var))
-            gui.lineEdit(box_min_max, widget, var + "_max", "", valueType=float, validator=max_validator, callback=set_max)
+            gui.lineEdit(box_min_max, widget, var + "_max", " ", labelWidth=0, valueType=float, validator=max_validator, callback=set_max)
 
             cb = orangegui.checkBox(box_function, widget, var + "_function", "f(x)", callback=set_flags)
             cb.setEnabled(not disable_function)
@@ -206,9 +206,9 @@ class OWGenericWidget(widget.OWWidget):
             gui.lineEdit(box_function_value, widget, var + "_function_value", "expression", valueType=str, callback=getattr(widget, "callback_" + var))
         else:
             cb_min = orangegui.checkBox(box_min_max, widget, var + "_has_min", "min")
-            gui.lineEdit(box_min_max, widget, var + "_min", "", valueType=float, validator=min_validator, callback=set_min)
+            gui.lineEdit(box_min_max, widget, var + "_min", " ", labelWidth=0, valueType=float, validator=min_validator, callback=set_min)
             cb_max = orangegui.checkBox(box_min_max, widget, var + "_has_max", "max")
-            gui.lineEdit(box_min_max, widget, var + "_max", "", valueType=float, validator=max_validator, callback=set_max)
+            gui.lineEdit(box_min_max, widget, var + "_max", " ", labelWidth=0, valueType=float, validator=max_validator, callback=set_max)
 
             cb = orangegui.checkBox(box_function, widget, var + "_function", "f(x)", callback=set_flags)
             cb.setEnabled(not disable_function)

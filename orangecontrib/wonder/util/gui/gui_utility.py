@@ -286,6 +286,19 @@ class OptionDialog(QMessageBox):
         else:
             return None
 
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from orangewidget.gui import notify_changed, CONTROLLED_ATTRIBUTES, ControlledAttributesDict
+
+class InnerBox(QWidget):
+
+    def __init__(self):
+        super().__init__()
+
+        setattr(self, CONTROLLED_ATTRIBUTES, ControlledAttributesDict(self))
+
+    def __setattr__(self, key, value):
+        super().__setattr__(key, value)
+        notify_changed(self, key, value)
 
 #######################################################################
 #######################################################################

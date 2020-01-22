@@ -687,11 +687,12 @@ class OWChebyshevBackground(OWGenericWidget):
 
 
 
-from orangewidget.gui import OWComponent
-from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
-class ChebyshevBackgroundBox(QtWidgets.QWidget, OWComponent):
+from PyQt5.QtWidgets import QVBoxLayout
+from orangecontrib.wonder.util.gui.gui_utility import InnerBox
+
+class ChebyshevBackgroundBox(InnerBox):
 
     c0                = 0.0
     c1                = 0.0
@@ -865,10 +866,9 @@ class ChebyshevBackgroundBox(QtWidgets.QWidget, OWComponent):
                  c7_function_value = "",
                  c8_function_value = "",
                  c9_function_value = ""):
-        super(ChebyshevBackgroundBox, self).__init__(parent)
-        OWComponent.__init__(self)
+        super(ChebyshevBackgroundBox, self).__init__()
 
-        self.setLayout(QtWidgets.QVBoxLayout())
+        self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
         self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
         self.setFixedHeight(500)
@@ -959,7 +959,8 @@ class ChebyshevBackgroundBox(QtWidgets.QWidget, OWComponent):
 
         self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH
 
-        container = gui.widgetBox(parent, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-35)
+        parent.layout().addWidget(self)
+        container = self
 
         OWGenericWidget.create_box_in_widget(self, container, "c0", add_callback=True)
         OWGenericWidget.create_box_in_widget(self, container, "c1", add_callback=True)

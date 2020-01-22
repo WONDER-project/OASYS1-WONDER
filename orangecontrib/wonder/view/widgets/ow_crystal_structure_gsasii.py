@@ -372,10 +372,10 @@ class OWCrystalStructureGSASII(OWGenericWidget):
             self.limit_type = copy.deepcopy(bkp_limit_type)
 
 
-from orangewidget.gui import OWComponent
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QVBoxLayout
+from orangecontrib.wonder.util.gui.gui_utility import InnerBox
 
-class CrystalStructureBox(QtWidgets.QWidget, OWComponent):
+class CrystalStructureBox(InnerBox):
 
     a                                     = 0.0
     a_fixed                               = 0
@@ -437,10 +437,9 @@ class CrystalStructureBox(QtWidgets.QWidget, OWComponent):
                  reflections                           = "",
                  limit                                 = 0.0,
                  limit_type                            = 0):
-        super(CrystalStructureBox, self).__init__(parent)
-        OWComponent.__init__(self)
+        super(CrystalStructureBox, self).__init__()
 
-        self.setLayout(QtWidgets.QVBoxLayout())
+        self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
         self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
         self.setFixedHeight(500)
@@ -472,25 +471,26 @@ class CrystalStructureBox(QtWidgets.QWidget, OWComponent):
         self.limit                                 = limit
         self.limit_type                            = limit_type
 
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH
+        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH-45
 
-        container = gui.widgetBox(parent, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-45)
+        parent.layout().addWidget(self)
+        container = self
 
         self.cb_symmetry = orangegui.comboBox(container, self, "symmetry", label="Symmetry", items=Symmetry.tuple(), callback=self.set_symmetry, orientation="horizontal")
 
-        widget.create_box_in_widget(self, container, "a", "a [nm]", add_callback=True, min_value=0.0, min_accepted=False)
+        OWGenericWidget.create_box_in_widget(self, container, "a", "a [nm]", add_callback=True, min_value=0.0, min_accepted=False, trim=5)
 
         orangegui.separator(container)
 
         structure_box = gui.widgetBox(container,
                                        "", orientation="vertical",
-                                       width=self.CONTROL_AREA_WIDTH - 45)
+                                       width=self.CONTROL_AREA_WIDTH )
 
         self.structure_box_1 = gui.widgetBox(structure_box,
                                        "", orientation="vertical",
-                                       width=self.CONTROL_AREA_WIDTH - 50, height=90)
+                                       width=self.CONTROL_AREA_WIDTH - 5, height=90)
 
-        file_box = gui.widgetBox(self.structure_box_1, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH-55)
+        file_box = gui.widgetBox(self.structure_box_1, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH-10)
 
         self.le_cif_file = gui.lineEdit(file_box, self, value="cif_file", valueType=str, label="CIF File", labelWidth=50,
                                         callback=widget.dump_cif_file)
@@ -498,7 +498,7 @@ class CrystalStructureBox(QtWidgets.QWidget, OWComponent):
 
         gui.lineEdit(self.structure_box_1, self, "formula", "Chemical Formula", labelWidth=110, valueType=str, callback=widget.dump_formula)
 
-        widget.create_box_in_widget(self, self.structure_box_1, "intensity_scale_factor", "I0", add_callback=True, min_value=0.0, min_accepted=False)
+        OWGenericWidget.create_box_in_widget(self, self.structure_box_1, "intensity_scale_factor", "I0", add_callback=True, min_value=0.0, min_accepted=False, trim=5)
 
         orangegui.separator(container)
 
@@ -525,13 +525,13 @@ class CrystalStructureBox(QtWidgets.QWidget, OWComponent):
 
         reflection_box = gui.widgetBox(container,
                                        "Reflections", orientation="vertical",
-                                       width=self.CONTROL_AREA_WIDTH - 50)
+                                       width=self.CONTROL_AREA_WIDTH - 5)
 
         orangegui.label(reflection_box, self, "h, k, l, <intensity_name> int <, min value, max value>")
 
         scrollarea = QScrollArea(reflection_box)
-        scrollarea.setMaximumWidth(self.CONTROL_AREA_WIDTH - 85)
-        scrollarea.setMinimumWidth(self.CONTROL_AREA_WIDTH - 85)
+        scrollarea.setMaximumWidth(self.CONTROL_AREA_WIDTH - 40)
+        scrollarea.setMinimumWidth(self.CONTROL_AREA_WIDTH - 40)
 
         def write_text():
             self.reflections = self.text_area.toPlainText()

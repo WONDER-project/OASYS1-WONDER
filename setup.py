@@ -55,7 +55,7 @@ elif platform.startswith("win"):
 elif platform.startswith("linux"):
     INSTALL_REQUIRES.append('GSAS-II-WONDER-linux')
 
-NAMESPACE_PACKAGES = ["orangecontrib", "orangecontrib.wonder", "orangecontrib.wonder.view", "orangecontrib.wonder.widgets"]
+NAMESPACE_PACKAGES = ["orangecontrib", "orangecontrib.wonder", "orangecontrib.wonder.view"]
 
 
 ENTRY_POINTS = {

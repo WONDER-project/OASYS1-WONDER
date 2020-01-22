@@ -726,10 +726,10 @@ class OWRadiation(OWGenericWidget):
             self.weight_5_function       = copy.deepcopy(bkp_weight_5_function      )
             self.weight_5_function_value = copy.deepcopy(bkp_weight_5_function_value)
 
-from orangewidget.gui import OWComponent
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QVBoxLayout
+from orangecontrib.wonder.util.gui.gui_utility import InnerBox
 
-class RadiationBox(QtWidgets.QWidget, OWComponent):
+class RadiationBox(InnerBox):
 
     is_multiple_wavelength = 0
     wavelength = 0.0826
@@ -891,14 +891,11 @@ class RadiationBox(QtWidgets.QWidget, OWComponent):
                  weight_5_max = 0.0,
                  weight_5_function = 0,
                  weight_5_function_value = ""):
-        super(RadiationBox, self).__init__(parent)
-        OWComponent.__init__(self)
+        super(RadiationBox, self).__init__()
 
         self.widget = widget
 
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH
-
-        self.setLayout(QtWidgets.QVBoxLayout())
+        self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
         self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
         self.setFixedHeight(500)
@@ -980,21 +977,24 @@ class RadiationBox(QtWidgets.QWidget, OWComponent):
         self.weight_5_function           = weight_5_function
         self.weight_5_function_value     = weight_5_function_value
 
-        container = gui.widgetBox(parent, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-35)
+        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH-45
+
+        parent.layout().addWidget(self)
+        container = self
 
         orangegui.comboBox(container, self, "is_multiple_wavelength", label="Incident Radiation", items=["Single Wavelenght", "X-ray Tube"], orientation="horizontal", callback=self.set_is_multiple_wavelength)
 
-        self.secondary_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 35, spacing=0)
+        self.secondary_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, spacing=0)
 
         orangegui.comboBox(self.secondary_box, self, "xray_tube_key", label="X-ray Tube Dataset", items=self.get_xray_tube_keys(),
                            sendSelectedValue=True, orientation="horizontal", callback=self.set_xray_tube_key)
 
-        self.secondary_box_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 35, spacing=0)
+        self.secondary_box_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, spacing=0)
 
         widget.create_box_in_widget(self, container,  "wavelength", label="\u03BB  [nm]", disable_function=True, add_callback=True, min_value=0.0, min_accepted=False)
 
-        self.secondary_box_2 = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 35, )
-        self.secondary_box_2_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 35)
+        self.secondary_box_2 = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
+        self.secondary_box_2_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
 
         self.create_wavelength_boxes()
 
