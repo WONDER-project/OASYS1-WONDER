@@ -3,10 +3,11 @@
 ######################################################################
 import sys, tempfile, site, os, pickle, traceback
 import subprocess
-from subprocess import CalledProcessError, check_output
-from orangecontrib.wonder.util.gui.gui_utility import OW_IS_DEVELOP
+from subprocess import CalledProcessError
 
-if OW_IS_DEVELOP:
+GSAS_II_IS_DEVELOP = False if not "GSASIIDEVELOP" in os.environ.keys() else str(os.environ.get('GSAS_II_IS_DEVELOP')) == "1"
+
+if GSAS_II_IS_DEVELOP:
     gsasii_dirname = os.environ.get("GSAS-II-DIR")
     gsasii_temp_dir = os.environ.get("GSAS-II-TEMP-DIR")
 else:
@@ -96,6 +97,7 @@ class GSASIIReflections:
                                                                                    self.create_temp_prm_file(wavelength),
                                                                                    twotheta_min,
                                                                                    twotheta_max)], stdout=subprocess.PIPE)
+
                 gsasii_data = pickle.loads(pipe.stdout.read())
             except CalledProcessError as error:
                 raise Exception("Failed to call GSAS-II: " + ''.join(traceback.format_tb(error.__traceback__)))

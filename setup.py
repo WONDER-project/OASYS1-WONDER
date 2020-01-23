@@ -12,7 +12,7 @@ NAME = 'OASYS1-WONDER'
 
 MAJOR = 1
 MINOR = 0
-MICRO = 2
+MICRO = 3
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 AUTHOR = 'Luca Rebuffi, Paolo Scardi, Alberto Flor'
@@ -49,7 +49,7 @@ INSTALL_REQUIRES = sorted(set(
 platform = sys.platform
 
 if platform == "darwin":
-    INSTALL_REQUIRES.append('GSAS-II-WONDER-osx>=1.0.1')
+    INSTALL_REQUIRES.append('GSAS-II-WONDER-osx>=1.0.3')
 elif platform.startswith("win"):
     INSTALL_REQUIRES.append('GSAS-II-WONDER-win')
 elif platform.startswith("linux"):
