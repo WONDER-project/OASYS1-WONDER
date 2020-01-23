@@ -3,6 +3,7 @@ import os, sys, numpy
 from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from orangewidget.settings import Setting
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -49,6 +50,10 @@ class OWZeroErrorPeakShift(OWGenericWidget):
                                     width=self.CONTROL_AREA_WIDTH - 30)
 
         self.create_box(zero_error_box, "shift", label="\u0394(2\u03b8) [deg]")
+
+        runaction = OWAction("Send Peak Shift", self)
+        runaction.triggered.connect(self.send_peak_shift)
+        self.addAction(runaction)
 
     def send_peak_shift(self):
         try:

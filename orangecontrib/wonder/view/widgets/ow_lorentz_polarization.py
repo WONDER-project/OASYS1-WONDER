@@ -5,6 +5,7 @@ from PyQt5.QtGui import QDoubleValidator
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -80,6 +81,10 @@ class OWLorentzPolarization(OWGenericWidget):
         gui.lineEdit(self.monochromator_box, self, "twotheta_mono", "2\u03B8 Monochromator [deg]", labelWidth=300, valueType=float, validator=QDoubleValidator())
 
         self.set_Polarization()
+
+        runaction = OWAction("Send Lorentz-Polarization Parameters", self)
+        runaction.triggered.connect(self.send_lorentz_polarization)
+        self.addAction(runaction)
 
     def set_LorentzFactor(self):
         self.lorentz_box.setVisible(self.use_lorentz_factor==1)

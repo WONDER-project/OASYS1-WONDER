@@ -3,6 +3,7 @@ import os, sys, numpy
 from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from orangewidget.settings import Setting
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -114,6 +115,9 @@ class OWInstrumentalProfile(OWGenericWidget):
         self.create_box(caglioti_box_2, "b")
         self.create_box(caglioti_box_2, "c")
 
+        runaction = OWAction("Send Instrumental Profile", self)
+        runaction.triggered.connect(self.send_intrumental_profile)
+        self.addAction(runaction)
 
     def send_intrumental_profile(self):
         try:

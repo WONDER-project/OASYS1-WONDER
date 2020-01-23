@@ -3,6 +3,7 @@ import os, sys, numpy
 from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from orangewidget.settings import Setting
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -92,6 +93,10 @@ class OWCalibrationPeakShift(OWGenericWidget):
         self.create_box(lab6_box, "cx")
         self.create_box(lab6_box, "dx")
         self.create_box(lab6_box, "ex")
+
+        runaction = OWAction("Send Peak Shift", self)
+        runaction.triggered.connect(self.send_peak_shift)
+        self.addAction(runaction)
 
 
     def send_peak_shift(self):

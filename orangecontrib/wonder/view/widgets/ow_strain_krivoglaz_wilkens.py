@@ -3,6 +3,7 @@ import os, sys, numpy
 from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from orangewidget.settings import Setting
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -140,6 +141,9 @@ class OWStrainKW(OWGenericWidget):
         self.create_box(main_box, "mix", min_value=0.0, min_accepted=True, max_value=1.0, max_accepted=True)
         self.create_box(main_box, "b", min_value=0.0, min_accepted=False)
 
+        runaction = OWAction("Send Strain", self)
+        runaction.triggered.connect(self.send_strain)
+        self.addAction(runaction)
 
     def send_strain(self):
         try:

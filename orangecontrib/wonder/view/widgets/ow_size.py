@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMessageBox, QScrollArea, QTableWidget, QApplication
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ShowTextDialog
@@ -100,6 +101,10 @@ class OWSize(OWGenericWidget):
         orangegui.comboBox(self.normalize_box, self, "normalize_to", label="Normalize to", items=Normalization.tuple(), labelWidth=300, orientation="horizontal")
 
         self.set_shape(is_init=True)
+
+        runaction = OWAction("Send Size", self)
+        runaction.triggered.connect(self.send_size)
+        self.addAction(runaction)
 
     def set_shape(self, is_init=False):
         if self.cb_distribution.currentText() == Distribution.LOGNORMAL:

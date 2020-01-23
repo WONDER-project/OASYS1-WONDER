@@ -8,7 +8,7 @@ from silx.gui.plot.PlotWindow import PlotWindow
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
-from oasys.widgets import gui as oasysgui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog
@@ -108,6 +108,11 @@ class OWDiffractionPattern(OWGenericWidget):
             self.table_data.append(table_widget)
 
             self.tab_data[index].layout().addWidget(table_widget, alignment=Qt.AlignHCenter)
+
+        runaction = OWAction("Load Diffraction Patterns", self)
+        runaction.triggered.connect(self.load_diffraction_patterns)
+        self.addAction(runaction)
+
 
 
     def insert_before(self):

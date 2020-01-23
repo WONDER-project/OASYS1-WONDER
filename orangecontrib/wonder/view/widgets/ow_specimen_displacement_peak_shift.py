@@ -5,6 +5,7 @@ from PyQt5.QtGui import QDoubleValidator
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -56,6 +57,10 @@ class OWSpecimenDisplacementPeakShift(OWGenericWidget):
         gui.lineEdit(specimen_displacement_box, self, "goniometer_radius", "Goniometer Radius [m]", labelWidth=300, valueType=float, validator=QDoubleValidator())
         orangegui.separator(specimen_displacement_box)
         self.create_box(specimen_displacement_box, "displacement", label="\u03b4 [\u03bcm]")
+
+        runaction = OWAction("Send Peak Shift", self)
+        runaction.triggered.connect(self.send_peak_displacement)
+        self.addAction(runaction)
 
     def send_peak_displacement(self):
         try:

@@ -5,7 +5,7 @@ import sys, tempfile, site, os, pickle, traceback
 import subprocess
 from subprocess import CalledProcessError
 
-GSAS_II_IS_DEVELOP = False if not "GSASIIDEVELOP" in os.environ.keys() else str(os.environ.get('GSAS_II_IS_DEVELOP')) == "1"
+GSAS_II_IS_DEVELOP = False if not "GSASIIDEVELOP" in os.environ.keys() else str(os.environ.get('GSASIIDEVELOP')) == "1"
 
 if GSAS_II_IS_DEVELOP:
     gsasii_dirname = os.environ.get("GSAS-II-DIR")

@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMessageBox, QScrollArea, QTableWidget, QApplication
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -59,6 +60,10 @@ class OWContrastFactor(OWGenericWidget):
         text_area_box.layout().addWidget(self.text_area)
 
         orangegui.separator(main_box, height=280)
+
+        runaction = OWAction("Send Constrast Factor A/B Parameters", self)
+        runaction.triggered.connect(self.send_contrast_factor_a_b)
+        self.addAction(runaction)
 
     def send_contrast_factor_a_b(self):
         try:

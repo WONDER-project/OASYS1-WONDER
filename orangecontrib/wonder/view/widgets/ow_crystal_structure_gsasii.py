@@ -6,6 +6,7 @@ from PyQt5.QtGui import QDoubleValidator
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog, ConfirmTextDialog, ShowTextDialog
@@ -100,6 +101,10 @@ class OWCrystalStructureGSASII(OWGenericWidget):
                                                         limit_type                           = self.limit_type[index])
 
             self.crystal_structure_box_array.append(crystal_structure_box)
+
+        runaction = OWAction("Send Crystal Structure", self)
+        runaction.triggered.connect(self.send_fit_initialization)
+        self.addAction(runaction)
 
     def send_fit_initialization(self):
         try:

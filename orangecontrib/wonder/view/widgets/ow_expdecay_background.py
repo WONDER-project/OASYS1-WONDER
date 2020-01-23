@@ -3,6 +3,7 @@ import sys
 from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from orangewidget.settings import Setting
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui

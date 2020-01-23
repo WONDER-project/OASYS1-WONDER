@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMessageBox, QScrollArea, QApplication
 from PyQt5.QtCore import Qt
 
 from orangewidget.settings import Setting
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -53,7 +54,9 @@ class OWFreeInputParameters(OWGenericWidget):
 
         tab_free_in.layout().addWidget(self.scrollarea_free_in, alignment=Qt.AlignHCenter)
 
-
+        runaction = OWAction("Send Free Input Parameters", self)
+        runaction.triggered.connect(self.send_free_input_parameters)
+        self.addAction(runaction)
 
     def send_free_input_parameters(self):
         try:

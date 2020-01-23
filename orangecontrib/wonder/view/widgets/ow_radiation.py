@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog
@@ -179,6 +180,10 @@ class OWRadiation(OWGenericWidget):
         self.radiation_tabs = gui.tabWidget(main_box)
 
         self.set_use_single_parameter_set(on_init=True)
+
+        runaction = OWAction("Send Radiation", self)
+        runaction.triggered.connect(self.send_radiation)
+        self.addAction(runaction)
 
     def set_use_single_parameter_set(self, on_init=False):
         self.radiation_tabs.clear()

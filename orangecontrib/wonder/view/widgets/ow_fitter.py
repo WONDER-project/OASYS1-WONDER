@@ -10,6 +10,7 @@ from silx.gui import qt
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget, OW_IS_DEVELOP
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog, EmittingStream
@@ -123,14 +124,14 @@ class OWFitter(OWGenericWidget):
 
         button_box_1 = gui.widgetBox(button_box, "", orientation="horizontal")
 
-        self.fit_button = gui.button(button_box_1,  self, "Fit", height=35, callback=self.do_fit)
+        self.fit_button = gui.button(button_box_1,  self, "Fit", height=30, callback=self.do_fit)
         self.fit_button.setStyleSheet("color: #252468")
         font = QFont(self.fit_button.font())
         font.setBold(True)
         font.setPixelSize(18)
         self.fit_button.setFont(font)
 
-        self.stop_fit_button = gui.button(button_box_1,  self, "STOP", height=35, callback=self.stop_fit)
+        self.stop_fit_button = gui.button(button_box_1,  self, "STOP", height=30, callback=self.stop_fit)
         self.stop_fit_button.setStyleSheet("color: red")
         font = QFont(self.stop_fit_button.font())
         font.setBold(True)
@@ -139,8 +140,21 @@ class OWFitter(OWGenericWidget):
 
         button_box_2 = gui.widgetBox(button_box, "", orientation="horizontal")
 
-        gui.button(button_box_2,  self, "Send Current Fit", height=35, callback=self.send_current_fit)
-        gui.button(button_box_2,  self, "Save Data", height=35, callback=self.save_data)
+        gui.button(button_box_2,  self, "Send Current Fit", height=30, callback=self.send_current_fit)
+        gui.button(button_box_2,  self, "Save Data", height=30, callback=self.save_data)
+
+        runaction = OWAction("Fit", self)
+        runaction.triggered.connect(self.do_fit)
+        self.addAction(runaction)
+
+        runaction = OWAction("Stop", self)
+        runaction.triggered.connect(self.stop_fit)
+        self.addAction(runaction)
+
+        runaction = OWAction("Send Current Fit", self)
+        runaction.triggered.connect(self.send_current_fit)
+        self.addAction(runaction)
+
 
         orangegui.separator(main_box)
 

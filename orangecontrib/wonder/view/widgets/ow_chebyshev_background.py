@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui, ConfirmDialog
@@ -129,6 +130,10 @@ class OWChebyshevBackground(OWGenericWidget):
         self.chebyshev_tabs = gui.tabWidget(main_box)
 
         self.set_use_single_parameter_set(on_init=True)
+
+        runaction = OWAction("Send Background", self)
+        runaction.triggered.connect(self.send_background)
+        self.addAction(runaction)
 
 
     def set_use_single_parameter_set(self, on_init=False):

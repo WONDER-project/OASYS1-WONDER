@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
+from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.util.widgets.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui.gui_utility import gui
@@ -98,6 +99,9 @@ class OWStrainInvariant(OWGenericWidget):
         self.create_box(invariant_box, "e1")
         self.create_box(invariant_box, "e4")
 
+        runaction = OWAction("Send Strain", self)
+        runaction.triggered.connect(self.send_strain)
+        self.addAction(runaction)
 
     def set_laue_id(self):
         if not (self.laue_id == 12 or self.laue_id == 13):
