@@ -11,7 +11,15 @@ if GSAS_II_IS_DEVELOP:
     gsasii_dirname = os.environ.get("GSAS-II-DIR")
     gsasii_temp_dir = os.environ.get("GSAS-II-TEMP-DIR")
 else:
-    gsasii_dirname = os.path.join(site.getsitepackages()[0], "GSAS-II-WONDER")
+    platform = sys.platform
+
+    if platform == "darwin":
+        gsasii_dirname = os.path.join(site.getsitepackages()[0], "GSAS-II-WONDER")
+    elif platform.startswith("win"):
+        gsasii_dirname = os.path.join(site.getsitepackages()[1], "GSAS-II-WONDER")
+    elif platform.startswith("linux"):
+        gsasii_dirname = os.path.join(site.getsitepackages()[0], "GSAS-II-WONDER")
+
     gsasii_temp_dir = tempfile.gettempdir()
 
 sys.path.insert(0, gsasii_dirname)
