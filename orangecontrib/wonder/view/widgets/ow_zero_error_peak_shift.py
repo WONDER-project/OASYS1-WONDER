@@ -43,7 +43,7 @@ class OWZeroErrorPeakShift(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box, self, "Send Peak Shift", height=50, callback=self.send_peak_shift)
+        gui.button(button_box, self, "Send Peak Shift", height=40, callback=self.send_peak_shift)
 
         zero_error_box = gui.widgetBox(main_box,
                                     "Zero Error", orientation="vertical",

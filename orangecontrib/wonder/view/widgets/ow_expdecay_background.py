@@ -83,18 +83,17 @@ class OWExpDecayBackground(OWGenericWidget):
         super().__init__(show_automatic_box=True)
 
         main_box = gui.widgetBox(self.controlArea,
-                                 "Instrumental Profile", orientation="vertical",
+                                 "Exponential Background", orientation="vertical",
                                  width=self.CONTROL_AREA_WIDTH - 10, height=600)
-
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box,  self, "Send Background", height=50, callback=self.send_background)
+        gui.button(button_box,  self, "Send Background", height=40, callback=self.send_background)
 
         chebyshev_box = gui.widgetBox(main_box,
-                                 "Chebyshev Parameters", orientation="vertical",
+                                 "Exponential Parameters", orientation="vertical",
                                  width=self.CONTROL_AREA_WIDTH - 30)
 
         self.create_box(chebyshev_box, "a0")

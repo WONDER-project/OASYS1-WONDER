@@ -42,7 +42,7 @@ class OWContrastFactor(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box, self, "Send Constrast Factor A/B Parameters", height=50, callback=self.send_contrast_factor_a_b)
+        gui.button(button_box, self, "Send Constrast Factor A/B Parameters", height=40, callback=self.send_contrast_factor_a_b)
 
         contrast_factor_box = gui.widgetBox(main_box, "Elastic Constants", orientation="vertical", height=300, width=self.CONTROL_AREA_WIDTH - 30)
 

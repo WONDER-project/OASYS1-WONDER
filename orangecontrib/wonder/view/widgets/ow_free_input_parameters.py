@@ -37,7 +37,7 @@ class OWFreeInputParameters(OWGenericWidget):
                                    width=self.CONTROL_AREA_WIDTH-25)
 
 
-        gui.button(button_box,  self, "Send Free Input Parameters", height=50, callback=self.send_free_input_parameters)
+        gui.button(button_box,  self, "Send Free Input Parameters", height=40, callback=self.send_free_input_parameters)
 
         tabs = gui.tabWidget(main_box)
         tab_free_in = gui.createTabPage(tabs, "Free Input Parameters")

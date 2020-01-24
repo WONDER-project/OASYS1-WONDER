@@ -98,7 +98,7 @@ class OWInstrumentalProfile(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box,  self, "Send Instrumental Profile", height=50, callback=self.send_intrumental_profile)
+        gui.button(button_box,  self, "Send Instrumental Profile", height=40, callback=self.send_intrumental_profile)
 
         caglioti_box_1 = gui.widgetBox(main_box,
                                  "Caglioti's FWHM", orientation="vertical",

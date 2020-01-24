@@ -47,7 +47,7 @@ class OWDebyeWaller(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box, self, "Send Debye-Waller Parameters", height=50, callback=self.send_debye_waller)
+        gui.button(button_box, self, "Send Debye-Waller Parameters", height=40, callback=self.send_debye_waller)
 
         box = gui.widgetBox(main_box,
                             "Debye-Waller Factor", orientation="vertical",

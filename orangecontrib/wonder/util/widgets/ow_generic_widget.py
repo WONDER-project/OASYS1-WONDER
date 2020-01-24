@@ -72,7 +72,7 @@ class OWGenericWidget(widget.OWWidget):
     info_id = 0
 
     MAX_WIDTH = 1320
-    MAX_WIDTH_NO_MAIN = 510
+    MAX_WIDTH_NO_MAIN = 512
     MAX_HEIGHT = 700
 
     CONTROL_AREA_WIDTH = 505

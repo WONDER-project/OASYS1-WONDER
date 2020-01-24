@@ -120,7 +120,7 @@ class OWChebyshevBackground(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box,  self, "Send Background", height=50, callback=self.send_background)
+        gui.button(button_box,  self, "Send Background", height=40, callback=self.send_background)
 
         orangegui.comboBox(main_box, self, "use_single_parameter_set", label="Use single set of Parameters", labelWidth=350, orientation="horizontal",
                            items=["No", "Yes"], callback=self.set_use_single_parameter_set, sendSelectedValue=False)

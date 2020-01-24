@@ -71,7 +71,7 @@ class OWSize(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box,  self, "Send Size", height=50, callback=self.send_size)
+        gui.button(button_box,  self, "Send Size", height=40, callback=self.send_size)
 
         self.cb_shape = orangegui.comboBox(main_box, self, "shape", label="Shape", items=Shape.tuple(), callback=self.set_shape, orientation="horizontal")
         self.cb_distribution = orangegui.comboBox(main_box, self, "distribution", label="Distribution", items=Distribution.tuple(), callback=self.set_distribution, orientation="horizontal")

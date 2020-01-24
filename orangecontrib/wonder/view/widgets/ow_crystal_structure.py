@@ -64,7 +64,7 @@ class OWCrystalStructure(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box,  self, "Send Crystal Structure", height=50, callback=self.send_fit_initialization)
+        gui.button(button_box,  self, "Send Crystal Structure", height=40, callback=self.send_fit_initialization)
 
         self.crystal_structure_tabs = gui.tabWidget(crystal_box)
         self.crystal_structure_box_array = []

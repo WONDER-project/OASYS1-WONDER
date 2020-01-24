@@ -44,7 +44,7 @@ class OWLorentzPolarization(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box, self, "Send Lorentz-Polarization Parameters", height=50, callback=self.send_lorentz_polarization)
+        gui.button(button_box, self, "Send Lorentz-Polarization Parameters", height=40, callback=self.send_lorentz_polarization)
 
         box = gui.widgetBox(main_box,
                             "Lorentz-Polarization Factors", orientation="vertical",

@@ -172,7 +172,7 @@ class OWRadiation(OWGenericWidget):
                                    "", orientation="horizontal",
                                    width=self.CONTROL_AREA_WIDTH-25)
 
-        gui.button(button_box, self, "Send Radiation", height=50, callback=self.send_radiation)
+        gui.button(button_box, self, "Send Radiation", height=40, callback=self.send_radiation)
 
         orangegui.comboBox(main_box, self, "use_single_parameter_set", label="Use single set of Parameters", labelWidth=350, orientation="horizontal",
                            items=["No", "Yes"], callback=self.set_use_single_parameter_set, sendSelectedValue=False)
