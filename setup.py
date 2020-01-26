@@ -18,8 +18,8 @@ VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 AUTHOR = 'Luca Rebuffi, Paolo Scardi, Alberto Flor'
 AUTHOR_EMAIL = 'paolo.scardi@unitn.ut'
 
-URL = 'https://github.com/WONDER-project/Orange3-WONDER'
-DESCRIPTION = 'Whole POwder PatterN MoDEl in Orange.'
+URL = 'https://github.com/WONDER-project/OASYS1-WONDER'
+DESCRIPTION = 'Whole POwder PatterN MoDEl in OASYS.'
 LONG_DESCRIPTION = ABOUT
 LICENSE = 'GPL3+'
 
@@ -38,8 +38,8 @@ KEYWORDS = [
 PACKAGES = find_packages()
 
 PACKAGE_DATA = {
-    'orangecontrib.wonder.view.widgets'        : ['icons/*.*', 'data/*.*'],
-    'orangecontrib.wonder.controller.fit.wppm.data': ['*.*', 'delta_l_files/*.*', 'wulff_solids/*.*'],
+    'orangecontrib.wonder.widgets.wonder' : ['icons/*.*', 'data/*.*'],
+    'orangecontrib.wonder.fit.data'       : ['*.*', 'delta_l_files/*.*', 'wulff_solids/*.*'],
 }
 
 INSTALL_REQUIRES = sorted(set(
@@ -55,13 +55,13 @@ elif platform.startswith("win"):
 elif platform.startswith("linux"):
     INSTALL_REQUIRES.append('GSAS-II-WONDER-linux')
 
-NAMESPACE_PACKAGES = ["orangecontrib", "orangecontrib.wonder", "orangecontrib.wonder.view"]
+NAMESPACE_PACKAGES = ["orangecontrib", "orangecontrib.wonder", "orangecontrib.wonder.widgets"]
 
 
 ENTRY_POINTS = {
     'oasys.addons': ("WONDER 1 = orangecontrib.wonder",),
     'oasys.widgets': (
-        "Wonder 1 = orangecontrib.wonder.view.widgets",
+        "Wonder 1 = orangecontrib.wonder.widgets.wonder",
     ),
     #'oasys.menus': ("wondermenu = orangecontrib.wonder.menu",)
 

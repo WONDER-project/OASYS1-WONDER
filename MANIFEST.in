@@ -1,10 +1,10 @@
 recursive-include orangecontrib/wonder *.svg *.png *.jpg
 recursive-include orangecontrib/wonder *.pyx
 
-recursive-include orangecontrib/wonder/controller/fit/wppm/data *.dat
-recursive-include orangecontrib/wonder/controller/fit/wppm/data/wulff_solids *.data
-recursive-include orangecontrib/wonder/controller/fit/wppm/data/delta_l_files *.FTinfo
-recursive-include orangecontrib/wonder/view/widgets/data *.dat
+recursive-include orangecontrib/wonder/fit/data *.dat
+recursive-include orangecontrib/wonder/fit/data/wulff_solids *.data
+recursive-include orangecontrib/wonder/fit/data/delta_l_files *.FTinfo
+recursive-include orangecontrib/wonder/widgets/wonder/data *.dat
 
 include requirements.txt
 include README.md
