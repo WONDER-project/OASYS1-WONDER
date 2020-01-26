@@ -1,7 +1,7 @@
 import numpy
 import copy
 
-from orangecontrib.wonder.fit.fitter import FitterInterface
+from orangecontrib.wonder.fit.fitters.fitter import FitterInterface
 from orangecontrib.wonder.fit.wppm_functions import fit_function_direct
 
 from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern, DiffractionPoint

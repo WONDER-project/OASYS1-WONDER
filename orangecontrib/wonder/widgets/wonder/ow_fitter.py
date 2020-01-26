@@ -15,7 +15,7 @@ from orangewidget.widget import OWAction
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget, OW_IS_DEVELOP
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog, EmittingStream
 
-from orangecontrib.wonder.fit.fitter_factory import FitterFactory, FitterName
+from orangecontrib.wonder.fit.fitters.fitter_factory import FitterFactory, FitterName
 
 from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
