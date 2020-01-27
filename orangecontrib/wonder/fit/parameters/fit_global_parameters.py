@@ -11,6 +11,7 @@ from orangecontrib.wonder.fit.wppm_functions import Distribution, Shape
 class FitGlobalParameters(ParametersList):
 
     fit_initialization = None
+    measured_dataset = None
     background_parameters = None
     instrumental_parameters = None
     shift_parameters = None
@@ -26,6 +27,7 @@ class FitGlobalParameters(ParametersList):
 
     def __init__(self,
                  fit_initialization = None,
+                 masured_dataset = None,
                  background_parameters = {},
                  instrumental_parameters = None,
                  shift_parameters = {},
@@ -36,6 +38,7 @@ class FitGlobalParameters(ParametersList):
         super().__init__()
 
         self.fit_initialization = fit_initialization
+        self.measured_dataset = masured_dataset
         self.background_parameters = background_parameters
         self.instrumental_parameters = instrumental_parameters
         self.shift_parameters = shift_parameters

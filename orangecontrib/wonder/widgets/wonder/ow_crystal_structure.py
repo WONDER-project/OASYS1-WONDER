@@ -9,7 +9,7 @@ from orangewidget import gui as orangegui
 from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
-from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog, ConfirmTextDialog, ShowTextDialog
+from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog, ConfirmTextDialog
 
 from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.util.fit_utilities import Utilities, list_of_s_bragg, Symmetry

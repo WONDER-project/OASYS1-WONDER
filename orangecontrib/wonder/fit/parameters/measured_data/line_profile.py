@@ -6,7 +6,7 @@ from orangecontrib.wonder.util.fit_utilities import Utilities
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList, FitParameter, Boundary, PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.measured_data.reflection import Reflection
 
-class DiffractionPatternDescription(ParametersList):
+class LineProfile(ParametersList):
 
     def __init__(self, phases=[]):
         self.phases = phases
@@ -14,12 +14,10 @@ class DiffractionPatternDescription(ParametersList):
 
     def add_reflection(self, phase_index, reflection):
         self.reflections_of_phases[phase_index].append(reflection)
-
         self.update_reflection(phase_index, -1)
 
     def set_reflection(self, phase_index, reflection_index, reflection):
         self.reflections_of_phases[phase_index][reflection_index] = reflection
-
         self.update_reflection(phase_index, reflection_index)
 
     def get_reflections_count(self, phase_index):
