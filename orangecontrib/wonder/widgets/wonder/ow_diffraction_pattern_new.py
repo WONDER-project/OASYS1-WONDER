@@ -14,13 +14,14 @@ from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.util import congruence
 
-from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPatternFactory, DiffractionPatternLimits
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
+from orangecontrib.wonder.fit.parameters.measured_data.measured_dataset import MeasuredDataset
+from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPatternFactory, DiffractionPatternLimits
 from orangecontrib.wonder.fit.parameters.initialization.fit_initialization import FitInitialization
 
-class OWDiffractionPattern(OWGenericWidget):
+class OWDiffractionPatternNew(OWGenericWidget):
 
-    name = "Load Diffraction Pattern"
+    name = "Load Diffraction Pattern (NEW)"
     description = "Loads diffraction pattern " \
                   "points from most common file formats"
     icon = "icons/diffraction_pattern.png"
@@ -113,6 +114,8 @@ class OWDiffractionPattern(OWGenericWidget):
         runaction = OWAction("Load Diffraction Patterns", self)
         runaction.triggered.connect(self.load_diffraction_patterns)
         self.addAction(runaction)
+
+
 
     def insert_before(self):
         current_index = self.diffraction_pattern_tabs.currentIndex()
@@ -282,7 +285,8 @@ class OWDiffractionPattern(OWGenericWidget):
             self.tabs.setCurrentIndex(self.diffraction_pattern_tabs.currentIndex())
             self.tabs_data_plot[self.diffraction_pattern_tabs.currentIndex()].setCurrentIndex(1)
 
-            fit_global_parameters = FitGlobalParameters(fit_initialization=FitInitialization(diffraction_patterns=self.diffraction_patterns))
+            fit_global_parameters = FitGlobalParameters(masured_dataset=MeasuredDataset.initialize_with_diffraction_pattern(diffraction_patterns=self.diffraction_patterns),
+                                                        fit_initialization=FitInitialization())
             fit_global_parameters.regenerate_parameters()
 
             self.send("Fit Global Parameters", fit_global_parameters)
@@ -536,7 +540,7 @@ class DiffractionPatternBox(InnerBox):
         self.diffraction_pattern = DiffractionPatternFactory.create_diffraction_pattern_from_file(self.filename, limits)
 if __name__ == "__main__":
     a = QApplication(sys.argv)
-    ow = OWDiffractionPattern()
+    ow = OWDiffractionPatternNew()
     ow.show()
     a.exec_()
     ow.saveSettings()

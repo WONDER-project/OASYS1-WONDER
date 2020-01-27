@@ -139,9 +139,7 @@ class LineProfile(ParametersList):
         self.reflections_of_phases[phase_index] = reflections
         self.update_reflections(phase_index)
 
-    def get_congruence_check(self, wavelength, min_value, max_value, limit_is_s=True):
-        excluded_reflections = [[]]*len(self.reflections_of_phases)
-
+    def get_congruence_check(self, phase_index, wavelength, min_value, max_value, limit_is_s=True):
         if wavelength <= 0: raise ValueError("Wavelenght should be a positive number")
         if max_value <= 0: raise ValueError("Max Value should be a positive number")
 
@@ -152,19 +150,16 @@ class LineProfile(ParametersList):
             s_min = min_value
             s_max = max_value
 
-        for phase_index in range(len(self.reflections_of_phases)):
-            excluded_reflections_of_phase = []
+        excluded_reflections_of_phase = []
 
-            for reflection in self.reflections_of_phases[phase_index]:
-                s_hkl = Utilities.s_hkl(self.a.value, reflection.h, reflection.k, reflection.l)
+        for reflection in self.reflections_of_phases[phase_index]:
+            s_hkl = Utilities.s_hkl(self.a.value, reflection.h, reflection.k, reflection.l)
 
-                if s_hkl < s_min or s_hkl > s_max: excluded_reflections_of_phase.append(reflection)
+            if s_hkl < s_min or s_hkl > s_max: excluded_reflections_of_phase.append(reflection)
 
-            if len(excluded_reflections_of_phase) == 0: excluded_reflections_of_phase = None
+        if len(excluded_reflections_of_phase) == 0: excluded_reflections_of_phase = None
 
-            excluded_reflections[phase_index] = excluded_reflections_of_phase
-
-        return excluded_reflections
+        return excluded_reflections_of_phase
 
 
 

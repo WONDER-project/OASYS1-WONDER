@@ -136,18 +136,19 @@ class FitGlobalParameters(ParametersList):
 
         last_index = -1
 
-        if not self.fit_initialization.incident_radiations is None:
-            for index in range(len(self.fit_initialization.incident_radiations)):
-                incident_radiation = self.fit_initialization.incident_radiations[index]
-                parameters[last_index + 1] = incident_radiation.wavelength
-                last_index += 1
+        if not self.measured_dataset.incident_radiations is None:
+            for index in range(len(self.measured_dataset.incident_radiations)):
+                incident_radiation = self.measured_dataset.incident_radiations[index]
+                if not incident_radiation is None:
+                    parameters[last_index + 1] = incident_radiation.wavelength
+                    last_index += 1
 
-                if not incident_radiation.is_single_wavelength:
-                    for secondary_wavelength, secondary_wavelength_weigth in zip(incident_radiation.secondary_wavelengths,
-                                                                                 incident_radiation.secondary_wavelengths_weights):
-                        parameters[last_index + 1] = secondary_wavelength
-                        parameters[last_index + 2] = secondary_wavelength_weigth
-                        last_index += 2
+                    if not incident_radiation.is_single_wavelength:
+                        for secondary_wavelength, secondary_wavelength_weigth in zip(incident_radiation.secondary_wavelengths,
+                                                                                     incident_radiation.secondary_wavelengths_weights):
+                            parameters[last_index + 1] = secondary_wavelength
+                            parameters[last_index + 2] = secondary_wavelength_weigth
+                            last_index += 2
 
         if not self.fit_initialization.crystal_structures is None:
             for index in range(len(self.fit_initialization.crystal_structures)):

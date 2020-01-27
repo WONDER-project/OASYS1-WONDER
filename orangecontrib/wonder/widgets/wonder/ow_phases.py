@@ -1,8 +1,7 @@
-import os, sys, numpy, copy
+import sys, copy
 
 from PyQt5.QtWidgets import QMessageBox, QApplication
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QDoubleValidator
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
@@ -11,12 +10,10 @@ from orangewidget.widget import OWAction
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.util import congruence
-from orangecontrib.wonder.util.fit_utilities import Utilities, list_of_s_bragg, Symmetry
+from orangecontrib.wonder.util.fit_utilities import Symmetry
 
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
-from orangecontrib.wonder.fit.parameters.measured_data.measured_dataset import MeasuredDataset
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
-
 
 class OWPhases(OWGenericWidget):
     name = "Phases"
@@ -174,7 +171,6 @@ class OWPhases(OWGenericWidget):
                 self.dumpSettings()
                 self.phases_tabs.setCurrentIndex(current_index)
 
-
     def send_phases(self):
         try:
             if not self.fit_global_parameters is None:
@@ -182,9 +178,10 @@ class OWPhases(OWGenericWidget):
 
                 self.check_congruence()
 
-                self.fit_global_parameters.measured_dataset.phases = []
-                for index in range(len(self.phases_box_array)):
-                    self.phases_box_array[index].append_phase()
+                phases = [self.phases_box_array[index].get_phase() for index in range(len(self.phases_box_array))]
+
+                self.fit_global_parameters.measured_dataset.set_phases(phases)
+                self.fit_global_parameters.evaluate_functions()  # in case that a is a function of other parameters
 
                 self.fit_global_parameters.regenerate_parameters()
 
@@ -565,14 +562,11 @@ class PhaseBox(InnerBox):
         self.set_structure()
         self.set_symmetry()
 
-    def append_phase(self):
+    def get_phase(self):
         if self.use_structure == 0:
             phase = Phase.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                     symmetry=self.cb_symmetry.currentText(),
                                     progressive=self.get_parameter_progressive())
-
-            self.widget.fit_global_parameters.measured_dataset.phases.append(phase)
-            self.widget.fit_global_parameters.evaluate_functions()  # in case that a is a function of other parameters
         elif self.use_structure == 1:
             phase = Phase.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                     symmetry=self.cb_symmetry.currentText(),
@@ -581,9 +575,6 @@ class PhaseBox(InnerBox):
                                     intensity_scale_factor=self.widget.populate_parameter_in_widget(self, "intensity_scale_factor",
                                                                                                     self.get_parameters_prefix()),
                                     progressive=self.get_parameter_progressive())
-
-            self.widget.fit_global_parameters.measured_dataset.phases.append(phase)
-            self.widget.fit_global_parameters.evaluate_functions()  # in case that a is a function of other parameters
 
         return phase
 
