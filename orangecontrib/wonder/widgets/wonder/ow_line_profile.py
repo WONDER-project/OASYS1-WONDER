@@ -11,12 +11,10 @@ from orangewidget.widget import OWAction
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog, ConfirmTextDialog
 
-from orangecontrib.wonder.util import congruence
-from orangecontrib.wonder.util.fit_utilities import Utilities, list_of_s_bragg, Symmetry
+from orangecontrib.wonder.util.fit_utilities import Utilities, list_of_s_bragg
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, Boundary
 from orangecontrib.wonder.fit.parameters.measured_data.reflection import Reflection
-from orangecontrib.wonder.fit.parameters.measured_data.line_profile import LineProfile
 
 class OWLineProfile(OWGenericWidget):
 
@@ -99,6 +97,8 @@ class OWLineProfile(OWGenericWidget):
                 if diffraction_patterns is None: raise ValueError("No Diffraction Pattern in input data!")
                 if phases is None:               raise ValueError("No Phases in input data!")
 
+                different_patterns = different_phases = recycle_phases = recycle_patterns = False
+
                 if len(phases) != len(self.reflections_of_phases[0]):
                     different_phases = True
                     recycle_phases = ConfirmDialog.confirmed(message="Number of Phases changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
@@ -116,7 +116,7 @@ class OWLineProfile(OWGenericWidget):
                     for diffraction_pattern_index in range(len(diffraction_patterns)):
                         line_profile_tab = gui.createTabPage(self.line_profiles_tabs, "Diff. Patt. " + str(diffraction_pattern_index + 1))
 
-                        if recycle_patterns and diffraction_pattern_index < len(self.reflections_of_phases): #keep the existing
+                        if (recycle_patterns or recycle_phases) and diffraction_pattern_index < len(self.reflections_of_phases): #keep the existing
                             reflections_of_phases = []
                             limits                = []
                             limit_types           = []
@@ -127,9 +127,9 @@ class OWLineProfile(OWGenericWidget):
                                     limits.append(self.limits[diffraction_pattern_index][phase_index])
                                     limit_types.append(self.limit_types[diffraction_pattern_index][phase_index])
                                 else:
-                                    reflections_of_phases.append([""])
-                                    limits.append([0.0])
-                                    limit_types.append([0])
+                                    reflections_of_phases.append("")
+                                    limits.append(0.0)
+                                    limit_types.append(0)
 
                             line_profile_box = LineProfileBox(widget=self,
                                                               parent=line_profile_tab,
@@ -182,8 +182,10 @@ class OWLineProfile(OWGenericWidget):
 
             for index in range(len(self.line_profiles_box_array)):
                 self.reflections_of_phases.append(self.line_profiles_box_array[index].reflections_of_phases)
-        except:
+        except Exception as e:
             self.reflections_of_phases = copy.deepcopy(bkp_reflections_of_phases)
+
+            if self.IS_DEVELOP: raise e
 
     def dump_limits(self):
         bkp_limits = copy.deepcopy(self.limits)
@@ -292,9 +294,11 @@ class LineProfileBox(InnerBox):
             self.reflections_of_phases = []
 
             for index in range(len(self.reflections_of_phases_box_array)):
-                self.reflections_of_phases.append(self.reflections_of_phases_box_array[index].reflections_of_phases)
-        except:
+                self.reflections_of_phases.append(self.reflections_of_phases_box_array[index].reflections_of_phase)
+        except Exception as e:
             self.reflections_of_phases = copy.deepcopy(bkp_reflections_of_phases)
+
+            if self.widget.IS_DEVELOP: raise e
 
         self.widget.dump_reflections_of_phases()
 
@@ -305,7 +309,7 @@ class LineProfileBox(InnerBox):
             self.limits = []
 
             for index in range(len(self.reflections_of_phases_box_array)):
-                self.limits.append(self.reflections_of_phases_box_array[index].limits)
+                self.limits.append(self.reflections_of_phases_box_array[index].limit)
         except:
             self.limits = copy.deepcopy(bkp_limits)
 
@@ -319,7 +323,7 @@ class LineProfileBox(InnerBox):
             self.limit_types = []
 
             for index in range(len(self.line_profiles_box_array)):
-                self.limit_types.append(self.line_profiles_box_array[index].limit_types)
+                self.limit_types.append(self.line_profiles_box_array[index].limit_type)
         except:
             self.limit_types = copy.deepcopy(bkp_limit_types)
 
@@ -422,8 +426,8 @@ class ReflectionsOfPhaseBox(InnerBox):
         self.phase_index = phase_index
 
     def generate_reflections(self):
-        a0 = self.widget.fit_global_parameter.measured_dataset.phases[self.phase_index].a
-        symmetry = self.widget.fit_global_parameter.measured_dataset.phases[self.phase_index].simmetry
+        a0 = self.widget.fit_global_parameters.measured_dataset.phases[self.phase_index].a
+        symmetry = self.widget.fit_global_parameters.measured_dataset.phases[self.phase_index].symmetry
 
         if a0.function:
             QMessageBox.critical(self,
@@ -437,9 +441,9 @@ class ReflectionsOfPhaseBox(InnerBox):
                 return
 
         if self.limit_type == 0:
-            list = list_of_s_bragg(a0, symmetry=symmetry)
+            list = list_of_s_bragg(a0.value, symmetry=symmetry)
         elif self.limit_type == 1:
-            list = list_of_s_bragg(a0, symmetry=symmetry, n_peaks=int(self.limit))
+            list = list_of_s_bragg(a0.value, symmetry=symmetry, n_peaks=int(self.limit))
         elif self.limit_type == 2:
             if not self.widget.fit_global_parameters is None \
                and not self.widget.fit_global_parameters.measured_dataset is None \
@@ -450,7 +454,7 @@ class ReflectionsOfPhaseBox(InnerBox):
                 if not incident_radiation.wavelength.function:
                     wavelength = incident_radiation.wavelength.value
 
-                    list = list_of_s_bragg(self.a,
+                    list = list_of_s_bragg(a0.value,
                                            symmetry=symmetry,
                                            s_max=Utilities.s(numpy.radians(self.limit/2), wavelength))
             else:
@@ -471,19 +475,13 @@ class ReflectionsOfPhaseBox(InnerBox):
 
         self.text_area.setText(text)
 
-    def get_parameters_prefix(self):
-        return Reflection.get_parameters_prefix() + self.get_parameter_progressive()
-
-    def get_parameter_progressive(self):
-        return str(self.diffraction_pattern_index + 1) + "_" + str(self.phase_index + 1) + "_"
-
     def set_data(self, line_profile):
         existing_line_profile = line_profile.duplicate()
 
         if not self.text_area.toPlainText().strip() == "":
-            existing_line_profile.parse_reflections(self.text_area.toPlainText(), phase_index=self.phase_index, progressive=self.get_parameter_progressive())
+            existing_line_profile.parse_reflections(self.text_area.toPlainText(), phase_index=self.phase_index, diffraction_pattern_index=self.diffraction_pattern_index)
 
-        for reflection in line_profile.get_reflections():
+        for reflection in line_profile.get_reflections(self.phase_index):
             existing_reflection = existing_line_profile.existing_reflection(self.phase_index, reflection.h, reflection.k, reflection.l)
 
             if existing_reflection is None:
@@ -502,7 +500,7 @@ class ReflectionsOfPhaseBox(InnerBox):
         line_profile        = self.widget.fit_global_parameters.measured_dataset.line_profiles[self.diffraction_pattern_index].duplicate()
         use_structure       = self.widget.fit_global_parameters.measured_dataset.phases[self.phase_index].use_structure
 
-        line_profile.parse_reflections(self.reflections_of_phase, phase_index=self.phase_index, progressive=self.get_parameter_progressive())
+        line_profile.parse_reflections(self.reflections_of_phase, phase_index=self.phase_index, diffraction_pattern_index=self.diffraction_pattern_index)
 
         if use_structure == 1:
             for reflection in line_profile.get_reflections(self.phase_index):
@@ -515,7 +513,7 @@ class ReflectionsOfPhaseBox(InnerBox):
                 0 if len(self.widget.fit_global_parameters.measured_dataset.incident_radiations) == 1 else self.diffraction_pattern_index]
 
             if not incident_radiation.wavelength.function:
-                diffraction_pattern = self.widget.fit_global_parameters.measured_dataset.diffraction_pattern[self.diffraction_pattern_index]
+                diffraction_pattern = self.widget.fit_global_parameters.measured_dataset.diffraction_patterns[self.diffraction_pattern_index]
 
                 wavelength = incident_radiation.wavelength.value
                 s_min      = diffraction_pattern.get_diffraction_point(0).s

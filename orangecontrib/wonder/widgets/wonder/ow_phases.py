@@ -296,16 +296,16 @@ class OWPhases(OWGenericWidget):
             self.a_function = []
             self.a_function_value = []
 
-            for index in range(len(self.phase_box_array)):
-                self.a.append(self.phase_box_array[index].a)
-                self.a_fixed.append(self.phase_box_array[index].a_fixed)
-                self.a_has_min.append(self.phase_box_array[index].a_has_min)
-                self.a_min.append(self.phase_box_array[index].a_min)
-                self.a_has_max.append(self.phase_box_array[index].a_has_max)
-                self.a_max.append(self.phase_box_array[index].a_max)
-                self.a_function.append(self.phase_box_array[index].a_function)
-                self.a_function_value.append(self.phase_box_array[index].a_function_value)
-        except:
+            for index in range(len(self.phases_box_array)):
+                self.a.append(self.phases_box_array[index].a)
+                self.a_fixed.append(self.phases_box_array[index].a_fixed)
+                self.a_has_min.append(self.phases_box_array[index].a_has_min)
+                self.a_min.append(self.phases_box_array[index].a_min)
+                self.a_has_max.append(self.phases_box_array[index].a_has_max)
+                self.a_max.append(self.phases_box_array[index].a_max)
+                self.a_function.append(self.phases_box_array[index].a_function)
+                self.a_function_value.append(self.phases_box_array[index].a_function_value)
+        except Exception as e:
             self.a = copy.deepcopy(bkp_a)
             self.a_fixed = copy.deepcopy(bkp_a_fixed)
             self.a_has_min = copy.deepcopy(bkp_a_has_min)
@@ -315,14 +315,16 @@ class OWPhases(OWGenericWidget):
             self.a_function = copy.deepcopy(bkp_a_function)
             self.a_function_value = copy.deepcopy(bkp_a_function_value)
 
+            if self.IS_DEVELOP: raise e
+
     def dump_symmetry(self):
         bkp_symmetry = copy.deepcopy(self.symmetry)
 
         try:
             self.symmetry = []
 
-            for index in range(len(self.phase_box_array)):
-                self.symmetry.append(self.phase_box_array[index].symmetry)
+            for index in range(len(self.phases_box_array)):
+                self.symmetry.append(self.phases_box_array[index].symmetry)
         except:
             self.symmetry = copy.deepcopy(bkp_symmetry)
 
@@ -332,8 +334,8 @@ class OWPhases(OWGenericWidget):
         try:
             self.use_structure = []
 
-            for index in range(len(self.phase_box_array)):
-                self.use_structure.append(self.phase_box_array[index].use_structure)
+            for index in range(len(self.phases_box_array)):
+                self.use_structure.append(self.phases_box_array[index].use_structure)
         except:
             self.use_structure = copy.deepcopy(bkp_use_structure)
 
@@ -343,8 +345,8 @@ class OWPhases(OWGenericWidget):
         try:
             self.formula = []
 
-            for index in range(len(self.phase_box_array)):
-                self.formula.append(self.phase_box_array[index].formula)
+            for index in range(len(self.phases_box_array)):
+                self.formula.append(self.phases_box_array[index].formula)
         except:
             self.formula = copy.deepcopy(bkp_formula)
 
@@ -368,15 +370,15 @@ class OWPhases(OWGenericWidget):
             self.intensity_scale_factor_function = []
             self.intensity_scale_factor_function_value = []
 
-            for index in range(len(self.phase_box_array)):
-                self.intensity_scale_factor.append(self.phase_box_array[index].intensity_scale_factor)
-                self.intensity_scale_factor_fixed.append(self.phase_box_array[index].intensity_scale_factor_fixed)
-                self.intensity_scale_factor_has_min.append(self.phase_box_array[index].intensity_scale_factor_has_min)
-                self.intensity_scale_factor_min.append(self.phase_box_array[index].intensity_scale_factor_min)
-                self.intensity_scale_factor_has_max.append(self.phase_box_array[index].intensity_scale_factor_has_max)
-                self.intensity_scale_factor_max.append(self.phase_box_array[index].intensity_scale_factor_max)
-                self.intensity_scale_factor_function.append(self.phase_box_array[index].intensity_scale_factor_function)
-                self.intensity_scale_factor_function_value.append(self.phase_box_array[index].intensity_scale_factor_function_value)
+            for index in range(len(self.phases_box_array)):
+                self.intensity_scale_factor.append(self.phases_box_array[index].intensity_scale_factor)
+                self.intensity_scale_factor_fixed.append(self.phases_box_array[index].intensity_scale_factor_fixed)
+                self.intensity_scale_factor_has_min.append(self.phases_box_array[index].intensity_scale_factor_has_min)
+                self.intensity_scale_factor_min.append(self.phases_box_array[index].intensity_scale_factor_min)
+                self.intensity_scale_factor_has_max.append(self.phases_box_array[index].intensity_scale_factor_has_max)
+                self.intensity_scale_factor_max.append(self.phases_box_array[index].intensity_scale_factor_max)
+                self.intensity_scale_factor_function.append(self.phases_box_array[index].intensity_scale_factor_function)
+                self.intensity_scale_factor_function_value.append(self.phases_box_array[index].intensity_scale_factor_function_value)
         except:
             self.intensity_scale_factor = copy.deepcopy(bkp_intensity_scale_factor)
             self.intensity_scale_factor_fixed = copy.deepcopy(bkp_intensity_scale_factor_fixed)

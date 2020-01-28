@@ -289,14 +289,15 @@ class OWRadiationNew(OWGenericWidget):
 
                 if diffraction_patterns is None: raise ValueError("No Diffraction Pattern in input data!")
 
-                incident_radiations = self.fit_global_parameters.fit_initialization.incident_radiations
+                incident_radiations = self.fit_global_parameters.measured_dataset.incident_radiations
 
                 if self.use_single_parameter_set == 0 and len(diffraction_patterns) != len(self.radiation_box_array):
                     if ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences", title="Warning"):
                         self.set_use_single_parameter_set()
                 elif not incident_radiations is None:
                         for index in range(1 if self.use_single_parameter_set == 0 else len(incident_radiations)):
-                            self.radiation_box_array[index].set_data(incident_radiations[index])
+                            if not incident_radiations[index] is None:
+                                self.radiation_box_array[index].set_data(incident_radiations[index])
 
                 self.dumpSettings()
 
@@ -321,7 +322,7 @@ class OWRadiationNew(OWGenericWidget):
                     incident_radiation = self.radiation_box_array[0].get_incident_radiation()
                     incident_radiations.append(incident_radiation)
 
-                    for index in range(self.fit_global_parameters.fit_initialization.get_diffraction_patterns_number()):
+                    for index in range(self.fit_global_parameters.measured_dataset.get_diffraction_patterns_number()):
                         self.fit_global_parameters.measured_dataset.diffraction_patterns[index].apply_wavelength(incident_radiation.wavelength)
                 else:
                     for index in range(len(self.is_multiple_wavelength)):
@@ -330,7 +331,7 @@ class OWRadiationNew(OWGenericWidget):
 
                         self.fit_global_parameters.measured_dataset.diffraction_patterns[index].apply_wavelength(incident_radiation.wavelength)
 
-                self.fit_global_parameters.fit_initialization.incident_radiations = incident_radiations
+                self.fit_global_parameters.measured_dataset.incident_radiations = incident_radiations
                 self.fit_global_parameters.regenerate_parameters()
 
                 self.send("Fit Global Parameters", self.fit_global_parameters)

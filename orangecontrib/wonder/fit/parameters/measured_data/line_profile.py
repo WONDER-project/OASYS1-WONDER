@@ -55,14 +55,14 @@ class LineProfile(ParametersList):
     def get_d_spacing(self, phase_index, h, k, l):
         return self.phases[phase_index].get_d_spacing(h, k, l)
 
-    def parse_reflections(self, text, phase_index=1, progressive=""):
-        congruence.checkEmptyString(text, "Reflections")
+    def parse_reflections(self, text, phase_index=0, diffraction_pattern_index=0):
+        #congruence.checkEmptyString(text, "Reflections")
 
         lines = text.splitlines()
 
         reflections = []
 
-        phase_index_str = str(phase_index) + "_"
+        progressive_str = str(diffraction_pattern_index + 1) + "_" + str(phase_index + 1) + "_"
 
         for i in range(len(lines)):
             congruence.checkEmptyString(lines[i], "Reflections: line " + str(i+1))
@@ -87,9 +87,9 @@ class LineProfile(ParametersList):
                         function_value = data[3].strip()
 
                     if intensity_name is None:
-                        intensity_name = Reflection.get_parameters_prefix() + phase_index_str + progressive + "I" + str(h) + str(k) + str(l)
+                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
                     elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
-                        intensity_name = Reflection.get_parameters_prefix() + phase_index_str + progressive + intensity_name
+                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
 
                     reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
                                                                             function=True,
@@ -125,10 +125,9 @@ class LineProfile(ParametersList):
                                 boundary = Boundary()
 
                     if intensity_name is None:
-                        intensity_name = Reflection.get_parameters_prefix() + phase_index_str + progressive + "I" + str(h) + str(k) + str(l)
+                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
                     elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
-                        intensity_name = Reflection.get_parameters_prefix() + phase_index_str + progressive + intensity_name
-
+                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
 
                     reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
                                                                             value=intensity_value,
@@ -153,7 +152,7 @@ class LineProfile(ParametersList):
         excluded_reflections_of_phase = []
 
         for reflection in self.reflections_of_phases[phase_index]:
-            s_hkl = Utilities.s_hkl(self.a.value, reflection.h, reflection.k, reflection.l)
+            s_hkl = Utilities.s_hkl(self.phases[phase_index].a.value, reflection.h, reflection.k, reflection.l)
 
             if s_hkl < s_min or s_hkl > s_max: excluded_reflections_of_phase.append(reflection)
 
