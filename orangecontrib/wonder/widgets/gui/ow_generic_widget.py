@@ -70,7 +70,7 @@ class OWGenericWidget(widget.OWWidget):
     info_id = 0
 
     MAX_WIDTH = 1320
-    MAX_WIDTH_NO_MAIN = 512
+    MAX_WIDTH_NO_MAIN = 515
     MAX_HEIGHT = 700
 
     CONTROL_AREA_WIDTH = 505
@@ -94,7 +94,7 @@ class OWGenericWidget(widget.OWWidget):
         self.setGeometry(QRect(round(geom.width()*0.01),
                                round(geom.height()*0.01),
                                round(min(geom.width()*0.95, max_width)),
-                               round(min(geom.height()*0.95, self.MAX_HEIGHT))))
+                               round(min(geom.height()*0.95, self.get_max_height()))))
 
         self.setMinimumWidth(self.geometry().width()/2)
         self.setMinimumHeight(self.geometry().height()/2)
@@ -112,6 +112,9 @@ class OWGenericWidget(widget.OWWidget):
 
         gui.button(self.general_options_box, self, "Reset Fields", callback=self.callResetSettings)
         gui.button(self.general_options_box, self, "Show Available Parameters", callback=self.show_available_parameters)
+
+    def get_max_height(self):
+        return self.MAX_HEIGHT
 
     @classmethod
     def fix_flag(cls, flag):

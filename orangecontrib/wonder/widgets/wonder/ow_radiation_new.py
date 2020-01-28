@@ -165,7 +165,7 @@ class OWRadiationNew(OWGenericWidget):
 
         main_box = gui.widgetBox(self.controlArea,
                                  "Radiation", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 5, height=350)
+                                 width=self.CONTROL_AREA_WIDTH - 5, height=500)
 
 
         button_box = gui.widgetBox(main_box,
@@ -185,6 +185,11 @@ class OWRadiationNew(OWGenericWidget):
         runaction.triggered.connect(self.send_radiation)
         self.addAction(runaction)
 
+        orangegui.rubber(self.controlArea)
+
+    def get_max_height(self):
+        return 600
+
     def set_use_single_parameter_set(self, on_init=False):
         self.radiation_tabs.clear()
         self.radiation_box_array = []
@@ -192,7 +197,7 @@ class OWRadiationNew(OWGenericWidget):
         dimension = len(self.is_multiple_wavelength) if self.fit_global_parameters is None else len(self.fit_global_parameters.measured_dataset.diffraction_patterns)
 
         for index in range(1 if self.use_single_parameter_set == 1 else dimension):
-            radiation_tab = gui.createTabPage(self.radiation_tabs, "Diff. Patt. " + str(index + 1))
+            radiation_tab = gui.createTabPage(self.radiation_tabs, "All Patterns" if self.use_single_parameter_set==1 else "Diff. Patt. " + str(index + 1))
 
             if index < len(self.is_multiple_wavelength): #keep the existing
                 radiation_box = RadiationBox(widget=self,
@@ -376,8 +381,8 @@ class OWRadiationNew(OWGenericWidget):
         try:
             self.xray_tube_key = []
 
-            for index in range(len(self.diffraction_pattern_box_array)):
-                self.xray_tube_key.append(self.diffraction_pattern_box_array[index].xray_tube_key)
+            for index in range(len(self.radiation_box_array)):
+                self.xray_tube_key.append(self.radiation_box_array[index].xray_tube_key)
         except:
             self.xray_tube_key = copy.deepcopy(bkp_xray_tube_key)
 
@@ -988,16 +993,18 @@ class RadiationBox(InnerBox):
         parent.layout().addWidget(self)
         container = self
 
-        orangegui.comboBox(container, self, "is_multiple_wavelength", label="Incident Radiation", items=["Single Wavelenght", "X-ray Tube"], orientation="horizontal", callback=self.set_is_multiple_wavelength)
+        box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
 
-        self.secondary_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, spacing=0)
+        orangegui.comboBox(box, self, "is_multiple_wavelength", label="Incident Radiation", items=["Single Wavelenght", "X-ray Tube"], orientation="horizontal", callback=self.set_is_multiple_wavelength)
+
+        self.secondary_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
 
         orangegui.comboBox(self.secondary_box, self, "xray_tube_key", label="X-ray Tube Dataset", items=self.get_xray_tube_keys(),
                            sendSelectedValue=True, orientation="horizontal", callback=self.set_xray_tube_key)
 
-        self.secondary_box_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, spacing=0)
+        self.secondary_box_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
 
-        widget.create_box_in_widget(self, container,  "wavelength", label="\u03BB  [nm]", disable_function=True, add_callback=True, min_value=0.0, min_accepted=False)
+        widget.create_box_in_widget(self, container,  "wavelength", label="\u03BB  [nm]", disable_function=True, add_callback=True, min_value=0.0, min_accepted=False, trim=25)
 
         self.secondary_box_2 = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
         self.secondary_box_2_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
@@ -1044,7 +1051,7 @@ class RadiationBox(InnerBox):
         self.secondary_wavelengths_boxes = {}
 
         for key in wavelengths_data.keys():
-            self.secondary_wavelengths_boxes[key] = gui.widgetBox(self.secondary_box_2, key + " Secondary Wavelengths", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 40, height=230)
+            self.secondary_wavelengths_boxes[key] = gui.widgetBox(self.secondary_box_2, key + " Secondary Wavelengths", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 5, height=240)
 
             secondary_index = 2
             for wavelenght in wavelengths_data[key]:
@@ -1054,8 +1061,8 @@ class RadiationBox(InnerBox):
                     label_wl = "\u03BB" + " " + str(secondary_index) + "  [nm]"
                     label_we = "weight " + str(secondary_index)
 
-                    OWGenericWidget.create_box_in_widget(self, self.secondary_wavelengths_boxes[key],  var_wl, label=label_wl, label_width=55, add_callback=True, min_value=0.0, min_accepted=False)
-                    OWGenericWidget.create_box_in_widget(self, self.secondary_wavelengths_boxes[key],  var_we, label=label_we, label_width=55, add_callback=True, min_value=0.0, min_accepted=True)
+                    OWGenericWidget.create_box_in_widget(self, self.secondary_wavelengths_boxes[key],  var_wl, label=label_wl, label_width=50, add_callback=True, min_value=0.0, min_accepted=False, trim=25)
+                    OWGenericWidget.create_box_in_widget(self, self.secondary_wavelengths_boxes[key],  var_we, label=label_we, label_width=50, add_callback=True, min_value=0.0, min_accepted=True, trim=25)
 
                     secondary_index += 1
 
@@ -1189,7 +1196,7 @@ class RadiationBox(InnerBox):
 
 if __name__ == "__main__":
     a = QApplication(sys.argv)
-    ow = OWRadiation()
+    ow = OWRadiationNew()
     ow.show()
     a.exec_()
     ow.saveSettings()
