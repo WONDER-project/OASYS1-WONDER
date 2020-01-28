@@ -28,10 +28,10 @@ class MeasuredDataset(ParametersList):
         return dataset
 
     def __init__(self,
-                 diffraction_patterns = [],
-                 incident_radiations = [],
-                 phases = [],
-                 line_profiles = []):
+                 diffraction_patterns = None,
+                 incident_radiations = None,
+                 phases = None,
+                 line_profiles = None):
         self.phases = phases
         self.diffraction_patterns = diffraction_patterns
         self.incident_radiations = incident_radiations
@@ -39,7 +39,7 @@ class MeasuredDataset(ParametersList):
         self.initialized = False
 
 
-    def set_phases(self, phases=[]):
+    def set_phases(self, phases=None):
         if phases is None: raise ValueError("Phases is None")
         if not isinstance(phases, list): raise ValueError("Phases is not a list")
         if len(phases) < 1: raise ValueError("Phases list is empty")

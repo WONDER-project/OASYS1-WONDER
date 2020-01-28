@@ -99,27 +99,30 @@ class OWLineProfile(OWGenericWidget):
                 if diffraction_patterns is None: raise ValueError("No Diffraction Pattern in input data!")
                 if phases is None:               raise ValueError("No Phases in input data!")
 
-                if len(line_profiles) != len(self.reflections_of_phases):
-                    recycle = ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
+                if len(phases) != len(self.reflections_of_phases[0]):
+                    different_phases = True
+                    recycle_phases = ConfirmDialog.confirmed(message="Number of Phases changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
                                                       title="Warning")
 
-                    if recycle and len(phases) != len(self.reflections_of_phases[0]):
-                        recycle = ConfirmDialog.confirmed(message="Number of Phases changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
-                                                          title="Warning")
+                if len(line_profiles) != len(self.reflections_of_phases):
+                    different_patterns = True
+                    recycle_patterns = ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
+                                                      title="Warning")
 
+                if different_patterns or different_phases:
                     self.line_profiles_tabs.clear()
                     self.line_profiles_box_array = []
 
                     for diffraction_pattern_index in range(len(diffraction_patterns)):
                         line_profile_tab = gui.createTabPage(self.line_profiles_tabs, "Diff. Patt. " + str(diffraction_pattern_index + 1))
 
-                        if recycle and diffraction_pattern_index < len(self.reflections_of_phases): #keep the existing
+                        if recycle_patterns and diffraction_pattern_index < len(self.reflections_of_phases): #keep the existing
                             reflections_of_phases = []
                             limits                = []
                             limit_types           = []
 
-                            for phase_index in len(phases):
-                                if recycle and phase_index < len(self.reflections_of_phases[diffraction_pattern_index]):
+                            for phase_index in range(len(phases)):
+                                if recycle_phases and phase_index < len(self.reflections_of_phases[diffraction_pattern_index]):
                                     reflections_of_phases.append(self.reflections_of_phases[diffraction_pattern_index][phase_index])
                                     limits.append(self.limits[diffraction_pattern_index][phase_index])
                                     limit_types.append(self.limit_types[diffraction_pattern_index][phase_index])
@@ -145,13 +148,13 @@ class OWLineProfile(OWGenericWidget):
                         self.line_profiles_box_array.append(line_profile_box)
 
                 elif not line_profiles is None:
-                    for diffraction_pattern_index in range(len(line_profiles)):
+                    for diffraction_pattern_index in range(len(diffraction_patterns)):
                         self.line_profiles_box_array[diffraction_pattern_index].set_data(line_profiles[diffraction_pattern_index])
 
                 self.dumpSettings()
 
                 if self.is_automatic_run:
-                    self.send_fit_initialization()
+                    self.send_line_profiles()
 
             except Exception as e:
                 QMessageBox.critical(self, "Error",
@@ -266,6 +269,14 @@ class LineProfileBox(InnerBox):
 
             self.reflections_of_phases_box_array.append(reflections_of_phase_box)
 
+    def set_data(self, line_profile):
+        if not line_profile is None:
+            for reflections_of_phases_box in self.reflections_of_phases_box_array:
+                reflections_of_phases_box.set_data(line_profile)
+
+    def update_line_profile(self):
+        for reflections_of_phases_box in self.reflections_of_phases_box_array:
+            reflections_of_phases_box.update_reflections_of_phase()
 
     def dumpSettings(self):
         self.dump_reflections_of_phases()
