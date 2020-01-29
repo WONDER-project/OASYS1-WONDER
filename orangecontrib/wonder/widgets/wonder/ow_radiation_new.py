@@ -1004,7 +1004,7 @@ class RadiationBox(InnerBox):
 
         self.secondary_box_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
 
-        widget.create_box_in_widget(self, container,  "wavelength", label="\u03BB  [nm]", disable_function=True, add_callback=True, min_value=0.0, min_accepted=False, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container,  "wavelength", label="\u03BB  [nm]", disable_function=True, add_callback=True, min_value=0.0, min_accepted=False, trim=25)
 
         self.secondary_box_2 = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
         self.secondary_box_2_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
@@ -1081,7 +1081,7 @@ class RadiationBox(InnerBox):
 
                     secondary_index += 1
                 else:
-                    self.widget.populate_fields_in_widget(self, "wavelength", FitParameter(value=wavelength.wavelength, fixed=True), value_only=False)
+                    OWGenericWidget.populate_fields_in_widget(self, "wavelength", FitParameter(value=wavelength.wavelength, fixed=True), value_only=False)
 
         for key in self.secondary_wavelengths_boxes.keys():
             if key==self.xray_tube_key:

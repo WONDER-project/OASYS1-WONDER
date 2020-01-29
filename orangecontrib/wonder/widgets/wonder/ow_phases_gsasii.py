@@ -563,8 +563,8 @@ class PhaseBox(InnerBox):
         return str(self.index + 1) + "_"
 
     def set_data(self, phase):
-        self.widget.populate_fields_in_widget(self, "a", phase.a)
-        self.widget.populate_fields_in_widget(self, "intensity_scale_factor", phase.intensity_scale_factor)
+        OWGenericWidget.populate_fields_in_widget(self, "a", phase.a)
+        OWGenericWidget.populate_fields_in_widget(self, "intensity_scale_factor", phase.intensity_scale_factor)
         self.cif_file = phase.cif_file
         self.formula = phase.formula
 
@@ -576,11 +576,11 @@ class PhaseBox(InnerBox):
         self.set_symmetry()
 
     def get_phase(self):
-        phase = GSASIIPhase.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
+        phase = GSASIIPhase.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                       symmetry=self.cb_symmetry.currentText(),
                                       cif_file=self.cif_file,
                                       formula=congruence.checkEmptyString(self.formula, "Chemical Formula"),
-                                      intensity_scale_factor=self.widget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
+                                      intensity_scale_factor=OWGenericWidget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
                                       progressive=self.get_parameter_progressive())
 
         return phase

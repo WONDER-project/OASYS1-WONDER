@@ -141,6 +141,28 @@ class FitGlobalParameters(ParametersList):
             key = shift_parameters[0].__class__.__name__
             self.shift_parameters[key] = shift_parameters
 
+    def set_size_parameters(self, size_parameters):
+        self.size_parameters = size_parameters
+
+    def get_size_parameters(self, phase_index):
+        if self.size_parameters is None: return None
+        else:
+            try:
+                return self.size_parameters[phase_index]
+            except:
+                return None
+
+    def set_strain_parameters(self, strain_parameters):
+        self.strain_parameters = strain_parameters
+
+    def get_strain_parameters(self, phase_index):
+        if self.strain_parameters is None: return None
+        else:
+            try:
+                return self.strain_parameters[phase_index]
+            except:
+                return None
+
     def evaluate_functions(self):
         FitGlobalParameters.compute_functions(self.get_parameters(), self.free_input_parameters, self.free_output_parameters)
 
@@ -261,42 +283,44 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                parameters[last_index + 1] = size_parameters.mu
-                if size_parameters.distribution == Distribution.DELTA:
-                    last_index += 1
-                else:
-                    parameters[last_index + 2] = size_parameters.sigma
-                    if size_parameters.shape == Shape.WULFF:
-                        parameters[last_index + 3] = size_parameters.truncation
-                        last_index += 3
+                if not size_parameters is None:
+                    parameters[last_index + 1] = size_parameters.mu
+                    if size_parameters.distribution == Distribution.DELTA:
+                        last_index += 1
                     else:
-                        last_index += 2
+                        parameters[last_index + 2] = size_parameters.sigma
+                        if size_parameters.shape == Shape.WULFF:
+                            parameters[last_index + 3] = size_parameters.truncation
+                            last_index += 3
+                        else:
+                            last_index += 2
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if isinstance(strain_parameters, InvariantPAH):
-                    parameters[last_index + 1] = strain_parameters.aa
-                    parameters[last_index + 2] = strain_parameters.bb
-                    parameters[last_index + 3] = strain_parameters.e1 # in realtà è E1 dell'invariante PAH
-                    parameters[last_index + 4] = strain_parameters.e2 # in realtà è E1 dell'invariante PAH
-                    parameters[last_index + 5] = strain_parameters.e3 # in realtà è E1 dell'invariante PAH
-                    parameters[last_index + 6] = strain_parameters.e4 # in realtà è E4 dell'invariante PAH
-                    parameters[last_index + 7] = strain_parameters.e5 # in realtà è E4 dell'invariante PAH
-                    parameters[last_index + 8] = strain_parameters.e6 # in realtà è E4 dell'invariante PAH
-                    last_index += 8
-                elif isinstance(strain_parameters, KrivoglazWilkensModel):
-                    parameters[last_index + 1] = strain_parameters.rho
-                    parameters[last_index + 2] = strain_parameters.Re
-                    parameters[last_index + 3] = strain_parameters.Ae
-                    parameters[last_index + 4] = strain_parameters.Be
-                    parameters[last_index + 5] = strain_parameters.As
-                    parameters[last_index + 6] = strain_parameters.Bs
-                    parameters[last_index + 7] = strain_parameters.mix
-                    parameters[last_index + 8] = strain_parameters.b
-                    last_index += 8
-                elif isinstance(strain_parameters, WarrenModel):
-                    parameters[last_index + 1] = strain_parameters.average_cell_parameter
-                    last_index += 1
+                if not strain_parameters is None:
+                    if isinstance(strain_parameters, InvariantPAH):
+                        parameters[last_index + 1] = strain_parameters.aa
+                        parameters[last_index + 2] = strain_parameters.bb
+                        parameters[last_index + 3] = strain_parameters.e1 # in realtà è E1 dell'invariante PAH
+                        parameters[last_index + 4] = strain_parameters.e2 # in realtà è E1 dell'invariante PAH
+                        parameters[last_index + 5] = strain_parameters.e3 # in realtà è E1 dell'invariante PAH
+                        parameters[last_index + 6] = strain_parameters.e4 # in realtà è E4 dell'invariante PAH
+                        parameters[last_index + 7] = strain_parameters.e5 # in realtà è E4 dell'invariante PAH
+                        parameters[last_index + 8] = strain_parameters.e6 # in realtà è E4 dell'invariante PAH
+                        last_index += 8
+                    elif isinstance(strain_parameters, KrivoglazWilkensModel):
+                        parameters[last_index + 1] = strain_parameters.rho
+                        parameters[last_index + 2] = strain_parameters.Re
+                        parameters[last_index + 3] = strain_parameters.Ae
+                        parameters[last_index + 4] = strain_parameters.Be
+                        parameters[last_index + 5] = strain_parameters.As
+                        parameters[last_index + 6] = strain_parameters.Bs
+                        parameters[last_index + 7] = strain_parameters.mix
+                        parameters[last_index + 8] = strain_parameters.b
+                        last_index += 8
+                    elif isinstance(strain_parameters, WarrenModel):
+                        parameters[last_index + 1] = strain_parameters.average_cell_parameter
+                        last_index += 1
 
         self.evaluate_functions()
 
@@ -413,42 +437,44 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                size_parameters.mu.set_value(fitted_parameters[last_index + 1].value)
-                if size_parameters.distribution == Distribution.DELTA:
-                    last_index += 1
-                else:
-                    size_parameters.sigma.set_value(fitted_parameters[last_index + 2].value)
-                    if size_parameters.shape == Shape.WULFF:
-                        size_parameters.truncation.set_value(fitted_parameters[last_index + 3].value)
-                        last_index += 3
+                if not size_parameters is None:
+                    size_parameters.mu.set_value(fitted_parameters[last_index + 1].value)
+                    if size_parameters.distribution == Distribution.DELTA:
+                        last_index += 1
                     else:
-                        last_index += 2
+                        size_parameters.sigma.set_value(fitted_parameters[last_index + 2].value)
+                        if size_parameters.shape == Shape.WULFF:
+                            size_parameters.truncation.set_value(fitted_parameters[last_index + 3].value)
+                            last_index += 3
+                        else:
+                            last_index += 2
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if isinstance(strain_parameters, InvariantPAH):
-                    strain_parameters.aa.set_value(fitted_parameters[last_index + 1].value)
-                    strain_parameters.bb.set_value(fitted_parameters[last_index + 2].value)
-                    strain_parameters.e1.set_value(fitted_parameters[last_index + 3].value) # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e2.set_value(fitted_parameters[last_index + 4].value) # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e3.set_value(fitted_parameters[last_index + 5].value) # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e4.set_value(fitted_parameters[last_index + 6].value) # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e5.set_value(fitted_parameters[last_index + 7].value) # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e6.set_value(fitted_parameters[last_index + 8].value) # in realtà è E4 dell'invariante PAH
-                    last_index += 8
-                elif isinstance(strain_parameters, KrivoglazWilkensModel):
-                    strain_parameters.rho.set_value(fitted_parameters[last_index + 1].value)
-                    strain_parameters.Re.set_value(fitted_parameters[last_index + 2].value)
-                    strain_parameters.Ae.set_value(fitted_parameters[last_index + 3].value)
-                    strain_parameters.Be.set_value(fitted_parameters[last_index + 4].value)
-                    strain_parameters.As.set_value(fitted_parameters[last_index + 5].value)
-                    strain_parameters.Bs.set_value(fitted_parameters[last_index + 6].value)
-                    strain_parameters.mix.set_value(fitted_parameters[last_index + 7].value)
-                    strain_parameters.b.set_value(fitted_parameters[last_index + 8].value)
-                    last_index += 8
-                elif isinstance(strain_parameters, WarrenModel):
-                    strain_parameters.average_cell_parameter.set_value(fitted_parameters[last_index + 1].value)
-                    last_index += 1
+                if not strain_parameters is None:
+                    if isinstance(strain_parameters, InvariantPAH):
+                        strain_parameters.aa.set_value(fitted_parameters[last_index + 1].value)
+                        strain_parameters.bb.set_value(fitted_parameters[last_index + 2].value)
+                        strain_parameters.e1.set_value(fitted_parameters[last_index + 3].value) # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e2.set_value(fitted_parameters[last_index + 4].value) # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e3.set_value(fitted_parameters[last_index + 5].value) # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e4.set_value(fitted_parameters[last_index + 6].value) # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e5.set_value(fitted_parameters[last_index + 7].value) # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e6.set_value(fitted_parameters[last_index + 8].value) # in realtà è E4 dell'invariante PAH
+                        last_index += 8
+                    elif isinstance(strain_parameters, KrivoglazWilkensModel):
+                        strain_parameters.rho.set_value(fitted_parameters[last_index + 1].value)
+                        strain_parameters.Re.set_value(fitted_parameters[last_index + 2].value)
+                        strain_parameters.Ae.set_value(fitted_parameters[last_index + 3].value)
+                        strain_parameters.Be.set_value(fitted_parameters[last_index + 4].value)
+                        strain_parameters.As.set_value(fitted_parameters[last_index + 5].value)
+                        strain_parameters.Bs.set_value(fitted_parameters[last_index + 6].value)
+                        strain_parameters.mix.set_value(fitted_parameters[last_index + 7].value)
+                        strain_parameters.b.set_value(fitted_parameters[last_index + 8].value)
+                        last_index += 8
+                    elif isinstance(strain_parameters, WarrenModel):
+                        strain_parameters.average_cell_parameter.set_value(fitted_parameters[last_index + 1].value)
+                        last_index += 1
 
         self.replace_parameters(fitted_parameters)
         self.evaluate_functions()
@@ -569,42 +595,44 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                size_parameters.mu.error    = errors[last_index + 1]
-                if size_parameters.distribution == Distribution.DELTA:
-                    last_index += 1
-                else:
-                    size_parameters.sigma.error = errors[last_index + 2]
-                    if size_parameters.shape == Shape.WULFF:
-                        size_parameters.truncation.error = errors[last_index + 3]
-                        last_index += 3
+                if not size_parameters is None:
+                    size_parameters.mu.error    = errors[last_index + 1]
+                    if size_parameters.distribution == Distribution.DELTA:
+                        last_index += 1
                     else:
-                        last_index += 2
+                        size_parameters.sigma.error = errors[last_index + 2]
+                        if size_parameters.shape == Shape.WULFF:
+                            size_parameters.truncation.error = errors[last_index + 3]
+                            last_index += 3
+                        else:
+                            last_index += 2
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if isinstance(strain_parameters, InvariantPAH):
-                    strain_parameters.aa.error = errors[last_index + 1]
-                    strain_parameters.bb.error = errors[last_index + 2]
-                    strain_parameters.e1.error = errors[last_index + 3] # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e2.error = errors[last_index + 4] # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e3.error = errors[last_index + 5] # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e4.error = errors[last_index + 6] # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e5.error = errors[last_index + 7] # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e6.error = errors[last_index + 8] # in realtà è E4 dell'invariante PAH
-                    last_index += 8
-                elif isinstance(strain_parameters, KrivoglazWilkensModel):
-                    strain_parameters.rho.error = errors[last_index + 1]
-                    strain_parameters.Re.error = errors[last_index + 2]
-                    strain_parameters.Ae.error = errors[last_index + 3]
-                    strain_parameters.Be.error = errors[last_index + 4]
-                    strain_parameters.As.error = errors[last_index + 5]
-                    strain_parameters.Bs.error = errors[last_index + 6]
-                    strain_parameters.mix.error = errors[last_index + 7]
-                    strain_parameters.b.error = errors[last_index + 8]
-                    last_index += 8
-                elif isinstance(strain_parameters, WarrenModel):
-                    strain_parameters.average_cell_parameter.error = errors[last_index + 1]
-                    last_index += 1
+                if not strain_parameters is None:
+                    if isinstance(strain_parameters, InvariantPAH):
+                        strain_parameters.aa.error = errors[last_index + 1]
+                        strain_parameters.bb.error = errors[last_index + 2]
+                        strain_parameters.e1.error = errors[last_index + 3] # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e2.error = errors[last_index + 4] # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e3.error = errors[last_index + 5] # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e4.error = errors[last_index + 6] # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e5.error = errors[last_index + 7] # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e6.error = errors[last_index + 8] # in realtà è E4 dell'invariante PAH
+                        last_index += 8
+                    elif isinstance(strain_parameters, KrivoglazWilkensModel):
+                        strain_parameters.rho.error = errors[last_index + 1]
+                        strain_parameters.Re.error = errors[last_index + 2]
+                        strain_parameters.Ae.error = errors[last_index + 3]
+                        strain_parameters.Be.error = errors[last_index + 4]
+                        strain_parameters.As.error = errors[last_index + 5]
+                        strain_parameters.Bs.error = errors[last_index + 6]
+                        strain_parameters.mix.error = errors[last_index + 7]
+                        strain_parameters.b.error = errors[last_index + 8]
+                        last_index += 8
+                    elif isinstance(strain_parameters, WarrenModel):
+                        strain_parameters.average_cell_parameter.error = errors[last_index + 1]
+                        last_index += 1
 
     def from_fitted_parameters_and_errors(self, fitted_parameters, errors):
         last_index = -1
@@ -760,62 +788,64 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                size_parameters.mu.set_value(fitted_parameters[last_index + 1].value)
-                size_parameters.mu.error    = errors[last_index + 1]
-                if size_parameters.distribution == Distribution.DELTA:
-                    last_index += 1
-                else:
-                    size_parameters.sigma.set_value(fitted_parameters[last_index + 2].value)
-                    size_parameters.sigma.error = errors[last_index + 2]
-                    if size_parameters.shape == Shape.WULFF:
-                        size_parameters.truncation.set_value(fitted_parameters[last_index + 3].value)
-                        size_parameters.truncation.error = errors[last_index + 3]
-                        last_index += 3
+                if not size_parameters is None:
+                    size_parameters.mu.set_value(fitted_parameters[last_index + 1].value)
+                    size_parameters.mu.error    = errors[last_index + 1]
+                    if size_parameters.distribution == Distribution.DELTA:
+                        last_index += 1
                     else:
-                        last_index += 2
+                        size_parameters.sigma.set_value(fitted_parameters[last_index + 2].value)
+                        size_parameters.sigma.error = errors[last_index + 2]
+                        if size_parameters.shape == Shape.WULFF:
+                            size_parameters.truncation.set_value(fitted_parameters[last_index + 3].value)
+                            size_parameters.truncation.error = errors[last_index + 3]
+                            last_index += 3
+                        else:
+                            last_index += 2
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if isinstance(strain_parameters, InvariantPAH):
-                    strain_parameters.aa.set_value(fitted_parameters[last_index + 1].value)
-                    strain_parameters.bb.set_value(fitted_parameters[last_index + 2].value)
-                    strain_parameters.e1.set_value(fitted_parameters[last_index + 3].value) # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e2.set_value(fitted_parameters[last_index + 4].value) # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e3.set_value(fitted_parameters[last_index + 5].value) # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e4.set_value(fitted_parameters[last_index + 6].value) # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e5.set_value(fitted_parameters[last_index + 7].value) # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e6.set_value(fitted_parameters[last_index + 8].value) # in realtà è E4 dell'invariante PAH
-                    strain_parameters.aa.error = errors[last_index + 1]
-                    strain_parameters.bb.error = errors[last_index + 2]
-                    strain_parameters.e1.error = errors[last_index + 3] # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e2.error = errors[last_index + 4] # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e3.error = errors[last_index + 5] # in realtà è E1 dell'invariante PAH
-                    strain_parameters.e4.error = errors[last_index + 6] # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e5.error = errors[last_index + 7] # in realtà è E4 dell'invariante PAH
-                    strain_parameters.e6.error = errors[last_index + 8] # in realtà è E4 dell'invariante PAH
-                    last_index += 8
-                elif isinstance(strain_parameters, KrivoglazWilkensModel):
-                    strain_parameters.rho.set_value(fitted_parameters[last_index + 1].value)
-                    strain_parameters.Re.set_value(fitted_parameters[last_index + 2].value)
-                    strain_parameters.Ae.set_value(fitted_parameters[last_index + 3].value)
-                    strain_parameters.Be.set_value(fitted_parameters[last_index + 4].value)
-                    strain_parameters.As.set_value(fitted_parameters[last_index + 5].value)
-                    strain_parameters.Bs.set_value(fitted_parameters[last_index + 6].value)
-                    strain_parameters.mix.set_value(fitted_parameters[last_index + 7].value)
-                    strain_parameters.b.set_value(fitted_parameters[last_index + 8].value)
-                    strain_parameters.rho.error = errors[last_index + 1]
-                    strain_parameters.Re.error = errors[last_index + 2]
-                    strain_parameters.Ae.error = errors[last_index + 3]
-                    strain_parameters.Be.error = errors[last_index + 4]
-                    strain_parameters.As.error = errors[last_index + 5]
-                    strain_parameters.Bs.error = errors[last_index + 6]
-                    strain_parameters.mix.error = errors[last_index + 7]
-                    strain_parameters.b.error = errors[last_index + 8]
-                    last_index += 8
-                elif isinstance(strain_parameters, WarrenModel):
-                    strain_parameters.average_cell_parameter.set_value(fitted_parameters[last_index + 1].value)
-                    strain_parameters.average_cell_parameter.error = errors[last_index + 1]
-                    last_index += 1
+                if not strain_parameters is None:
+                    if isinstance(strain_parameters, InvariantPAH):
+                        strain_parameters.aa.set_value(fitted_parameters[last_index + 1].value)
+                        strain_parameters.bb.set_value(fitted_parameters[last_index + 2].value)
+                        strain_parameters.e1.set_value(fitted_parameters[last_index + 3].value) # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e2.set_value(fitted_parameters[last_index + 4].value) # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e3.set_value(fitted_parameters[last_index + 5].value) # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e4.set_value(fitted_parameters[last_index + 6].value) # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e5.set_value(fitted_parameters[last_index + 7].value) # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e6.set_value(fitted_parameters[last_index + 8].value) # in realtà è E4 dell'invariante PAH
+                        strain_parameters.aa.error = errors[last_index + 1]
+                        strain_parameters.bb.error = errors[last_index + 2]
+                        strain_parameters.e1.error = errors[last_index + 3] # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e2.error = errors[last_index + 4] # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e3.error = errors[last_index + 5] # in realtà è E1 dell'invariante PAH
+                        strain_parameters.e4.error = errors[last_index + 6] # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e5.error = errors[last_index + 7] # in realtà è E4 dell'invariante PAH
+                        strain_parameters.e6.error = errors[last_index + 8] # in realtà è E4 dell'invariante PAH
+                        last_index += 8
+                    elif isinstance(strain_parameters, KrivoglazWilkensModel):
+                        strain_parameters.rho.set_value(fitted_parameters[last_index + 1].value)
+                        strain_parameters.Re.set_value(fitted_parameters[last_index + 2].value)
+                        strain_parameters.Ae.set_value(fitted_parameters[last_index + 3].value)
+                        strain_parameters.Be.set_value(fitted_parameters[last_index + 4].value)
+                        strain_parameters.As.set_value(fitted_parameters[last_index + 5].value)
+                        strain_parameters.Bs.set_value(fitted_parameters[last_index + 6].value)
+                        strain_parameters.mix.set_value(fitted_parameters[last_index + 7].value)
+                        strain_parameters.b.set_value(fitted_parameters[last_index + 8].value)
+                        strain_parameters.rho.error = errors[last_index + 1]
+                        strain_parameters.Re.error = errors[last_index + 2]
+                        strain_parameters.Ae.error = errors[last_index + 3]
+                        strain_parameters.Be.error = errors[last_index + 4]
+                        strain_parameters.As.error = errors[last_index + 5]
+                        strain_parameters.Bs.error = errors[last_index + 6]
+                        strain_parameters.mix.error = errors[last_index + 7]
+                        strain_parameters.b.error = errors[last_index + 8]
+                        last_index += 8
+                    elif isinstance(strain_parameters, WarrenModel):
+                        strain_parameters.average_cell_parameter.set_value(fitted_parameters[last_index + 1].value)
+                        strain_parameters.average_cell_parameter.error = errors[last_index + 1]
+                        last_index += 1
 
         self.replace_parameters(fitted_parameters)
         self.evaluate_functions()

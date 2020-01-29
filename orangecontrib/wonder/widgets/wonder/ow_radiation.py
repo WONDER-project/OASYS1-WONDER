@@ -1,7 +1,6 @@
 import os, sys, numpy, copy
 
 from PyQt5.QtWidgets import QMessageBox, QApplication
-from PyQt5.QtCore import Qt
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
@@ -732,6 +731,7 @@ class OWRadiation(OWGenericWidget):
             self.weight_5_function_value = copy.deepcopy(bkp_weight_5_function_value)
 
 from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtCore import Qt
 from orangecontrib.wonder.util.gui_utility import InnerBox
 
 class RadiationBox(InnerBox):
@@ -996,7 +996,7 @@ class RadiationBox(InnerBox):
 
         self.secondary_box_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, spacing=0)
 
-        widget.create_box_in_widget(self, container,  "wavelength", label="\u03BB  [nm]", disable_function=True, add_callback=True, min_value=0.0, min_accepted=False)
+        OWGenericWidget.create_box_in_widget(self, container,  "wavelength", label="\u03BB  [nm]", disable_function=True, add_callback=True, min_value=0.0, min_accepted=False)
 
         self.secondary_box_2 = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
         self.secondary_box_2_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
@@ -1073,7 +1073,7 @@ class RadiationBox(InnerBox):
 
                     secondary_index += 1
                 else:
-                    self.widget.populate_fields_in_widget(self, "wavelength", FitParameter(value=wavelength.wavelength, fixed=True), value_only=False)
+                    OWGenericWidget.populate_fields_in_widget(self, "wavelength", FitParameter(value=wavelength.wavelength, fixed=True), value_only=False)
 
         for key in self.secondary_wavelengths_boxes.keys():
             if key==self.xray_tube_key:

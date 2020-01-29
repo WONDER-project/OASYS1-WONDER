@@ -8,94 +8,94 @@
 		<node id="4" name="Lorentz-Polarization Factors" position="(682.0, 364.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_lorentz_polarization.OWLorentzPolarization" title="Lorentz-Polarization Factors" version="" />
 		<node id="5" name="Invariant PAH Strain" position="(867.0, 125.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_strain_invariant.OWStrainInvariant" title="Invariant PAH Strain" version="" />
 		<node id="6" name="Fitter" position="(991.0, 126.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (PAH)" version="" />
-		<node id="7" name="Size" position="(799.0, 32.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_size.OWSize" title="Size (FREE)" version="" />
-		<node id="8" name="Fitter" position="(723.0, 133.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="9" name="Debye-Waller Factor" position="(799.0, 363.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_debye_waller.OWDebyeWaller" title="Debye-Waller Factor" version="" />
-		<node id="10" name="Contrast Factor Calculator" position="(528.0, 244.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_contrast_factor.OWContrastFactor" title="Contrast Factor Calculator" version="" />
-		<node id="11" name="Krivoglaz-Wilkens Strain" position="(675.0, 244.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_strain_krivoglaz_wilkens.OWStrainKW" title="Krivoglaz-Wilkens Strain" version="" />
-		<node id="12" name="Fitter" position="(791.0, 248.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (KW)" version="" />
-		<node id="13" name="Fitter" position="(638.0, 53.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="14" name="Calibration Peak Shift" position="(356.0, 363.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift" version="" />
-		<node id="15" name="Instrumental Profile" position="(236.0, 361.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile" version="" />
-		<node id="16" name="Chebyshev Background" position="(457.0, 364.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background" version="" />
-		<node id="17" name="Size" position="(724.0, 490.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_size.OWSize" title="Size" version="" />
-		<node id="18" name="Invariant PAH Strain" position="(977.0, 450.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_strain_invariant.OWStrainInvariant" title="Invariant PAH Strain" version="" />
-		<node id="19" name="Fitter" position="(1106.0, 402.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="20" name="Fitter" position="(904.0, 309.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="21" name="Fitter" position="(850.0, 487.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
-		<node id="22" name="Zero Error Peak Shift" position="(538.0, 51.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_zero_error_peak_shift.OWZeroErrorPeakShift" title="Zero Error Peak Shift" version="" />
-		<node id="23" name="Zero Error Peak Shift" position="(568.0, 364.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_zero_error_peak_shift.OWZeroErrorPeakShift" title="Zero Error Peak Shift" version="" />
-		<node id="24" name="Lorentz-Polarization Factors" position="(735.0, 645.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_lorentz_polarization.OWLorentzPolarization" title="Lorentz-Polarization Factors (1)" version="" />
-		<node id="25" name="Debye-Waller Factor" position="(855.0, 644.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_debye_waller.OWDebyeWaller" title="Debye-Waller Factor (1)" version="" />
-		<node id="26" name="Calibration Peak Shift" position="(405.0, 646.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift (1)" version="" />
-		<node id="27" name="Instrumental Profile" position="(281.0, 644.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile (1)" version="" />
-		<node id="28" name="Chebyshev Background" position="(508.0, 646.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background (1)" version="" />
-		<node id="29" name="Size" position="(780.0, 761.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_size.OWSize" title="Size (1)" version="" />
-		<node id="30" name="Invariant PAH Strain" position="(1033.0, 721.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_strain_invariant.OWStrainInvariant" title="Invariant PAH Strain (1)" version="" />
-		<node id="31" name="Fitter" position="(1148.0, 648.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (1)" version="" />
-		<node id="32" name="Fitter" position="(960.0, 580.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (1)" version="" />
-		<node id="33" name="Fitter" position="(906.0, 753.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (1)" version="" />
-		<node id="34" name="Zero Error Peak Shift" position="(620.0, 647.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_zero_error_peak_shift.OWZeroErrorPeakShift" title="Zero Error Peak Shift (1)" version="" />
-		<node id="35" name="Incident Radiation (NEW)" position="(157.0, -21.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Incident Radiation" version="" />
-		<node id="36" name="Load Diffraction Pattern (NEW)" position="(64.0, -21.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_diffraction_pattern_new.OWDiffractionPatternNew" title="Load Diffraction Pattern" version="" />
-		<node id="37" name="Phases" position="(139.0, 82.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases.OWPhases" title="Phases" version="" />
-		<node id="38" name="Line Profile" position="(236.0, 110.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_line_profile.OWLineProfile" title="Line Profile" version="" />
-		<node id="39" name="Phases" position="(107.0, 377.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases.OWPhases" title="Phases (1)" version="" />
-		<node id="40" name="Line Profile" position="(190.0, 500.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_line_profile.OWLineProfile" title="Line Profile (1)" version="" />
-		<node id="41" name="GSAS-II Phases" position="(88.0, 216.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases_gsasii.OWGSASIIPhases" title="GSAS-II Phases" version="" />
-		<node id="42" name="Line Profile" position="(177.0, 282.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_line_profile.OWLineProfile" title="Line Profile (1) (1)" version="" />
-		<node id="43" name="GSAS-II Phases" position="(1143.0, 294.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases_gsasii.OWGSASIIPhases" title="GSASII Recalculate" version="" />
-		<node id="44" name="Incident Radiation (NEW)" position="(716.0, -36.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Fix Radiation" version="" />
-		<node id="45" name="Incident Radiation (NEW)" position="(1023.0, 302.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Fix Radiation" version="" />
-		<node id="46" name="Incident Radiation (NEW)" position="(1075.0, 578.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Fix Radaition" version="" />
+		<node id="7" name="Fitter" position="(723.0, 133.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="8" name="Debye-Waller Factor" position="(799.0, 363.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_debye_waller.OWDebyeWaller" title="Debye-Waller Factor" version="" />
+		<node id="9" name="Contrast Factor Calculator" position="(528.0, 244.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_contrast_factor.OWContrastFactor" title="Contrast Factor Calculator" version="" />
+		<node id="10" name="Krivoglaz-Wilkens Strain" position="(675.0, 244.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_strain_krivoglaz_wilkens.OWStrainKW" title="Krivoglaz-Wilkens Strain" version="" />
+		<node id="11" name="Fitter" position="(791.0, 248.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (KW)" version="" />
+		<node id="12" name="Fitter" position="(638.0, 53.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="13" name="Calibration Peak Shift" position="(356.0, 363.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift" version="" />
+		<node id="14" name="Instrumental Profile" position="(236.0, 361.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile" version="" />
+		<node id="15" name="Chebyshev Background" position="(457.0, 364.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background" version="" />
+		<node id="16" name="Size" position="(724.0, 490.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_size.OWSize" title="Size" version="" />
+		<node id="17" name="Invariant PAH Strain" position="(977.0, 450.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_strain_invariant.OWStrainInvariant" title="Invariant PAH Strain" version="" />
+		<node id="18" name="Fitter" position="(1106.0, 402.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="19" name="Fitter" position="(904.0, 309.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="20" name="Fitter" position="(850.0, 487.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="21" name="Zero Error Peak Shift" position="(538.0, 51.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_zero_error_peak_shift.OWZeroErrorPeakShift" title="Zero Error Peak Shift" version="" />
+		<node id="22" name="Zero Error Peak Shift" position="(568.0, 364.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_zero_error_peak_shift.OWZeroErrorPeakShift" title="Zero Error Peak Shift" version="" />
+		<node id="23" name="Lorentz-Polarization Factors" position="(735.0, 645.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_lorentz_polarization.OWLorentzPolarization" title="Lorentz-Polarization Factors (1)" version="" />
+		<node id="24" name="Debye-Waller Factor" position="(855.0, 644.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_debye_waller.OWDebyeWaller" title="Debye-Waller Factor (1)" version="" />
+		<node id="25" name="Calibration Peak Shift" position="(405.0, 646.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_calibration_peak_shift.OWCalibrationPeakShift" title="Calibration Peak Shift (1)" version="" />
+		<node id="26" name="Instrumental Profile" position="(281.0, 644.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_instrumental_profile.OWInstrumentalProfile" title="Instrumental Profile (1)" version="" />
+		<node id="27" name="Chebyshev Background" position="(508.0, 646.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background (1)" version="" />
+		<node id="28" name="Size" position="(780.0, 761.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_size.OWSize" title="Size (1)" version="" />
+		<node id="29" name="Invariant PAH Strain" position="(1033.0, 721.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_strain_invariant.OWStrainInvariant" title="Invariant PAH Strain (1)" version="" />
+		<node id="30" name="Fitter" position="(1148.0, 648.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (1)" version="" />
+		<node id="31" name="Fitter" position="(960.0, 580.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (1)" version="" />
+		<node id="32" name="Fitter" position="(906.0, 753.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (1)" version="" />
+		<node id="33" name="Zero Error Peak Shift" position="(620.0, 647.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_zero_error_peak_shift.OWZeroErrorPeakShift" title="Zero Error Peak Shift (1)" version="" />
+		<node id="34" name="Incident Radiation (NEW)" position="(157.0, -21.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Incident Radiation" version="" />
+		<node id="35" name="Load Diffraction Pattern (NEW)" position="(64.0, -21.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_diffraction_pattern_new.OWDiffractionPatternNew" title="Load Diffraction Pattern" version="" />
+		<node id="36" name="Phases" position="(139.0, 82.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases.OWPhases" title="Phases" version="" />
+		<node id="37" name="Line Profile" position="(236.0, 110.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_line_profile.OWLineProfile" title="Line Profile" version="" />
+		<node id="38" name="Phases" position="(107.0, 377.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases.OWPhases" title="Phases (1)" version="" />
+		<node id="39" name="Line Profile" position="(190.0, 500.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_line_profile.OWLineProfile" title="Line Profile (1)" version="" />
+		<node id="40" name="GSAS-II Phases" position="(88.0, 216.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases_gsasii.OWGSASIIPhases" title="GSAS-II Phases" version="" />
+		<node id="41" name="Line Profile" position="(177.0, 282.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_line_profile.OWLineProfile" title="Line Profile (1) (1)" version="" />
+		<node id="42" name="GSAS-II Phases" position="(1143.0, 294.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases_gsasii.OWGSASIIPhases" title="GSASII Recalculate" version="" />
+		<node id="43" name="Incident Radiation (NEW)" position="(716.0, -36.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Fix Radiation" version="" />
+		<node id="44" name="Incident Radiation (NEW)" position="(1023.0, 302.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Fix Radiation" version="" />
+		<node id="45" name="Incident Radiation (NEW)" position="(1075.0, 578.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation_new.OWRadiationNew" title="Fix Radaition" version="" />
+		<node id="46" name="Size" position="(813.0, 5.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_size_new.OWSizeNew" title="Size" version="" />
 	</nodes>
 	<links>
 		<link enabled="true" id="0" sink_channel="Fit Global Parameters" sink_node_id="3" source_channel="Fit Global Parameters" source_node_id="2" />
 		<link enabled="true" id="1" sink_channel="Fit Global Parameters" sink_node_id="2" source_channel="Fit Global Parameters" source_node_id="1" />
-		<link enabled="true" id="2" sink_channel="Fit Global Parameters" sink_node_id="8" source_channel="Fit Global Parameters" source_node_id="7" />
-		<link enabled="true" id="3" sink_channel="Fit Global Parameters" sink_node_id="5" source_channel="Fit Global Parameters" source_node_id="8" />
-		<link enabled="true" id="4" sink_channel="Fit Global Parameters" sink_node_id="9" source_channel="Fit Global Parameters" source_node_id="4" />
-		<link enabled="true" id="5" sink_channel="Fit Global Parameters" sink_node_id="11" source_channel="Fit Global Parameters" source_node_id="10" />
-		<link enabled="true" id="6" sink_channel="Fit Global Parameters" sink_node_id="10" source_channel="Fit Global Parameters" source_node_id="8" />
-		<link enabled="true" id="7" sink_channel="Fit Global Parameters" sink_node_id="12" source_channel="Fit Global Parameters" source_node_id="11" />
-		<link enabled="true" id="8" sink_channel="Fit Global Parameters" sink_node_id="6" source_channel="Fit Global Parameters" source_node_id="5" />
-		<link enabled="true" id="9" sink_channel="Fit Global Parameters" sink_node_id="14" source_channel="Fit Global Parameters" source_node_id="15" />
-		<link enabled="true" id="10" sink_channel="Fit Global Parameters" sink_node_id="16" source_channel="Fit Global Parameters" source_node_id="14" />
-		<link enabled="true" id="11" sink_channel="Fit Global Parameters" sink_node_id="20" source_channel="Fit Global Parameters" source_node_id="9" />
-		<link enabled="true" id="12" sink_channel="Fit Global Parameters" sink_node_id="21" source_channel="Fit Global Parameters" source_node_id="17" />
-		<link enabled="true" id="13" sink_channel="Fit Global Parameters" sink_node_id="18" source_channel="Fit Global Parameters" source_node_id="21" />
-		<link enabled="true" id="14" sink_channel="Fit Global Parameters" sink_node_id="22" source_channel="Fit Global Parameters" source_node_id="3" />
-		<link enabled="true" id="15" sink_channel="Fit Global Parameters" sink_node_id="13" source_channel="Fit Global Parameters" source_node_id="22" />
-		<link enabled="true" id="16" sink_channel="Fit Global Parameters" sink_node_id="23" source_channel="Fit Global Parameters" source_node_id="16" />
-		<link enabled="true" id="17" sink_channel="Fit Global Parameters" sink_node_id="4" source_channel="Fit Global Parameters" source_node_id="23" />
-		<link enabled="true" id="18" sink_channel="Fit Global Parameters" sink_node_id="25" source_channel="Fit Global Parameters" source_node_id="24" />
-		<link enabled="true" id="19" sink_channel="Fit Global Parameters" sink_node_id="26" source_channel="Fit Global Parameters" source_node_id="27" />
-		<link enabled="true" id="20" sink_channel="Fit Global Parameters" sink_node_id="28" source_channel="Fit Global Parameters" source_node_id="26" />
-		<link enabled="true" id="21" sink_channel="Fit Global Parameters" sink_node_id="31" source_channel="Fit Global Parameters" source_node_id="30" />
-		<link enabled="true" id="22" sink_channel="Fit Global Parameters" sink_node_id="32" source_channel="Fit Global Parameters" source_node_id="25" />
-		<link enabled="true" id="23" sink_channel="Fit Global Parameters" sink_node_id="33" source_channel="Fit Global Parameters" source_node_id="29" />
-		<link enabled="true" id="24" sink_channel="Fit Global Parameters" sink_node_id="30" source_channel="Fit Global Parameters" source_node_id="33" />
-		<link enabled="true" id="25" sink_channel="Fit Global Parameters" sink_node_id="34" source_channel="Fit Global Parameters" source_node_id="28" />
-		<link enabled="true" id="26" sink_channel="Fit Global Parameters" sink_node_id="24" source_channel="Fit Global Parameters" source_node_id="34" />
-		<link enabled="true" id="27" sink_channel="Fit Global Parameters" sink_node_id="35" source_channel="Fit Global Parameters" source_node_id="36" />
-		<link enabled="true" id="28" sink_channel="Fit Global Parameters" sink_node_id="0" source_channel="Fit Global Parameters" source_node_id="35" />
-		<link enabled="true" id="29" sink_channel="Fit Global Parameters" sink_node_id="37" source_channel="Fit Global Parameters" source_node_id="0" />
-		<link enabled="true" id="30" sink_channel="Fit Global Parameters" sink_node_id="38" source_channel="Fit Global Parameters" source_node_id="37" />
-		<link enabled="true" id="31" sink_channel="Fit Global Parameters" sink_node_id="1" source_channel="Fit Global Parameters" source_node_id="38" />
-		<link enabled="true" id="32" sink_channel="Fit Global Parameters" sink_node_id="40" source_channel="Fit Global Parameters" source_node_id="39" />
-		<link enabled="true" id="33" sink_channel="Fit Global Parameters" sink_node_id="27" source_channel="Fit Global Parameters" source_node_id="40" />
-		<link enabled="true" id="34" sink_channel="Fit Global Parameters" sink_node_id="42" source_channel="Fit Global Parameters" source_node_id="41" />
-		<link enabled="true" id="35" sink_channel="Fit Global Parameters" sink_node_id="15" source_channel="Fit Global Parameters" source_node_id="42" />
-		<link enabled="true" id="36" sink_channel="Fit Global Parameters" sink_node_id="19" source_channel="Fit Global Parameters" source_node_id="18" />
-		<link enabled="true" id="37" sink_channel="Fit Global Parameters" sink_node_id="41" source_channel="Fit Global Parameters" source_node_id="0" />
-		<link enabled="true" id="38" sink_channel="Fit Global Parameters" sink_node_id="44" source_channel="Fit Global Parameters" source_node_id="13" />
-		<link enabled="true" id="39" sink_channel="Fit Global Parameters" sink_node_id="7" source_channel="Fit Global Parameters" source_node_id="44" />
-		<link enabled="true" id="40" sink_channel="Fit Global Parameters" sink_node_id="45" source_channel="Fit Global Parameters" source_node_id="20" />
-		<link enabled="true" id="41" sink_channel="Fit Global Parameters" sink_node_id="43" source_channel="Fit Global Parameters" source_node_id="45" />
-		<link enabled="true" id="42" sink_channel="Fit Global Parameters" sink_node_id="46" source_channel="Fit Global Parameters" source_node_id="32" />
-		<link enabled="true" id="43" sink_channel="Fit Global Parameters" sink_node_id="29" source_channel="Fit Global Parameters" source_node_id="46" />
-		<link enabled="true" id="44" sink_channel="Fit Global Parameters" sink_node_id="17" source_channel="Fit Global Parameters" source_node_id="43" />
-		<link enabled="true" id="45" sink_channel="Fit Global Parameters" sink_node_id="39" source_channel="Fit Global Parameters" source_node_id="0" />
+		<link enabled="true" id="2" sink_channel="Fit Global Parameters" sink_node_id="5" source_channel="Fit Global Parameters" source_node_id="7" />
+		<link enabled="true" id="3" sink_channel="Fit Global Parameters" sink_node_id="8" source_channel="Fit Global Parameters" source_node_id="4" />
+		<link enabled="true" id="4" sink_channel="Fit Global Parameters" sink_node_id="10" source_channel="Fit Global Parameters" source_node_id="9" />
+		<link enabled="false" id="5" sink_channel="Fit Global Parameters" sink_node_id="9" source_channel="Fit Global Parameters" source_node_id="7" />
+		<link enabled="true" id="6" sink_channel="Fit Global Parameters" sink_node_id="11" source_channel="Fit Global Parameters" source_node_id="10" />
+		<link enabled="true" id="7" sink_channel="Fit Global Parameters" sink_node_id="6" source_channel="Fit Global Parameters" source_node_id="5" />
+		<link enabled="true" id="8" sink_channel="Fit Global Parameters" sink_node_id="13" source_channel="Fit Global Parameters" source_node_id="14" />
+		<link enabled="true" id="9" sink_channel="Fit Global Parameters" sink_node_id="15" source_channel="Fit Global Parameters" source_node_id="13" />
+		<link enabled="true" id="10" sink_channel="Fit Global Parameters" sink_node_id="19" source_channel="Fit Global Parameters" source_node_id="8" />
+		<link enabled="true" id="11" sink_channel="Fit Global Parameters" sink_node_id="20" source_channel="Fit Global Parameters" source_node_id="16" />
+		<link enabled="true" id="12" sink_channel="Fit Global Parameters" sink_node_id="17" source_channel="Fit Global Parameters" source_node_id="20" />
+		<link enabled="true" id="13" sink_channel="Fit Global Parameters" sink_node_id="21" source_channel="Fit Global Parameters" source_node_id="3" />
+		<link enabled="true" id="14" sink_channel="Fit Global Parameters" sink_node_id="12" source_channel="Fit Global Parameters" source_node_id="21" />
+		<link enabled="true" id="15" sink_channel="Fit Global Parameters" sink_node_id="22" source_channel="Fit Global Parameters" source_node_id="15" />
+		<link enabled="true" id="16" sink_channel="Fit Global Parameters" sink_node_id="4" source_channel="Fit Global Parameters" source_node_id="22" />
+		<link enabled="true" id="17" sink_channel="Fit Global Parameters" sink_node_id="24" source_channel="Fit Global Parameters" source_node_id="23" />
+		<link enabled="true" id="18" sink_channel="Fit Global Parameters" sink_node_id="25" source_channel="Fit Global Parameters" source_node_id="26" />
+		<link enabled="true" id="19" sink_channel="Fit Global Parameters" sink_node_id="27" source_channel="Fit Global Parameters" source_node_id="25" />
+		<link enabled="true" id="20" sink_channel="Fit Global Parameters" sink_node_id="30" source_channel="Fit Global Parameters" source_node_id="29" />
+		<link enabled="true" id="21" sink_channel="Fit Global Parameters" sink_node_id="31" source_channel="Fit Global Parameters" source_node_id="24" />
+		<link enabled="true" id="22" sink_channel="Fit Global Parameters" sink_node_id="32" source_channel="Fit Global Parameters" source_node_id="28" />
+		<link enabled="true" id="23" sink_channel="Fit Global Parameters" sink_node_id="29" source_channel="Fit Global Parameters" source_node_id="32" />
+		<link enabled="true" id="24" sink_channel="Fit Global Parameters" sink_node_id="33" source_channel="Fit Global Parameters" source_node_id="27" />
+		<link enabled="true" id="25" sink_channel="Fit Global Parameters" sink_node_id="23" source_channel="Fit Global Parameters" source_node_id="33" />
+		<link enabled="true" id="26" sink_channel="Fit Global Parameters" sink_node_id="34" source_channel="Fit Global Parameters" source_node_id="35" />
+		<link enabled="true" id="27" sink_channel="Fit Global Parameters" sink_node_id="0" source_channel="Fit Global Parameters" source_node_id="34" />
+		<link enabled="true" id="28" sink_channel="Fit Global Parameters" sink_node_id="36" source_channel="Fit Global Parameters" source_node_id="0" />
+		<link enabled="true" id="29" sink_channel="Fit Global Parameters" sink_node_id="37" source_channel="Fit Global Parameters" source_node_id="36" />
+		<link enabled="true" id="30" sink_channel="Fit Global Parameters" sink_node_id="1" source_channel="Fit Global Parameters" source_node_id="37" />
+		<link enabled="true" id="31" sink_channel="Fit Global Parameters" sink_node_id="39" source_channel="Fit Global Parameters" source_node_id="38" />
+		<link enabled="true" id="32" sink_channel="Fit Global Parameters" sink_node_id="26" source_channel="Fit Global Parameters" source_node_id="39" />
+		<link enabled="true" id="33" sink_channel="Fit Global Parameters" sink_node_id="41" source_channel="Fit Global Parameters" source_node_id="40" />
+		<link enabled="true" id="34" sink_channel="Fit Global Parameters" sink_node_id="14" source_channel="Fit Global Parameters" source_node_id="41" />
+		<link enabled="true" id="35" sink_channel="Fit Global Parameters" sink_node_id="18" source_channel="Fit Global Parameters" source_node_id="17" />
+		<link enabled="false" id="36" sink_channel="Fit Global Parameters" sink_node_id="40" source_channel="Fit Global Parameters" source_node_id="0" />
+		<link enabled="true" id="37" sink_channel="Fit Global Parameters" sink_node_id="43" source_channel="Fit Global Parameters" source_node_id="12" />
+		<link enabled="true" id="38" sink_channel="Fit Global Parameters" sink_node_id="44" source_channel="Fit Global Parameters" source_node_id="19" />
+		<link enabled="true" id="39" sink_channel="Fit Global Parameters" sink_node_id="42" source_channel="Fit Global Parameters" source_node_id="44" />
+		<link enabled="true" id="40" sink_channel="Fit Global Parameters" sink_node_id="45" source_channel="Fit Global Parameters" source_node_id="31" />
+		<link enabled="true" id="41" sink_channel="Fit Global Parameters" sink_node_id="28" source_channel="Fit Global Parameters" source_node_id="45" />
+		<link enabled="true" id="42" sink_channel="Fit Global Parameters" sink_node_id="16" source_channel="Fit Global Parameters" source_node_id="42" />
+		<link enabled="false" id="43" sink_channel="Fit Global Parameters" sink_node_id="38" source_channel="Fit Global Parameters" source_node_id="0" />
+		<link enabled="true" id="44" sink_channel="Fit Global Parameters" sink_node_id="46" source_channel="Fit Global Parameters" source_node_id="43" />
+		<link enabled="true" id="45" sink_channel="Fit Global Parameters" sink_node_id="7" source_channel="Fit Global Parameters" source_node_id="46" />
 	</links>
 	<annotations>
 		<text font-family="Helvetica" font-size="16" id="0" rect="(24.0, 145.0, 150.0, 44.0)">Wonder 1</text>
@@ -126,10 +126,47 @@ AZsAAAAAAAAAAA/wAAAAAAAAAC0AAAH8AAABm3EvhXEwh3ExUnEydS4=
 		<properties format="literal" node_id="3">{'c0': [0.0], 'c0_fixed': [0], 'c0_function': [0], 'c0_function_value': [''], 'c0_has_max': [0], 'c0_has_min': [0], 'c0_max': [0.0], 'c0_min': [0.0], 'c1': [0.0], 'c1_fixed': [0], 'c1_function': [0], 'c1_function_value': [''], 'c1_has_max': [0], 'c1_has_min': [0], 'c1_max': [0.0], 'c1_min': [0.0], 'c2': [0.0], 'c2_fixed': [0], 'c2_function': [0], 'c2_function_value': [''], 'c2_has_max': [0], 'c2_has_min': [0], 'c2_max': [0.0], 'c2_min': [0.0], 'c3': [0.0], 'c3_fixed': [0], 'c3_function': [0], 'c3_function_value': [''], 'c3_has_max': [0], 'c3_has_min': [0], 'c3_max': [0.0], 'c3_min': [0.0], 'c4': [0.0], 'c4_fixed': [0], 'c4_function': [0], 'c4_function_value': [''], 'c4_has_max': [0], 'c4_has_min': [0], 'c4_max': [0.0], 'c4_min': [0.0], 'c5': [0.0], 'c5_fixed': [0], 'c5_function': [0], 'c5_function_value': [''], 'c5_has_max': [0], 'c5_has_min': [0], 'c5_max': [0.0], 'c5_min': [0.0], 'c6': [0.0], 'c6_fixed': [1], 'c6_function': [0], 'c6_function_value': [''], 'c6_has_max': [0], 'c6_has_min': [0], 'c6_max': [0.0], 'c6_min': [0.0], 'c7': [0.0], 'c7_fixed': [1], 'c7_function': [0], 'c7_function_value': [''], 'c7_has_max': [0], 'c7_has_min': [0], 'c7_max': [0.0], 'c7_min': [0.0], 'c8': [0.0], 'c8_fixed': [1], 'c8_function': [0], 'c8_function_value': [''], 'c8_has_max': [0], 'c8_has_min': [0], 'c8_max': [0.0], 'c8_min': [0.0], 'c9': [0.0], 'c9_fixed': [1], 'c9_function': [0], 'c9_function_value': [''], 'c9_has_max': [0], 'c9_has_min': [0], 'c9_max': [0.0], 'c9_min': [0.0], 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'use_single_parameter_set': 0}</properties>
 		<properties format="literal" node_id="4">{'beampath': 0, 'degree_of_polarization': 1.0, 'is_automatic_run': True, 'lorentz_formula': 1, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'twotheta_mono': 28.443, 'use_lorentz_factor': 1, 'use_polarization_factor': 0, 'use_twotheta_mono': 0}</properties>
 		<properties format="literal" node_id="5">{'aa': 0.1, 'aa_fixed': 0, 'aa_function': 0, 'aa_function_value': '', 'aa_has_max': 0, 'aa_has_min': 1, 'aa_max': 0.0, 'aa_min': 0.0, 'bb': 0.1, 'bb_fixed': 0, 'bb_function': 0, 'bb_function_value': '', 'bb_has_max': 0, 'bb_has_min': 1, 'bb_max': 0.0, 'bb_min': 0.0, 'e1': 0.0001, 'e1_fixed': 0, 'e1_function': 0, 'e1_function_value': '', 'e1_has_max': 0, 'e1_has_min': False, 'e1_max': 0.0, 'e1_min': 0.0, 'e4': 0.0001, 'e4_fixed': 0, 'e4_function': 0, 'e4_function_value': '', 'e4_has_max': 0, 'e4_has_min': False, 'e4_max': 0.0, 'e4_min': 0.0, 'is_automatic_run': True, 'laue_id': 13, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x06\x90'}</properties>
-		<properties format="literal" node_id="6">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': 'D_avg = exp(size_mu + 0.5*size_sigma**2)\nD_avg_s = exp(size_mu + 1.25*size_sigma**2)\nD_avg_v = exp(size_mu + 1.75*size_sigma**2)\nstd_dev = sqrt(exp(2*size_mu + size_sigma**2)*(exp(size_sigma**2)-1))\n', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': 1, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 10, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x05\xe4\x00\x00\x00\x1a\x00\x00\n\xcd\x00\x00\x02\xeb\x00\x00\x05\xe4\x00\x00\x000\x00\x00\n\xcd\x00\x00\x02\xeb\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x05\xe4\x00\x00\x000\x00\x00\n\xcd\x00\x00\x02\xeb', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 1, 'show_wss_gof': 1}</properties>
-		<properties format="literal" node_id="7">{'add_saxs': False, 'cube_face': 0, 'distribution': 1, 'is_automatic_run': True, 'mu': 2.0, 'mu_fixed': 0, 'mu_function': 0, 'mu_function_value': '', 'mu_has_max': 0, 'mu_has_min': 1, 'mu_max': 0.0, 'mu_min': 0.0, 'normalize_to': 0, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x06\x90', 'shape': 1, 'sigma': 0.3, 'sigma_fixed': 0, 'sigma_function': 0, 'sigma_function_value': '', 'sigma_has_max': 1, 'sigma_has_min': 1, 'sigma_max': 1.0, 'sigma_min': 0.0, 'truncation': 0.2, 'truncation_fixed': 0, 'truncation_function': 0, 'truncation_function_value': '', 'truncation_has_max': 1, 'truncation_has_min': 1, 'truncation_max': 1.0, 'truncation_min': 0.0}</properties>
-		<properties format="literal" node_id="8">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': 'D_avg = exp(size_mu + 0.5*size_sigma**2)\nD_avg_s = exp(size_mu + 1.25*size_sigma**2)\nD_avg_v = exp(size_mu + 1.75*size_sigma**2)\nstd_dev = sqrt(exp(2*size_mu + size_sigma**2)*(exp(size_sigma**2)-1))\n', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': False, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 5, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xae\x00\x00\x00\x84\x00\x00\tA\x00\x00\x02y\x00\x00\x06\xae\x00\x00\x00\x9a\x00\x00\tA\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xae\x00\x00\x00\x9a\x00\x00\tA\x00\x00\x02y', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 0, 'show_wss_gof': 1}</properties>
-		<properties format="pickle" node_id="9">gAN9cQAoWBMAAABkZWJ5ZV93YWxsZXJfZmFjdG9ycQFHP+AAAAAAAABYGQAAAGRlYnllX3dhbGxl
+		<properties format="pickle" node_id="6">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
+ZXRhX3htaW5xA0cAAAAAAAAAAFgIAAAAZXRhX3ltYXhxBEc/8AAAAAAAAFgIAAAAZXRhX3ltaW5x
+BUcAAAAAAAAAAFgLAAAAZml0dGVyX25hbWVxBksBWBsAAABmcmVlX291dHB1dF9wYXJhbWV0ZXJz
+X3RleHRxB1jZAAAARF9hdmcgPSBleHAoc2l6ZV8xX211ICsgMC41KnNpemVfMV9zaWdtYSoqMikK
+RF9hdmdfcyA9IGV4cChzaXplXzFfbXUgKyAxLjI1KnNpemVfMV9zaWdtYSoqMikKRF9hdmdfdiA9
+IGV4cChzaXplXzFfbXUgKyAxLjc1KnNpemVfMV9zaWdtYSoqMikKc3RkX2RldiA9IHNxcnQoZXhw
+KDIqc2l6ZV8xX211ICsgc2l6ZV8xX3NpZ21hKioyKSooZXhwKHNpemVfMV9zaWdtYSoqMiktMSkp
+CnEIWA4AAABmd2htX2F1dG9zY2FsZXEJSwFYCQAAAGZ3aG1feG1heHEKR0BiwAAAAAAAWAkAAABm
+d2htX3htaW5xC0cAAAAAAAAAAFgJAAAAZndobV95bWF4cQxHP/AAAAAAAABYCQAAAGZ3aG1feW1p
+bnENRwAAAAAAAAAAWBAAAABpc19hdXRvbWF0aWNfcnVucQ6JWA4AAABpc19pbmNyZW1lbnRhbHEP
+SwBYDgAAAGlzX2ludGVyYWN0aXZlcRBLAVgOAAAAbGFiNl9hdXRvc2NhbGVxEUsBWAkAAABsYWI2
+X3htYXhxEkdAYsAAAAAAAFgJAAAAbGFiNl94bWlucRNHAAAAAAAAAABYCQAAAGxhYjZfeW1heHEU
+Rz/wAAAAAAAAWAkAAABsYWI2X3ltaW5xFUe/8AAAAAAAAFgMAAAAbl9pdGVyYXRpb25zcRZLClgO
+AAAAc2F2ZV9maWxlX25hbWVxF1gOAAAAZml0X291dHB1dC5kYXRxGFgTAAAAc2F2ZWRXaWRnZXRH
+ZW9tZXRyeXEZY3NpcApfdW5waWNrbGVfdHlwZQpxGlgMAAAAUHlRdDUuUXRDb3JlcRtYCgAAAFFC
+eXRlQXJyYXlxHENCAdnQywADAAAAAAXkAAAAGgAACs0AAALrAAAF5AAAADAAAArNAAAC6wAAAAAA
+AAAAD/AAAAXkAAAAMAAACs0AAALrcR2FcR6HcR9ScSBYFQAAAHNob3dfaW50ZWdyYWxfYnJlYWR0
+aHEhSwFYCAAAAHNob3dfaXBmcSJLAFgKAAAAc2hvd19zaGlmdHEjSwBYCQAAAHNob3dfc2l6ZXEk
+SwFYCwAAAHNob3dfd2FycmVucSVLAVgMAAAAc2hvd193c3NfZ29mcSZLAXUu
+</properties>
+		<properties format="pickle" node_id="7">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
+ZXRhX3htaW5xA0cAAAAAAAAAAFgIAAAAZXRhX3ltYXhxBEc/8AAAAAAAAFgIAAAAZXRhX3ltaW5x
+BUcAAAAAAAAAAFgLAAAAZml0dGVyX25hbWVxBksBWBsAAABmcmVlX291dHB1dF9wYXJhbWV0ZXJz
+X3RleHRxB1jZAAAARF9hdmcgPSBleHAoc2l6ZV8xX211ICsgMC41KnNpemVfMV9zaWdtYSoqMikK
+RF9hdmdfcyA9IGV4cChzaXplXzFfbXUgKyAxLjI1KnNpemVfMV9zaWdtYSoqMikKRF9hdmdfdiA9
+IGV4cChzaXplXzFfbXUgKyAxLjc1KnNpemVfMV9zaWdtYSoqMikKc3RkX2RldiA9IHNxcnQoZXhw
+KDIqc2l6ZV8xX211ICsgc2l6ZV8xX3NpZ21hKioyKSooZXhwKHNpemVfMV9zaWdtYSoqMiktMSkp
+CnEIWA4AAABmd2htX2F1dG9zY2FsZXEJSwFYCQAAAGZ3aG1feG1heHEKR0BiwAAAAAAAWAkAAABm
+d2htX3htaW5xC0cAAAAAAAAAAFgJAAAAZndobV95bWF4cQxHP/AAAAAAAABYCQAAAGZ3aG1feW1p
+bnENRwAAAAAAAAAAWBAAAABpc19hdXRvbWF0aWNfcnVucQ6JWA4AAABpc19pbmNyZW1lbnRhbHEP
+iFgOAAAAaXNfaW50ZXJhY3RpdmVxEIhYDgAAAGxhYjZfYXV0b3NjYWxlcRFLAVgJAAAAbGFiNl94
+bWF4cRJHQGLAAAAAAABYCQAAAGxhYjZfeG1pbnETRwAAAAAAAAAAWAkAAABsYWI2X3ltYXhxFEc/
+8AAAAAAAAFgJAAAAbGFiNl95bWlucRVHv/AAAAAAAABYDAAAAG5faXRlcmF0aW9uc3EWSwVYDgAA
+AHNhdmVfZmlsZV9uYW1lcRdYDgAAAGZpdF9vdXRwdXQuZGF0cRhYEwAAAHNhdmVkV2lkZ2V0R2Vv
+bWV0cnlxGWNzaXAKX3VucGlja2xlX3R5cGUKcRpYDAAAAFB5UXQ1LlF0Q29yZXEbWAoAAABRQnl0
+ZUFycmF5cRxDQgHZ0MsAAwAAAAAGYwAAABcAAAuKAAAC6AAABmMAAAAtAAALigAAAugAAAAAAgAA
+AA/wAAAGYwAAAC0AAAuKAAAC6HEdhXEeh3EfUnEgWBUAAABzaG93X2ludGVncmFsX2JyZWFkdGhx
+IUsBWAgAAABzaG93X2lwZnEiSwBYCgAAAHNob3dfc2hpZnRxI0sAWAkAAABzaG93X3NpemVxJEsB
+WAsAAABzaG93X3dhcnJlbnElSwBYDAAAAHNob3dfd3NzX2dvZnEmSwF1Lg==
+</properties>
+		<properties format="pickle" node_id="8">gAN9cQAoWBMAAABkZWJ5ZV93YWxsZXJfZmFjdG9ycQFHP+AAAAAAAABYGQAAAGRlYnllX3dhbGxl
 cl9mYWN0b3JfZml4ZWRxAksAWBwAAABkZWJ5ZV93YWxsZXJfZmFjdG9yX2Z1bmN0aW9ucQNLAFgi
 AAAAZGVieWVfd2FsbGVyX2ZhY3Rvcl9mdW5jdGlvbl92YWx1ZXEEWAAAAABxBVgbAAAAZGVieWVf
 d2FsbGVyX2ZhY3Rvcl9oYXNfbWF4cQaJWBsAAABkZWJ5ZV93YWxsZXJfZmFjdG9yX2hhc19taW5x
@@ -140,8 +177,8 @@ DVgKAAAAUUJ5dGVBcnJheXEOQ0IB2dDLAAMAAAAAAAAAAAAXAAACAgAAAYoAAAAAAAAALQAAAgIA
 AAGKAAAAAAAAAAAP8AAAAAAAAAAtAAACAgAAAYpxD4VxEIdxEVJxElgXAAAAdXNlX2RlYnllX3dh
 bGxlcl9mYWN0b3JxE0sBdS4=
 </properties>
-		<properties format="literal" node_id="10">{'c11': 237.0, 'c12': 141.0, 'c44': 116.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y'}</properties>
-		<properties format="pickle" node_id="11">gAN9cQAoWAIAAABBZXEBRz/Q+lq6CtNDWAgAAABBZV9maXhlZHECSwFYCwAAAEFlX2Z1bmN0aW9u
+		<properties format="literal" node_id="9">{'c11': 237.0, 'c12': 141.0, 'c44': 116.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y'}</properties>
+		<properties format="pickle" node_id="10">gAN9cQAoWAIAAABBZXEBRz/Q+lq6CtNDWAgAAABBZV9maXhlZHECSwFYCwAAAEFlX2Z1bmN0aW9u
 cQNLAFgRAAAAQWVfZnVuY3Rpb25fdmFsdWVxBFgAAAAAcQVYCgAAAEFlX2hhc19tYXhxBksAWAoA
 AABBZV9oYXNfbWlucQdLAFgGAAAAQWVfbWF4cQhHAAAAAAAAAABYBgAAAEFlX21pbnEJRwAAAAAA
 AAAAWAIAAABBc3EKRz/QrNyB9o+/WAgAAABBc19maXhlZHELSwFYCwAAAEFzX2Z1bmN0aW9ucQxL
@@ -170,30 +207,30 @@ ZXRHZW9tZXRyeXFFY3NpcApfdW5waWNrbGVfdHlwZQpxRlgMAAAAUHlRdDUuUXRDb3JlcUdYCgAA
 AFFCeXRlQXJyYXlxSENCAdnQywADAAAAAAAAAAAAFwAAAfwAAALoAAAAAAAAAC0AAAH8AAAC6AAA
 AAACAAAAD/AAAAAAAAAALQAAAfwAAALocUmFcUqHcUtScUx1Lg==
 </properties>
-		<properties format="literal" node_id="12">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': 'D_avg = exp(size_mu + 0.5*size_sigma**2)\nD_avg_s = exp(size_mu + 1.25*size_sigma**2)\nD_avg_v = exp(size_mu + 1.75*size_sigma**2)\nstd_dev = sqrt(exp(2*size_mu + size_sigma**2)*(exp(size_sigma**2)-1))\n', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': False, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 10, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x05\x8f\x00\x00\x00\x17\x00\x00\n\xb6\x00\x00\x02\xe8\x00\x00\x05\x8f\x00\x00\x00-\x00\x00\n\xb6\x00\x00\x02\xe8\x00\x00\x00\x00\x02\x00\x00\x00\x0f\xf0\x00\x00\x05\x8f\x00\x00\x00-\x00\x00\n\xb6\x00\x00\x02\xe8', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 1, 'show_wss_gof': 1}</properties>
-		<properties format="pickle" node_id="13">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
+		<properties format="literal" node_id="11">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': 'D_avg = exp(size_mu + 0.5*size_sigma**2)\nD_avg_s = exp(size_mu + 1.25*size_sigma**2)\nD_avg_v = exp(size_mu + 1.75*size_sigma**2)\nstd_dev = sqrt(exp(2*size_mu + size_sigma**2)*(exp(size_sigma**2)-1))\n', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': False, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 10, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x05\x8f\x00\x00\x00\x17\x00\x00\n\xb6\x00\x00\x02\xe8\x00\x00\x05\x8f\x00\x00\x00-\x00\x00\n\xb6\x00\x00\x02\xe8\x00\x00\x00\x00\x02\x00\x00\x00\x0f\xf0\x00\x00\x05\x8f\x00\x00\x00-\x00\x00\n\xb6\x00\x00\x02\xe8', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 1, 'show_wss_gof': 1}</properties>
+		<properties format="pickle" node_id="12">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
 ZXRhX3htaW5xA0cAAAAAAAAAAFgIAAAAZXRhX3ltYXhxBEc/8AAAAAAAAFgIAAAAZXRhX3ltaW5x
 BUcAAAAAAAAAAFgLAAAAZml0dGVyX25hbWVxBksBWBsAAABmcmVlX291dHB1dF9wYXJhbWV0ZXJz
 X3RleHRxB1gAAAAAcQhYDgAAAGZ3aG1fYXV0b3NjYWxlcQlLAVgJAAAAZndobV94bWF4cQpHQGLA
 AAAAAABYCQAAAGZ3aG1feG1pbnELRwAAAAAAAAAAWAkAAABmd2htX3ltYXhxDEc/8AAAAAAAAFgJ
-AAAAZndobV95bWlucQ1HAAAAAAAAAABYEAAAAGlzX2F1dG9tYXRpY19ydW5xDolYDgAAAGlzX2lu
-Y3JlbWVudGFscQ9LAFgOAAAAaXNfaW50ZXJhY3RpdmVxEIlYDgAAAGxhYjZfYXV0b3NjYWxlcRFL
-AVgJAAAAbGFiNl94bWF4cRJHQGLAAAAAAABYCQAAAGxhYjZfeG1pbnETRwAAAAAAAAAAWAkAAABs
-YWI2X3ltYXhxFEc/8AAAAAAAAFgJAAAAbGFiNl95bWlucRVHv/AAAAAAAABYDAAAAG5faXRlcmF0
-aW9uc3EWSwVYDgAAAHNhdmVfZmlsZV9uYW1lcRdYSAAAAC9Vc2Vycy9hZG1pbi9Eb2N1bWVudHMv
-d29ya3NwYWNlL1NjYXJkaS9PcmFuZ2UzLVdPTkRFUi9FeGFtcGxlcy90ZXN0LmRhdHEYWBMAAABz
-YXZlZFdpZGdldEdlb21ldHJ5cRljc2lwCl91bnBpY2tsZV90eXBlCnEaWAwAAABQeVF0NS5RdENv
-cmVxG1gKAAAAUUJ5dGVBcnJheXEcQ0IB2dDLAAMAAAAACgcAAAAXAAAPLgAAAugAAAoHAAAALQAA
-Dy4AAALoAAAAAAAAAAAP8AAACgcAAAAtAAAPLgAAAuhxHYVxHodxH1JxIFgVAAAAc2hvd19pbnRl
-Z3JhbF9icmVhZHRocSFLAFgIAAAAc2hvd19pcGZxIksAWAoAAABzaG93X3NoaWZ0cSNLAFgJAAAA
-c2hvd19zaXplcSRLAFgLAAAAc2hvd193YXJyZW5xJUsAWAwAAABzaG93X3dzc19nb2ZxJksBdS4=
+AAAAZndobV95bWlucQ1HAAAAAAAAAABYEAAAAGlzX2F1dG9tYXRpY19ydW5xDohYDgAAAGlzX2lu
+Y3JlbWVudGFscQ9LAFgOAAAAaXNfaW50ZXJhY3RpdmVxEEsAWA4AAABsYWI2X2F1dG9zY2FsZXER
+SwFYCQAAAGxhYjZfeG1heHESR0BiwAAAAAAAWAkAAABsYWI2X3htaW5xE0cAAAAAAAAAAFgJAAAA
+bGFiNl95bWF4cRRHP/AAAAAAAABYCQAAAGxhYjZfeW1pbnEVR7/wAAAAAAAAWAwAAABuX2l0ZXJh
+dGlvbnNxFksFWA4AAABzYXZlX2ZpbGVfbmFtZXEXWEgAAAAvVXNlcnMvYWRtaW4vRG9jdW1lbnRz
+L3dvcmtzcGFjZS9TY2FyZGkvT3JhbmdlMy1XT05ERVIvRXhhbXBsZXMvdGVzdC5kYXRxGFgTAAAA
+c2F2ZWRXaWRnZXRHZW9tZXRyeXEZY3NpcApfdW5waWNrbGVfdHlwZQpxGlgMAAAAUHlRdDUuUXRD
+b3JlcRtYCgAAAFFCeXRlQXJyYXlxHENCAdnQywADAAAAAAoHAAAAFwAADy4AAALoAAAKBwAAAC0A
+AA8uAAAC6AAAAAACAAAAD/AAAAoHAAAALQAADy4AAALocR2FcR6HcR9ScSBYFQAAAHNob3dfaW50
+ZWdyYWxfYnJlYWR0aHEhSwBYCAAAAHNob3dfaXBmcSJLAFgKAAAAc2hvd19zaGlmdHEjSwBYCQAA
+AHNob3dfc2l6ZXEkSwBYCwAAAHNob3dfd2FycmVucSVLAFgMAAAAc2hvd193c3NfZ29mcSZLAXUu
 </properties>
-		<properties format="literal" node_id="14">{'ax': -0.0004186276, 'ax_fixed': True, 'ax_function': 0, 'ax_function_value': '', 'ax_has_max': 0, 'ax_has_min': 0, 'ax_max': 0.0, 'ax_min': 0.0, 'bx': -0.002962925, 'bx_fixed': True, 'bx_function': 0, 'bx_function_value': '', 'bx_has_max': 0, 'bx_has_min': 0, 'bx_max': 0.0, 'bx_min': 0.0, 'cx': 0.0288333, 'cx_fixed': True, 'cx_function': 0, 'cx_function_value': '', 'cx_has_max': 0, 'cx_has_min': 0, 'cx_max': 0.0, 'cx_min': 0.0, 'dx': -0.02681535, 'dx_fixed': True, 'dx_function': 0, 'dx_function_value': '', 'dx_has_max': 0, 'dx_has_min': 0, 'dx_max': 0.0, 'dx_min': 0.0, 'ex': 0.01484788, 'ex_fixed': True, 'ex_function': 0, 'ex_function_value': '', 'ex_has_max': 0, 'ex_has_min': 0, 'ex_max': 0.0, 'ex_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x02?\x00\x00\x006\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x02?\x00\x00\x00L\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
-		<properties format="literal" node_id="15">{'U': 0.000292292, 'U_fixed': True, 'U_function': 0, 'U_function_value': '', 'U_has_max': 0, 'U_has_min': 0, 'U_max': 0.0, 'U_min': 0.0, 'V': -3.281793e-05, 'V_fixed': True, 'V_function': 0, 'V_function_value': '', 'V_has_max': 0, 'V_has_min': 0, 'V_max': 0.0, 'V_min': 0.0, 'W': 0.001789973, 'W_fixed': True, 'W_function': 0, 'W_function_value': '', 'W_has_max': 0, 'W_has_min': 0, 'W_max': 0.0, 'W_min': 0.0, 'a': 0.05617726, 'a_fixed': True, 'a_function': 0, 'a_function_value': '', 'a_has_max': 0, 'a_has_min': 0, 'a_max': 0.0, 'a_min': 0.0, 'b': 0.0005769923, 'b_fixed': True, 'b_function': 0, 'b_function_value': '', 'b_has_max': 0, 'b_has_min': 0, 'b_max': 0.0, 'b_min': 0.0, 'c': 5.334123e-06, 'c_fixed': True, 'c_function': 0, 'c_function_value': '', 'c_has_max': 0, 'c_has_min': 0, 'c_max': 0.0, 'c_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x06\x81\x00\x00\x00\x81\x00\x00\x08}\x00\x00\x02+\x00\x00\x06\x81\x00\x00\x00\x97\x00\x00\x08}\x00\x00\x02+\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
-		<properties format="literal" node_id="16">{'c0': [0.0], 'c0_fixed': [0], 'c0_function': [0], 'c0_function_value': [''], 'c0_has_max': [0], 'c0_has_min': [0], 'c0_max': [0.0], 'c0_min': [0.0], 'c1': [0.0], 'c1_fixed': [0], 'c1_function': [0], 'c1_function_value': [''], 'c1_has_max': [0], 'c1_has_min': [0], 'c1_max': [0.0], 'c1_min': [0.0], 'c2': [0.0], 'c2_fixed': [0], 'c2_function': [0], 'c2_function_value': [''], 'c2_has_max': [0], 'c2_has_min': [0], 'c2_max': [0.0], 'c2_min': [0.0], 'c3': [0.0], 'c3_fixed': [0], 'c3_function': [0], 'c3_function_value': [''], 'c3_has_max': [0], 'c3_has_min': [0], 'c3_max': [0.0], 'c3_min': [0.0], 'c4': [0.0], 'c4_fixed': [0], 'c4_function': [0], 'c4_function_value': [''], 'c4_has_max': [0], 'c4_has_min': [0], 'c4_max': [0.0], 'c4_min': [0.0], 'c5': [0.0], 'c5_fixed': [0], 'c5_function': [0], 'c5_function_value': [''], 'c5_has_max': [0], 'c5_has_min': [0], 'c5_max': [0.0], 'c5_min': [0.0], 'c6': [0.0], 'c6_fixed': [1], 'c6_function': [0], 'c6_function_value': [''], 'c6_has_max': [0], 'c6_has_min': [0], 'c6_max': [0.0], 'c6_min': [0.0], 'c7': [0.0], 'c7_fixed': [1], 'c7_function': [0], 'c7_function_value': [''], 'c7_has_max': [0], 'c7_has_min': [0], 'c7_max': [0.0], 'c7_min': [0.0], 'c8': [0.0], 'c8_fixed': [1], 'c8_function': [0], 'c8_function_value': [''], 'c8_has_max': [0], 'c8_has_min': [0], 'c8_max': [0.0], 'c8_min': [0.0], 'c9': [0.0], 'c9_fixed': [1], 'c9_function': [0], 'c9_function_value': [''], 'c9_has_max': [0], 'c9_has_min': [0], 'c9_max': [0.0], 'c9_min': [0.0], 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'use_single_parameter_set': 0}</properties>
-		<properties format="literal" node_id="17">{'add_saxs': False, 'cube_face': 0, 'distribution': 1, 'is_automatic_run': True, 'mu': 1.81609712, 'mu_fixed': 0, 'mu_function': 0, 'mu_function_value': '', 'mu_has_max': 0, 'mu_has_min': 1, 'mu_max': 0.0, 'mu_min': 0.0, 'normalize_to': 0, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'shape': 1, 'sigma': 0.50418033, 'sigma_fixed': 0, 'sigma_function': 0, 'sigma_function_value': '', 'sigma_has_max': 1, 'sigma_has_min': 1, 'sigma_max': 1.0, 'sigma_min': 0.0, 'truncation': 0.2, 'truncation_fixed': 0, 'truncation_function': 0, 'truncation_function_value': '', 'truncation_has_max': 1, 'truncation_has_min': 1, 'truncation_max': 1.0, 'truncation_min': 0.0}</properties>
-		<properties format="literal" node_id="18">{'aa': 0.23388612, 'aa_fixed': 0, 'aa_function': 0, 'aa_function_value': '', 'aa_has_max': 0, 'aa_has_min': 1, 'aa_max': 0.0, 'aa_min': 0.0, 'bb': 0.03876293, 'bb_fixed': 0, 'bb_function': 0, 'bb_function_value': '', 'bb_has_max': 0, 'bb_has_min': 1, 'bb_max': 0.0, 'bb_min': 0.0, 'e1': 0.00076656, 'e1_fixed': 0, 'e1_function': 0, 'e1_function_value': '', 'e1_has_max': 0, 'e1_has_min': False, 'e1_max': 0.0, 'e1_min': 0.0, 'e4': 7.197e-05, 'e4_fixed': 0, 'e4_function': 0, 'e4_function_value': '', 'e4_has_max': 0, 'e4_has_min': False, 'e4_max': 0.0, 'e4_min': 0.0, 'is_automatic_run': True, 'laue_id': 13, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y'}</properties>
-		<properties format="pickle" node_id="19">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
+		<properties format="literal" node_id="13">{'ax': -0.0004186276, 'ax_fixed': True, 'ax_function': 0, 'ax_function_value': '', 'ax_has_max': 0, 'ax_has_min': 0, 'ax_max': 0.0, 'ax_min': 0.0, 'bx': -0.002962925, 'bx_fixed': True, 'bx_function': 0, 'bx_function_value': '', 'bx_has_max': 0, 'bx_has_min': 0, 'bx_max': 0.0, 'bx_min': 0.0, 'cx': 0.0288333, 'cx_fixed': True, 'cx_function': 0, 'cx_function_value': '', 'cx_has_max': 0, 'cx_has_min': 0, 'cx_max': 0.0, 'cx_min': 0.0, 'dx': -0.02681535, 'dx_fixed': True, 'dx_function': 0, 'dx_function_value': '', 'dx_has_max': 0, 'dx_has_min': 0, 'dx_max': 0.0, 'dx_min': 0.0, 'ex': 0.01484788, 'ex_fixed': True, 'ex_function': 0, 'ex_function_value': '', 'ex_has_max': 0, 'ex_has_min': 0, 'ex_max': 0.0, 'ex_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x02?\x00\x00\x006\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x02?\x00\x00\x00L\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
+		<properties format="literal" node_id="14">{'U': 0.000292292, 'U_fixed': True, 'U_function': 0, 'U_function_value': '', 'U_has_max': 0, 'U_has_min': 0, 'U_max': 0.0, 'U_min': 0.0, 'V': -3.281793e-05, 'V_fixed': True, 'V_function': 0, 'V_function_value': '', 'V_has_max': 0, 'V_has_min': 0, 'V_max': 0.0, 'V_min': 0.0, 'W': 0.001789973, 'W_fixed': True, 'W_function': 0, 'W_function_value': '', 'W_has_max': 0, 'W_has_min': 0, 'W_max': 0.0, 'W_min': 0.0, 'a': 0.05617726, 'a_fixed': True, 'a_function': 0, 'a_function_value': '', 'a_has_max': 0, 'a_has_min': 0, 'a_max': 0.0, 'a_min': 0.0, 'b': 0.0005769923, 'b_fixed': True, 'b_function': 0, 'b_function_value': '', 'b_has_max': 0, 'b_has_min': 0, 'b_max': 0.0, 'b_min': 0.0, 'c': 5.334123e-06, 'c_fixed': True, 'c_function': 0, 'c_function_value': '', 'c_has_max': 0, 'c_has_min': 0, 'c_max': 0.0, 'c_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x06\x81\x00\x00\x00\x81\x00\x00\x08}\x00\x00\x02+\x00\x00\x06\x81\x00\x00\x00\x97\x00\x00\x08}\x00\x00\x02+\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
+		<properties format="literal" node_id="15">{'c0': [0.0], 'c0_fixed': [0], 'c0_function': [0], 'c0_function_value': [''], 'c0_has_max': [0], 'c0_has_min': [0], 'c0_max': [0.0], 'c0_min': [0.0], 'c1': [0.0], 'c1_fixed': [0], 'c1_function': [0], 'c1_function_value': [''], 'c1_has_max': [0], 'c1_has_min': [0], 'c1_max': [0.0], 'c1_min': [0.0], 'c2': [0.0], 'c2_fixed': [0], 'c2_function': [0], 'c2_function_value': [''], 'c2_has_max': [0], 'c2_has_min': [0], 'c2_max': [0.0], 'c2_min': [0.0], 'c3': [0.0], 'c3_fixed': [0], 'c3_function': [0], 'c3_function_value': [''], 'c3_has_max': [0], 'c3_has_min': [0], 'c3_max': [0.0], 'c3_min': [0.0], 'c4': [0.0], 'c4_fixed': [0], 'c4_function': [0], 'c4_function_value': [''], 'c4_has_max': [0], 'c4_has_min': [0], 'c4_max': [0.0], 'c4_min': [0.0], 'c5': [0.0], 'c5_fixed': [0], 'c5_function': [0], 'c5_function_value': [''], 'c5_has_max': [0], 'c5_has_min': [0], 'c5_max': [0.0], 'c5_min': [0.0], 'c6': [0.0], 'c6_fixed': [1], 'c6_function': [0], 'c6_function_value': [''], 'c6_has_max': [0], 'c6_has_min': [0], 'c6_max': [0.0], 'c6_min': [0.0], 'c7': [0.0], 'c7_fixed': [1], 'c7_function': [0], 'c7_function_value': [''], 'c7_has_max': [0], 'c7_has_min': [0], 'c7_max': [0.0], 'c7_min': [0.0], 'c8': [0.0], 'c8_fixed': [1], 'c8_function': [0], 'c8_function_value': [''], 'c8_has_max': [0], 'c8_has_min': [0], 'c8_max': [0.0], 'c8_min': [0.0], 'c9': [0.0], 'c9_fixed': [1], 'c9_function': [0], 'c9_function_value': [''], 'c9_has_max': [0], 'c9_has_min': [0], 'c9_max': [0.0], 'c9_min': [0.0], 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'use_single_parameter_set': 0}</properties>
+		<properties format="literal" node_id="16">{'add_saxs': False, 'cube_face': 0, 'distribution': 1, 'is_automatic_run': True, 'mu': 1.81609712, 'mu_fixed': 0, 'mu_function': 0, 'mu_function_value': '', 'mu_has_max': 0, 'mu_has_min': 1, 'mu_max': 0.0, 'mu_min': 0.0, 'normalize_to': 0, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'shape': 1, 'sigma': 0.50418033, 'sigma_fixed': 0, 'sigma_function': 0, 'sigma_function_value': '', 'sigma_has_max': 1, 'sigma_has_min': 1, 'sigma_max': 1.0, 'sigma_min': 0.0, 'truncation': 0.2, 'truncation_fixed': 0, 'truncation_function': 0, 'truncation_function_value': '', 'truncation_has_max': 1, 'truncation_has_min': 1, 'truncation_max': 1.0, 'truncation_min': 0.0}</properties>
+		<properties format="literal" node_id="17">{'aa': 0.23388612, 'aa_fixed': 0, 'aa_function': 0, 'aa_function_value': '', 'aa_has_max': 0, 'aa_has_min': 1, 'aa_max': 0.0, 'aa_min': 0.0, 'bb': 0.03876293, 'bb_fixed': 0, 'bb_function': 0, 'bb_function_value': '', 'bb_has_max': 0, 'bb_has_min': 1, 'bb_max': 0.0, 'bb_min': 0.0, 'e1': 0.00076656, 'e1_fixed': 0, 'e1_function': 0, 'e1_function_value': '', 'e1_has_max': 0, 'e1_has_min': False, 'e1_max': 0.0, 'e1_min': 0.0, 'e4': 7.197e-05, 'e4_fixed': 0, 'e4_function': 0, 'e4_function_value': '', 'e4_has_max': 0, 'e4_has_min': False, 'e4_max': 0.0, 'e4_min': 0.0, 'is_automatic_run': True, 'laue_id': 13, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y'}</properties>
+		<properties format="pickle" node_id="18">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
 ZXRhX3htaW5xA0cAAAAAAAAAAFgIAAAAZXRhX3ltYXhxBEc/8AAAAAAAAFgIAAAAZXRhX3ltaW5x
 BUcAAAAAAAAAAFgLAAAAZml0dGVyX25hbWVxBksBWBsAAABmcmVlX291dHB1dF9wYXJhbWV0ZXJz
 X3RleHRxB1gAAAAAcQhYDgAAAGZ3aG1fYXV0b3NjYWxlcQlLAVgJAAAAZndobV94bWF4cQpHQGLA
@@ -209,7 +246,7 @@ BVAAAALoAAAAAAIAAAAP8AAAACkAAAAtAAAFUAAAAuhxHYVxHodxH1JxIFgVAAAAc2hvd19pbnRl
 Z3JhbF9icmVhZHRocSFLAVgIAAAAc2hvd19pcGZxIksAWAoAAABzaG93X3NoaWZ0cSNLAFgJAAAA
 c2hvd19zaXplcSRLAVgLAAAAc2hvd193YXJyZW5xJUsBWAwAAABzaG93X3dzc19nb2ZxJksBdS4=
 </properties>
-		<properties format="pickle" node_id="20">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
+		<properties format="pickle" node_id="19">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
 ZXRhX3htaW5xA0cAAAAAAAAAAFgIAAAAZXRhX3ltYXhxBEc/8AAAAAAAAFgIAAAAZXRhX3ltaW5x
 BUcAAAAAAAAAAFgLAAAAZml0dGVyX25hbWVxBksBWBsAAABmcmVlX291dHB1dF9wYXJhbWV0ZXJz
 X3RleHRxB1gAAAAAcQhYDgAAAGZ3aG1fYXV0b3NjYWxlcQlLAVgJAAAAZndobV94bWF4cQpHQGLA
@@ -225,7 +262,7 @@ BVAAAALoAAAAAAIAAAAP8AAAACkAAAAtAAAFUAAAAuhxHYVxHodxH1JxIFgVAAAAc2hvd19pbnRl
 Z3JhbF9icmVhZHRocSFLAFgIAAAAc2hvd19pcGZxIksAWAoAAABzaG93X3NoaWZ0cSNLAFgJAAAA
 c2hvd19zaXplcSRLAFgLAAAAc2hvd193YXJyZW5xJUsAWAwAAABzaG93X3dzc19nb2ZxJksBdS4=
 </properties>
-		<properties format="pickle" node_id="21">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
+		<properties format="pickle" node_id="20">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
 ZXRhX3htaW5xA0cAAAAAAAAAAFgIAAAAZXRhX3ltYXhxBEc/8AAAAAAAAFgIAAAAZXRhX3ltaW5x
 BUcAAAAAAAAAAFgLAAAAZml0dGVyX25hbWVxBksBWBsAAABmcmVlX291dHB1dF9wYXJhbWV0ZXJz
 X3RleHRxB1gAAAAAcQhYDgAAAGZ3aG1fYXV0b3NjYWxlcQlLAVgJAAAAZndobV94bWF4cQpHQGLA
@@ -241,16 +278,16 @@ BVAAAALoAAAAAAIAAAAP8AAAACkAAAAtAAAFUAAAAuhxHYVxHodxH1JxIFgVAAAAc2hvd19pbnRl
 Z3JhbF9icmVhZHRocSFLAVgIAAAAc2hvd19pcGZxIksAWAoAAABzaG93X3NoaWZ0cSNLAFgJAAAA
 c2hvd19zaXplcSRLAVgLAAAAc2hvd193YXJyZW5xJUsAWAwAAABzaG93X3dzc19nb2ZxJksBdS4=
 </properties>
-		<properties format="literal" node_id="22">{'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\x11\x00\x00\x00\x17\x00\x00\x02\x0e\x00\x00\x02\xe8\x00\x00\x00\x11\x00\x00\x00-\x00\x00\x02\x0e\x00\x00\x02\xe8\x00\x00\x00\x00\x02\x00\x00\x00\x05\xa0\x00\x00\x00\x11\x00\x00\x00-\x00\x00\x02\x0e\x00\x00\x02\xe8', 'shift': -0.0001, 'shift_fixed': 0, 'shift_function': 0, 'shift_function_value': '', 'shift_has_max': True, 'shift_has_min': 1, 'shift_max': 0.005, 'shift_min': -0.005}</properties>
-		<properties format="literal" node_id="23">{'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'shift': -0.003, 'shift_fixed': 0, 'shift_function': 0, 'shift_function_value': '', 'shift_has_max': True, 'shift_has_min': 1, 'shift_max': 0.005, 'shift_min': -0.005}</properties>
-		<properties format="literal" node_id="24">{'beampath': 0, 'degree_of_polarization': 1.0, 'is_automatic_run': True, 'lorentz_formula': 1, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'twotheta_mono': 28.443, 'use_lorentz_factor': 1, 'use_polarization_factor': 0, 'use_twotheta_mono': 0}</properties>
-		<properties format="literal" node_id="25">{'debye_waller_factor': 0.5, 'debye_waller_factor_fixed': 0, 'debye_waller_factor_function': 0, 'debye_waller_factor_function_value': '', 'debye_waller_factor_has_max': 1, 'debye_waller_factor_has_min': 1, 'debye_waller_factor_max': 1.0, 'debye_waller_factor_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x01\xc1\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x01\xc1\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x01\xc1', 'use_debye_waller_factor': 1}</properties>
-		<properties format="literal" node_id="26">{'ax': -0.0004186276, 'ax_fixed': True, 'ax_function': 0, 'ax_function_value': '', 'ax_has_max': 0, 'ax_has_min': 0, 'ax_max': 0.0, 'ax_min': 0.0, 'bx': -0.002962925, 'bx_fixed': True, 'bx_function': 0, 'bx_function_value': '', 'bx_has_max': 0, 'bx_has_min': 0, 'bx_max': 0.0, 'bx_min': 0.0, 'cx': 0.0288333, 'cx_fixed': True, 'cx_function': 0, 'cx_function_value': '', 'cx_has_max': 0, 'cx_has_min': 0, 'cx_max': 0.0, 'cx_min': 0.0, 'dx': -0.02681535, 'dx_fixed': True, 'dx_function': 0, 'dx_function_value': '', 'dx_has_max': 0, 'dx_has_min': 0, 'dx_max': 0.0, 'dx_min': 0.0, 'ex': 0.01484788, 'ex_fixed': True, 'ex_function': 0, 'ex_function_value': '', 'ex_has_max': 0, 'ex_has_min': 0, 'ex_max': 0.0, 'ex_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x02?\x00\x00\x006\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x02?\x00\x00\x00L\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
-		<properties format="literal" node_id="27">{'U': 0.000292292, 'U_fixed': True, 'U_function': 0, 'U_function_value': '', 'U_has_max': 0, 'U_has_min': 0, 'U_max': 0.0, 'U_min': 0.0, 'V': -3.281793e-05, 'V_fixed': True, 'V_function': 0, 'V_function_value': '', 'V_has_max': 0, 'V_has_min': 0, 'V_max': 0.0, 'V_min': 0.0, 'W': 0.001789973, 'W_fixed': True, 'W_function': 0, 'W_function_value': '', 'W_has_max': 0, 'W_has_min': 0, 'W_max': 0.0, 'W_min': 0.0, 'a': 0.05617726, 'a_fixed': True, 'a_function': 0, 'a_function_value': '', 'a_has_max': 0, 'a_has_min': 0, 'a_max': 0.0, 'a_min': 0.0, 'b': 0.0005769923, 'b_fixed': True, 'b_function': 0, 'b_function_value': '', 'b_has_max': 0, 'b_has_min': 0, 'b_max': 0.0, 'b_min': 0.0, 'c': 5.334123e-06, 'c_fixed': True, 'c_function': 0, 'c_function_value': '', 'c_has_max': 0, 'c_has_min': 0, 'c_max': 0.0, 'c_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x06\x81\x00\x00\x00\x81\x00\x00\x08}\x00\x00\x02+\x00\x00\x06\x81\x00\x00\x00\x97\x00\x00\x08}\x00\x00\x02+\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
-		<properties format="literal" node_id="28">{'c0': [0.0], 'c0_fixed': [0], 'c0_function': [0], 'c0_function_value': [''], 'c0_has_max': [0], 'c0_has_min': [0], 'c0_max': [0.0], 'c0_min': [0.0], 'c1': [0.0], 'c1_fixed': [0], 'c1_function': [0], 'c1_function_value': [''], 'c1_has_max': [0], 'c1_has_min': [0], 'c1_max': [0.0], 'c1_min': [0.0], 'c2': [0.0], 'c2_fixed': [0], 'c2_function': [0], 'c2_function_value': [''], 'c2_has_max': [0], 'c2_has_min': [0], 'c2_max': [0.0], 'c2_min': [0.0], 'c3': [0.0], 'c3_fixed': [0], 'c3_function': [0], 'c3_function_value': [''], 'c3_has_max': [0], 'c3_has_min': [0], 'c3_max': [0.0], 'c3_min': [0.0], 'c4': [0.0], 'c4_fixed': [0], 'c4_function': [0], 'c4_function_value': [''], 'c4_has_max': [0], 'c4_has_min': [0], 'c4_max': [0.0], 'c4_min': [0.0], 'c5': [0.0], 'c5_fixed': [0], 'c5_function': [0], 'c5_function_value': [''], 'c5_has_max': [0], 'c5_has_min': [0], 'c5_max': [0.0], 'c5_min': [0.0], 'c6': [0.0], 'c6_fixed': [1], 'c6_function': [0], 'c6_function_value': [''], 'c6_has_max': [0], 'c6_has_min': [0], 'c6_max': [0.0], 'c6_min': [0.0], 'c7': [0.0], 'c7_fixed': [1], 'c7_function': [0], 'c7_function_value': [''], 'c7_has_max': [0], 'c7_has_min': [0], 'c7_max': [0.0], 'c7_min': [0.0], 'c8': [0.0], 'c8_fixed': [1], 'c8_function': [0], 'c8_function_value': [''], 'c8_has_max': [0], 'c8_has_min': [0], 'c8_max': [0.0], 'c8_min': [0.0], 'c9': [0.0], 'c9_fixed': [1], 'c9_function': [0], 'c9_function_value': [''], 'c9_has_max': [0], 'c9_has_min': [0], 'c9_max': [0.0], 'c9_min': [0.0], 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'use_single_parameter_set': 0}</properties>
-		<properties format="literal" node_id="29">{'add_saxs': False, 'cube_face': 0, 'distribution': 1, 'is_automatic_run': True, 'mu': 1.81609712, 'mu_fixed': 0, 'mu_function': 0, 'mu_function_value': '', 'mu_has_max': 0, 'mu_has_min': 1, 'mu_max': 0.0, 'mu_min': 0.0, 'normalize_to': 0, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'shape': 1, 'sigma': 0.50418033, 'sigma_fixed': 0, 'sigma_function': 0, 'sigma_function_value': '', 'sigma_has_max': 1, 'sigma_has_min': 1, 'sigma_max': 1.0, 'sigma_min': 0.0, 'truncation': 0.2, 'truncation_fixed': 0, 'truncation_function': 0, 'truncation_function_value': '', 'truncation_has_max': 1, 'truncation_has_min': 1, 'truncation_max': 1.0, 'truncation_min': 0.0}</properties>
-		<properties format="literal" node_id="30">{'aa': 0.23388612, 'aa_fixed': 0, 'aa_function': 0, 'aa_function_value': '', 'aa_has_max': 0, 'aa_has_min': 1, 'aa_max': 0.0, 'aa_min': 0.0, 'bb': 0.03876293, 'bb_fixed': 0, 'bb_function': 0, 'bb_function_value': '', 'bb_has_max': 0, 'bb_has_min': 1, 'bb_max': 0.0, 'bb_min': 0.0, 'e1': 0.00076656, 'e1_fixed': 0, 'e1_function': 0, 'e1_function_value': '', 'e1_has_max': 0, 'e1_has_min': False, 'e1_max': 0.0, 'e1_min': 0.0, 'e4': 7.197e-05, 'e4_fixed': 0, 'e4_function': 0, 'e4_function_value': '', 'e4_has_max': 0, 'e4_has_min': False, 'e4_max': 0.0, 'e4_min': 0.0, 'is_automatic_run': True, 'laue_id': 13, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y'}</properties>
-		<properties format="pickle" node_id="31">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
+		<properties format="literal" node_id="21">{'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\x11\x00\x00\x00\x17\x00\x00\x02\x0e\x00\x00\x02\xe8\x00\x00\x00\x11\x00\x00\x00-\x00\x00\x02\x0e\x00\x00\x02\xe8\x00\x00\x00\x00\x02\x00\x00\x00\x05\xa0\x00\x00\x00\x11\x00\x00\x00-\x00\x00\x02\x0e\x00\x00\x02\xe8', 'shift': -0.0001, 'shift_fixed': 0, 'shift_function': 0, 'shift_function_value': '', 'shift_has_max': True, 'shift_has_min': 1, 'shift_max': 0.005, 'shift_min': -0.005}</properties>
+		<properties format="literal" node_id="22">{'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'shift': -0.003, 'shift_fixed': 0, 'shift_function': 0, 'shift_function_value': '', 'shift_has_max': True, 'shift_has_min': 1, 'shift_max': 0.005, 'shift_min': -0.005}</properties>
+		<properties format="literal" node_id="23">{'beampath': 0, 'degree_of_polarization': 1.0, 'is_automatic_run': True, 'lorentz_formula': 1, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'twotheta_mono': 28.443, 'use_lorentz_factor': 1, 'use_polarization_factor': 0, 'use_twotheta_mono': 0}</properties>
+		<properties format="literal" node_id="24">{'debye_waller_factor': 0.5, 'debye_waller_factor_fixed': 0, 'debye_waller_factor_function': 0, 'debye_waller_factor_function_value': '', 'debye_waller_factor_has_max': 1, 'debye_waller_factor_has_min': 1, 'debye_waller_factor_max': 1.0, 'debye_waller_factor_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x01\xc1\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x01\xc1\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x01\xc1', 'use_debye_waller_factor': 1}</properties>
+		<properties format="literal" node_id="25">{'ax': -0.0004186276, 'ax_fixed': True, 'ax_function': 0, 'ax_function_value': '', 'ax_has_max': 0, 'ax_has_min': 0, 'ax_max': 0.0, 'ax_min': 0.0, 'bx': -0.002962925, 'bx_fixed': True, 'bx_function': 0, 'bx_function_value': '', 'bx_has_max': 0, 'bx_has_min': 0, 'bx_max': 0.0, 'bx_min': 0.0, 'cx': 0.0288333, 'cx_fixed': True, 'cx_function': 0, 'cx_function_value': '', 'cx_has_max': 0, 'cx_has_min': 0, 'cx_max': 0.0, 'cx_min': 0.0, 'dx': -0.02681535, 'dx_fixed': True, 'dx_function': 0, 'dx_function_value': '', 'dx_has_max': 0, 'dx_has_min': 0, 'dx_max': 0.0, 'dx_min': 0.0, 'ex': 0.01484788, 'ex_fixed': True, 'ex_function': 0, 'ex_function_value': '', 'ex_has_max': 0, 'ex_has_min': 0, 'ex_max': 0.0, 'ex_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x02?\x00\x00\x006\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x02?\x00\x00\x00L\x00\x00\x04;\x00\x00\x01\xe0\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
+		<properties format="literal" node_id="26">{'U': 0.000292292, 'U_fixed': True, 'U_function': 0, 'U_function_value': '', 'U_has_max': 0, 'U_has_min': 0, 'U_max': 0.0, 'U_min': 0.0, 'V': -3.281793e-05, 'V_fixed': True, 'V_function': 0, 'V_function_value': '', 'V_has_max': 0, 'V_has_min': 0, 'V_max': 0.0, 'V_min': 0.0, 'W': 0.001789973, 'W_fixed': True, 'W_function': 0, 'W_function_value': '', 'W_has_max': 0, 'W_has_min': 0, 'W_max': 0.0, 'W_min': 0.0, 'a': 0.05617726, 'a_fixed': True, 'a_function': 0, 'a_function_value': '', 'a_has_max': 0, 'a_has_min': 0, 'a_max': 0.0, 'a_min': 0.0, 'b': 0.0005769923, 'b_fixed': True, 'b_function': 0, 'b_function_value': '', 'b_has_max': 0, 'b_has_min': 0, 'b_max': 0.0, 'b_min': 0.0, 'c': 5.334123e-06, 'c_fixed': True, 'c_function': 0, 'c_function_value': '', 'c_has_max': 0, 'c_has_min': 0, 'c_max': 0.0, 'c_min': 0.0, 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x06\x81\x00\x00\x00\x81\x00\x00\x08}\x00\x00\x02+\x00\x00\x06\x81\x00\x00\x00\x97\x00\x00\x08}\x00\x00\x02+\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0'}</properties>
+		<properties format="literal" node_id="27">{'c0': [0.0], 'c0_fixed': [0], 'c0_function': [0], 'c0_function_value': [''], 'c0_has_max': [0], 'c0_has_min': [0], 'c0_max': [0.0], 'c0_min': [0.0], 'c1': [0.0], 'c1_fixed': [0], 'c1_function': [0], 'c1_function_value': [''], 'c1_has_max': [0], 'c1_has_min': [0], 'c1_max': [0.0], 'c1_min': [0.0], 'c2': [0.0], 'c2_fixed': [0], 'c2_function': [0], 'c2_function_value': [''], 'c2_has_max': [0], 'c2_has_min': [0], 'c2_max': [0.0], 'c2_min': [0.0], 'c3': [0.0], 'c3_fixed': [0], 'c3_function': [0], 'c3_function_value': [''], 'c3_has_max': [0], 'c3_has_min': [0], 'c3_max': [0.0], 'c3_min': [0.0], 'c4': [0.0], 'c4_fixed': [0], 'c4_function': [0], 'c4_function_value': [''], 'c4_has_max': [0], 'c4_has_min': [0], 'c4_max': [0.0], 'c4_min': [0.0], 'c5': [0.0], 'c5_fixed': [0], 'c5_function': [0], 'c5_function_value': [''], 'c5_has_max': [0], 'c5_has_min': [0], 'c5_max': [0.0], 'c5_min': [0.0], 'c6': [0.0], 'c6_fixed': [1], 'c6_function': [0], 'c6_function_value': [''], 'c6_has_max': [0], 'c6_has_min': [0], 'c6_max': [0.0], 'c6_min': [0.0], 'c7': [0.0], 'c7_fixed': [1], 'c7_function': [0], 'c7_function_value': [''], 'c7_has_max': [0], 'c7_has_min': [0], 'c7_max': [0.0], 'c7_min': [0.0], 'c8': [0.0], 'c8_fixed': [1], 'c8_function': [0], 'c8_function_value': [''], 'c8_has_max': [0], 'c8_has_min': [0], 'c8_max': [0.0], 'c8_min': [0.0], 'c9': [0.0], 'c9_fixed': [1], 'c9_function': [0], 'c9_function_value': [''], 'c9_has_max': [0], 'c9_has_min': [0], 'c9_max': [0.0], 'c9_min': [0.0], 'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'use_single_parameter_set': 0}</properties>
+		<properties format="literal" node_id="28">{'add_saxs': False, 'cube_face': 0, 'distribution': 1, 'is_automatic_run': True, 'mu': 1.81609712, 'mu_fixed': 0, 'mu_function': 0, 'mu_function_value': '', 'mu_has_max': 0, 'mu_has_min': 1, 'mu_max': 0.0, 'mu_min': 0.0, 'normalize_to': 0, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x17\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00-\x00\x00\x01\xfc\x00\x00\x02\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0', 'shape': 1, 'sigma': 0.50418033, 'sigma_fixed': 0, 'sigma_function': 0, 'sigma_function_value': '', 'sigma_has_max': 1, 'sigma_has_min': 1, 'sigma_max': 1.0, 'sigma_min': 0.0, 'truncation': 0.2, 'truncation_fixed': 0, 'truncation_function': 0, 'truncation_function_value': '', 'truncation_has_max': 1, 'truncation_has_min': 1, 'truncation_max': 1.0, 'truncation_min': 0.0}</properties>
+		<properties format="literal" node_id="29">{'aa': 0.23388612, 'aa_fixed': 0, 'aa_function': 0, 'aa_function_value': '', 'aa_has_max': 0, 'aa_has_min': 1, 'aa_max': 0.0, 'aa_min': 0.0, 'bb': 0.03876293, 'bb_fixed': 0, 'bb_function': 0, 'bb_function_value': '', 'bb_has_max': 0, 'bb_has_min': 1, 'bb_max': 0.0, 'bb_min': 0.0, 'e1': 0.00076656, 'e1_fixed': 0, 'e1_function': 0, 'e1_function_value': '', 'e1_has_max': 0, 'e1_has_min': False, 'e1_max': 0.0, 'e1_min': 0.0, 'e4': 7.197e-05, 'e4_fixed': 0, 'e4_function': 0, 'e4_function_value': '', 'e4_has_max': 0, 'e4_has_min': False, 'e4_max': 0.0, 'e4_min': 0.0, 'is_automatic_run': True, 'laue_id': 13, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y'}</properties>
+		<properties format="pickle" node_id="30">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
 ZXRhX3htaW5xA0cAAAAAAAAAAFgIAAAAZXRhX3ltYXhxBEc/8AAAAAAAAFgIAAAAZXRhX3ltaW5x
 BUcAAAAAAAAAAFgLAAAAZml0dGVyX25hbWVxBksBWBsAAABmcmVlX291dHB1dF9wYXJhbWV0ZXJz
 X3RleHRxB1gAAAAAcQhYDgAAAGZ3aG1fYXV0b3NjYWxlcQlLAVgJAAAAZndobV94bWF4cQpHQGLA
@@ -266,10 +303,10 @@ BakAAALoAAAAAAIAAAAP8AAAAIIAAAAtAAAFqQAAAuhxHYVxHodxH1JxIFgVAAAAc2hvd19pbnRl
 Z3JhbF9icmVhZHRocSFLAVgIAAAAc2hvd19pcGZxIksAWAoAAABzaG93X3NoaWZ0cSNLAFgJAAAA
 c2hvd19zaXplcSRLAVgLAAAAc2hvd193YXJyZW5xJUsBWAwAAABzaG93X3dzc19nb2ZxJksBdS4=
 </properties>
-		<properties format="literal" node_id="32">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': '', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': 1, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 5, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\xf8\x00\x00\x00X\x00\x00\x06\x1f\x00\x00\x02\xd3\x00\x00\x00\xf8\x00\x00\x00n\x00\x00\x06\x1f\x00\x00\x02\xd3\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x00\xf8\x00\x00\x00n\x00\x00\x06\x1f\x00\x00\x02\xd3', 'show_integral_breadth': 0, 'show_ipf': 0, 'show_shift': 0, 'show_size': 0, 'show_warren': 0, 'show_wss_gof': 1}</properties>
-		<properties format="literal" node_id="33">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': '', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': 1, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 5, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00Z\x00\x00\x00\x17\x00\x00\x05\x81\x00\x00\x02\xbf\x00\x00\x00Z\x00\x00\x00-\x00\x00\x05\x81\x00\x00\x02\xbf\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x00Z\x00\x00\x00-\x00\x00\x05\x81\x00\x00\x02\xbf', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 0, 'show_wss_gof': 1}</properties>
-		<properties format="literal" node_id="34">{'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'shift': -0.003, 'shift_fixed': 0, 'shift_function': 0, 'shift_function_value': '', 'shift_has_max': True, 'shift_has_min': 1, 'shift_max': 0.005, 'shift_min': -0.005}</properties>
-		<properties format="pickle" node_id="35">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
+		<properties format="literal" node_id="31">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': '', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': 1, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 5, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\xf8\x00\x00\x00X\x00\x00\x06\x1f\x00\x00\x02\xd3\x00\x00\x00\xf8\x00\x00\x00n\x00\x00\x06\x1f\x00\x00\x02\xd3\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x00\xf8\x00\x00\x00n\x00\x00\x06\x1f\x00\x00\x02\xd3', 'show_integral_breadth': 0, 'show_ipf': 0, 'show_shift': 0, 'show_size': 0, 'show_warren': 0, 'show_wss_gof': 1}</properties>
+		<properties format="literal" node_id="32">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': '', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': 1, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 5, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00Z\x00\x00\x00\x17\x00\x00\x05\x81\x00\x00\x02\xbf\x00\x00\x00Z\x00\x00\x00-\x00\x00\x05\x81\x00\x00\x02\xbf\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x00Z\x00\x00\x00-\x00\x00\x05\x81\x00\x00\x02\xbf', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 0, 'show_wss_gof': 1}</properties>
+		<properties format="literal" node_id="33">{'is_automatic_run': True, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x06\xf9\x00\x00\x00\x84\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y\x00\x00\x00\x00\x00\x00\x00\x00\x0f\xf0\x00\x00\x06\xf9\x00\x00\x00\x9a\x00\x00\x08\xf6\x00\x00\x02y', 'shift': -0.003, 'shift_fixed': 0, 'shift_function': 0, 'shift_function_value': '', 'shift_has_max': True, 'shift_has_min': 1, 'shift_max': 0.005, 'shift_min': -0.005}</properties>
+		<properties format="pickle" node_id="34">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
 cQJdcQNLAGFYEwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxBGNzaXAKX3VucGlja2xlX3R5cGUKcQVY
 DAAAAFB5UXQ1LlF0Q29yZXEGWAoAAABRQnl0ZUFycmF5cQdDQgHZ0MsAAwAAAAAAKQAAABcAAAIr
 AAAChAAAACkAAAAtAAACKwAAAoQAAAAAAgAAAA/wAAAAKQAAAC0AAAIrAAAChHEIhXEJh3EKUnEL
@@ -317,7 +354,7 @@ AHdlaWdodF81X2hhc19taW5xmF1xmUsBYVgMAAAAd2VpZ2h0XzVfbWF4cZpdcZtHAAAAAAAAAABh
 WAwAAAB3ZWlnaHRfNV9taW5xnF1xnUcAAAAAAAAAAGFYDQAAAHhyYXlfdHViZV9rZXlxnl1xn1gF
 AAAAQ3VLYTJxoGF1Lg==
 </properties>
-		<properties format="pickle" node_id="36">gAN9cQAoWAgAAABmaWxlbmFtZXEBXXECWBsAAABGZU1vX0JhdGNoNF9HaWFyYUFfMV9IUS54eWVx
+		<properties format="pickle" node_id="35">gAN9cQAoWAgAAABmaWxlbmFtZXEBXXECWBsAAABGZU1vX0JhdGNoNF9HaWFyYUFfMV9IUS54eWVx
 A2FYEAAAAGlzX2F1dG9tYXRpY19ydW5xBIhYEwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxBWNzaXAK
 X3VucGlja2xlX3R5cGUKcQZYDAAAAFB5UXQ1LlF0Q29yZXEHWAoAAABRQnl0ZUFycmF5cQhDQgHZ
 0MsAAwAAAAAAKQAAABcAAAVQAAAC6AAAACkAAAAtAAAFUAAAAugAAAAAAgAAAA/wAAAAKQAAAC0A
@@ -325,7 +362,7 @@ AAVQAAAC6HEJhXEKh3ELUnEMWBAAAAB0d290aGV0YV9oYXNfbWF4cQ1dcQ5LAGFYEAAAAHR3b3Ro
 ZXRhX2hhc19taW5xD11xEEsAYVgMAAAAdHdvdGhldGFfbWF4cRFdcRJHAAAAAAAAAABhWAwAAAB0
 d290aGV0YV9taW5xE11xFEcAAAAAAAAAAGF1Lg==
 </properties>
-		<properties format="pickle" node_id="37">gAN9cQAoWAEAAABhcQFdcQJHP9JN0vGp++dhWAcAAABhX2ZpeGVkcQNdcQRLAGFYCgAAAGFfZnVu
+		<properties format="pickle" node_id="36">gAN9cQAoWAEAAABhcQFdcQJHP9JN0vGp++dhWAcAAABhX2ZpeGVkcQNdcQRLAGFYCgAAAGFfZnVu
 Y3Rpb25xBV1xBksAYVgQAAAAYV9mdW5jdGlvbl92YWx1ZXEHXXEIWAAAAABxCWFYCQAAAGFfaGFz
 X21heHEKXXELSwFhWAkAAABhX2hhc19taW5xDF1xDUsBYVgFAAAAYV9tYXhxDl1xD0c/0o9cKPXC
 j2FYBQAAAGFfbWlucRBdcRFHAAAAAAAAAABhWAcAAABmb3JtdWxhcRJdcRNoCWFYFgAAAGludGVu
@@ -341,7 +378,7 @@ Cl91bnBpY2tsZV90eXBlCnEmWAwAAABQeVF0NS5RdENvcmVxJ1gKAAAAUUJ5dGVBcnJheXEoQ0IB
 AAACKwAAAe5xKYVxKodxK1JxLFgIAAAAc3ltbWV0cnlxLV1xLksBYVgNAAAAdXNlX3N0cnVjdHVy
 ZXEvXXEwSwBhdS4=
 </properties>
-		<properties format="pickle" node_id="38">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWAsAAABsaW1pdF90eXBlc3ECXXEDXXEESwBh
+		<properties format="pickle" node_id="37">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWAsAAABsaW1pdF90eXBlc3ECXXEDXXEESwBh
 YVgGAAAAbGltaXRzcQVdcQZdcQdHAAAAAAAAAABhYVgVAAAAcmVmbGVjdGlvbnNfb2ZfcGhhc2Vz
 cQhdcQldcQpYVQMAADEsIDEsIDAsIHJlZmxlY3Rpb25fMV8xX2ludGVuc2l0eTEgMTAwMC4wLCBt
 aW4gMWUtMDYKMiwgMCwgMCwgcmVmbGVjdGlvbl8xXzFfaW50ZW5zaXR5MiAxMDAwLjAsIG1pbiAx
@@ -363,7 +400,7 @@ eXBlCnENWAwAAABQeVF0NS5RdENvcmVxDlgKAAAAUUJ5dGVBcnJheXEPQ0IB2dDLAAMAAAAAACkA
 AAAXAAACKwAAAugAAAApAAAALQAAAisAAALoAAAAAAIAAAAP8AAAACkAAAAtAAACKwAAAuhxEIVx
 EYdxElJxE3Uu
 </properties>
-		<properties format="pickle" node_id="39">gAN9cQAoWAEAAABhcQFdcQJHP9JN0vGp++dhWAcAAABhX2ZpeGVkcQNdcQRLAGFYCgAAAGFfZnVu
+		<properties format="pickle" node_id="38">gAN9cQAoWAEAAABhcQFdcQJHP9JN0vGp++dhWAcAAABhX2ZpeGVkcQNdcQRLAGFYCgAAAGFfZnVu
 Y3Rpb25xBV1xBksAYVgQAAAAYV9mdW5jdGlvbl92YWx1ZXEHXXEIWAAAAABxCWFYCQAAAGFfaGFz
 X21heHEKXXELSwFhWAkAAABhX2hhc19taW5xDF1xDUsBYVgFAAAAYV9tYXhxDl1xD0c/0o9cKPXC
 j2FYBQAAAGFfbWlucRBdcRFHAAAAAAAAAABhWAcAAABmb3JtdWxhcRJdcRNYCQAAAEZlOTg1TW8x
@@ -379,7 +416,7 @@ Qnl0ZUFycmF5cSlDQgHZ0MsAAwAAAAAAKQAAABcAAAIrAAAB7gAAACkAAAAtAAACKwAAAe4AAAAA
 AgAAAA/wAAAAKQAAAC0AAAIrAAAB7nEqhXErh3EsUnEtWAgAAABzeW1tZXRyeXEuXXEvSwFhWA0A
 AAB1c2Vfc3RydWN0dXJlcTBdcTFLAWF1Lg==
 </properties>
-		<properties format="pickle" node_id="40">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWAsAAABsaW1pdF90eXBlc3ECXXEDXXEESwBh
+		<properties format="pickle" node_id="39">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWAsAAABsaW1pdF90eXBlc3ECXXEDXXEESwBh
 YVgGAAAAbGltaXRzcQVdcQZdcQdHAAAAAAAAAABhYVgVAAAAcmVmbGVjdGlvbnNfb2ZfcGhhc2Vz
 cQhdcQldcQpYVQMAADEsIDEsIDAsIHJlZmxlY3Rpb25fMV8xX2ludGVuc2l0eTEgMTAwMC4wLCBt
 aW4gMWUtMDYKMiwgMCwgMCwgcmVmbGVjdGlvbl8xXzFfaW50ZW5zaXR5MiAxMDAwLjAsIG1pbiAx
@@ -401,7 +438,7 @@ eXBlCnENWAwAAABQeVF0NS5RdENvcmVxDlgKAAAAUUJ5dGVBcnJheXEPQ0IB2dDLAAMAAAAAACkA
 AAAXAAACKwAAAugAAAApAAAALQAAAisAAALoAAAAAAIAAAAP8AAAACkAAAAtAAACKwAAAuhxEIVx
 EYdxElJxE3Uu
 </properties>
-		<properties format="pickle" node_id="41">gAN9cQAoWAEAAABhcQFdcQJHP9JN0vGp++dhWAcAAABhX2ZpeGVkcQNdcQRLAGFYCgAAAGFfZnVu
+		<properties format="pickle" node_id="40">gAN9cQAoWAEAAABhcQFdcQJHP9JN0vGp++dhWAcAAABhX2ZpeGVkcQNdcQRLAGFYCgAAAGFfZnVu
 Y3Rpb25xBV1xBksAYVgQAAAAYV9mdW5jdGlvbl92YWx1ZXEHXXEIWAAAAABxCWFYCQAAAGFfaGFz
 X21heHEKXXELSwBhWAkAAABhX2hhc19taW5xDF1xDUsBYVgFAAAAYV9tYXhxDl1xD0cAAAAAAAAA
 AGFYBQAAAGFfbWlucRBdcRFHAAAAAAAAAABhWAgAAABjaWZfZmlsZXESXXETWAoAAABGZV9iY2Mu
@@ -417,7 +454,7 @@ a2xlX3R5cGUKcSpYDAAAAFB5UXQ1LlF0Q29yZXErWAoAAABRQnl0ZUFycmF5cSxDQgHZ0MsAAwAA
 AAAAKQAAABcAAAIrAAAB7gAAACkAAAAtAAACKwAAAe4AAAAAAgAAAA/wAAAAKQAAAC0AAAIrAAAB
 7nEthXEuh3EvUnEwWAgAAABzeW1tZXRyeXExXXEySwFhdS4=
 </properties>
-		<properties format="pickle" node_id="42">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWAsAAABsaW1pdF90eXBlc3ECXXEDXXEESwBh
+		<properties format="pickle" node_id="41">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWAsAAABsaW1pdF90eXBlc3ECXXEDXXEESwBh
 YVgGAAAAbGltaXRzcQVdcQZdcQdHAAAAAAAAAABhYVgVAAAAcmVmbGVjdGlvbnNfb2ZfcGhhc2Vz
 cQhdcQldcQpYVQMAADEsIDEsIDAsIHJlZmxlY3Rpb25fMV8xX2ludGVuc2l0eTEgMTAwMC4wLCBt
 aW4gMWUtMDYKMiwgMCwgMCwgcmVmbGVjdGlvbl8xXzFfaW50ZW5zaXR5MiAxMDAwLjAsIG1pbiAx
@@ -439,7 +476,7 @@ eXBlCnENWAwAAABQeVF0NS5RdENvcmVxDlgKAAAAUUJ5dGVBcnJheXEPQ0IB2dDLAAMAAAAAACkA
 AAAXAAACKwAAAugAAAApAAAALQAAAisAAALoAAAAAAAAAAAP8AAAACkAAAAtAAACKwAAAuhxEIVx
 EYdxElJxE3Uu
 </properties>
-		<properties format="pickle" node_id="43">gAN9cQAoWAEAAABhcQFdcQJjbnVtcHkuY29yZS5tdWx0aWFycmF5CnNjYWxhcgpxA2NudW1weQpk
+		<properties format="pickle" node_id="42">gAN9cQAoWAEAAABhcQFdcQJjbnVtcHkuY29yZS5tdWx0aWFycmF5CnNjYWxhcgpxA2NudW1weQpk
 dHlwZQpxBFgCAAAAZjhxBUsASwGHcQZScQcoSwNYAQAAADxxCE5OTkr/////Sv////9LAHRxCWJD
 CKw/280AVdI/cQqGcQtScQxhWAcAAABhX2ZpeGVkcQ1dcQ5LAGFYCgAAAGFfZnVuY3Rpb25xD11x
 EEsAYVgQAAAAYV9mdW5jdGlvbl92YWx1ZXERXXESWAAAAABxE2FYCQAAAGFfaGFzX21heHEUXXEV
@@ -457,7 +494,7 @@ bnBpY2tsZV90eXBlCnE3WAwAAABQeVF0NS5RdENvcmVxOFgKAAAAUUJ5dGVBcnJheXE5Q0IB2dDL
 AAMAAAAAACkAAAAXAAACKwAAAe4AAAApAAAALQAAAisAAAHuAAAAAAIAAAAP8AAAACkAAAAtAAAC
 KwAAAe5xOoVxO4dxPFJxPVgIAAAAc3ltbWV0cnlxPl1xP0sBYXUu
 </properties>
-		<properties format="pickle" node_id="44">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
+		<properties format="pickle" node_id="43">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
 cQJdcQNLAGFYEwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxBGNzaXAKX3VucGlja2xlX3R5cGUKcQVY
 DAAAAFB5UXQ1LlF0Q29yZXEGWAoAAABRQnl0ZUFycmF5cQdDQgHZ0MsAAwAAAAAAKQAAABcAAAIr
 AAAChAAAACkAAAAtAAACKwAAAoQAAAAAAgAAAA/wAAAAKQAAAC0AAAIrAAAChHEIhXEJh3EKUnEL
@@ -505,7 +542,7 @@ d2VpZ2h0XzVfaGFzX21pbnGYXXGZSwFhWAwAAAB3ZWlnaHRfNV9tYXhxml1xm0cAAAAAAAAAAGFY
 DAAAAHdlaWdodF81X21pbnGcXXGdRwAAAAAAAAAAYVgNAAAAeHJheV90dWJlX2tleXGeXXGfWAUA
 AABDdUthMnGgYXUu
 </properties>
-		<properties format="pickle" node_id="45">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
+		<properties format="pickle" node_id="44">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
 cQJdcQNLAGFYEwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxBGNzaXAKX3VucGlja2xlX3R5cGUKcQVY
 DAAAAFB5UXQ1LlF0Q29yZXEGWAoAAABRQnl0ZUFycmF5cQdDQgHZ0MsAAwAAAAAAKQAAABcAAAIr
 AAAChAAAACkAAAAtAAACKwAAAoQAAAAAAgAAAA/wAAAAKQAAAC0AAAIrAAAChHEIhXEJh3EKUnEL
@@ -553,7 +590,7 @@ d2VpZ2h0XzVfaGFzX21pbnGYXXGZSwFhWAwAAAB3ZWlnaHRfNV9tYXhxml1xm0cAAAAAAAAAAGFY
 DAAAAHdlaWdodF81X21pbnGcXXGdRwAAAAAAAAAAYVgNAAAAeHJheV90dWJlX2tleXGeXXGfWAUA
 AABDdUthMnGgYXUu
 </properties>
-		<properties format="pickle" node_id="46">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
+		<properties format="pickle" node_id="45">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWBYAAABpc19tdWx0aXBsZV93YXZlbGVuZ3Ro
 cQJdcQNLAGFYEwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxBGNzaXAKX3VucGlja2xlX3R5cGUKcQVY
 DAAAAFB5UXQ1LlF0Q29yZXEGWAoAAABRQnl0ZUFycmF5cQdDQgHZ0MsAAwAAAAAAKQAAABcAAAIr
 AAAChAAAACkAAAAtAAACKwAAAoQAAAAAAgAAAA/wAAAAKQAAAC0AAAIrAAAChHEIhXEJh3EKUnEL
@@ -600,6 +637,25 @@ X2Z1bmN0aW9uX3ZhbHVlcZRdcZVoF2FYEAAAAHdlaWdodF81X2hhc19tYXhxll1xl0sAYVgQAAAA
 d2VpZ2h0XzVfaGFzX21pbnGYXXGZSwFhWAwAAAB3ZWlnaHRfNV9tYXhxml1xm0cAAAAAAAAAAGFY
 DAAAAHdlaWdodF81X21pbnGcXXGdRwAAAAAAAAAAYVgNAAAAeHJheV90dWJlX2tleXGeXXGfWAUA
 AABDdUthMnGgYXUu
+</properties>
+		<properties format="pickle" node_id="46">gAN9cQAoWAYAAABhY3RpdmVxAV1xAksAYVgIAAAAYWRkX3NheHNxA11xBIlhWAkAAABjdWJlX2Zh
+Y2VxBV1xBksBYVgMAAAAZGlzdHJpYnV0aW9ucQddcQhLAWFYEAAAAGlzX2F1dG9tYXRpY19ydW5x
+CYhYAgAAAG11cQpdcQtHQBAAAAAAAABhWAgAAABtdV9maXhlZHEMXXENSwBhWAsAAABtdV9mdW5j
+dGlvbnEOXXEPSwBhWBEAAABtdV9mdW5jdGlvbl92YWx1ZXEQXXERWAAAAABxEmFYCgAAAG11X2hh
+c19tYXhxE11xFEsAYVgKAAAAbXVfaGFzX21pbnEVXXEWSwFhWAYAAABtdV9tYXhxF11xGEcAAAAA
+AAAAAGFYBgAAAG11X21pbnEZXXEaRz+EeuFHrhR7YVgMAAAAbm9ybWFsaXplX3RvcRtdcRxLAGFY
+EwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxHWNzaXAKX3VucGlja2xlX3R5cGUKcR5YDAAAAFB5UXQ1
+LlF0Q29yZXEfWAoAAABRQnl0ZUFycmF5cSBDQgHZ0MsAAwAAAAAAKQAAABcAAAIrAAACIAAAACkA
+AAAtAAACKwAAAiAAAAAAAgAAAA/wAAAAKQAAAC0AAAIrAAACIHEhhXEih3EjUnEkWAUAAABzaGFw
+ZXElXXEmSwFhWAUAAABzaWdtYXEnXXEoRz/gAAAAAAAAYVgLAAAAc2lnbWFfZml4ZWRxKV1xKksA
+YVgOAAAAc2lnbWFfZnVuY3Rpb25xK11xLEsAYVgUAAAAc2lnbWFfZnVuY3Rpb25fdmFsdWVxLV1x
+LmgSYVgNAAAAc2lnbWFfaGFzX21heHEvXXEwSwFhWA0AAABzaWdtYV9oYXNfbWlucTFdcTJLAWFY
+CQAAAHNpZ21hX21heHEzXXE0Rz/wAAAAAAAAYVgJAAAAc2lnbWFfbWlucTVdcTZHP4R64UeuFHth
+WAoAAAB0cnVuY2F0aW9ucTddcThHP+AAAAAAAABhWBAAAAB0cnVuY2F0aW9uX2ZpeGVkcTldcTpL
+AGFYEwAAAHRydW5jYXRpb25fZnVuY3Rpb25xO11xPEsAYVgZAAAAdHJ1bmNhdGlvbl9mdW5jdGlv
+bl92YWx1ZXE9XXE+aBJhWBIAAAB0cnVuY2F0aW9uX2hhc19tYXhxP11xQEsBYVgSAAAAdHJ1bmNh
+dGlvbl9oYXNfbWlucUFdcUJLAWFYDgAAAHRydW5jYXRpb25fbWF4cUNdcURHP/AAAAAAAABhWA4A
+AAB0cnVuY2F0aW9uX21pbnFFXXFGRz+EeuFHrhR7YXUu
 </properties>
 	</node_properties>
 </scheme>

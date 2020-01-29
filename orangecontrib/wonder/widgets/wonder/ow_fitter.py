@@ -967,11 +967,11 @@ class OWFitter(OWGenericWidget):
             if self.distribution is None: L_max = 20
             else: L_max = 2*self.distribution.D_avg
 
-            x, y = self.fitted_fit_global_parameters.strain_parameters[0].get_warren_plot(1, 0, 0, L_max=L_max)
+            x, y = self.fitted_fit_global_parameters.get_strain_parameters(0).get_warren_plot(1, 0, 0, L_max=L_max)
             self.plot_strain.addCurve(x, y, legend="h00", color='blue')
-            _, y = self.fitted_fit_global_parameters.strain_parameters[0].get_warren_plot(1, 1, 1, L_max=L_max)
+            _, y = self.fitted_fit_global_parameters.get_strain_parameters(0).get_warren_plot(1, 1, 1, L_max=L_max)
             self.plot_strain.addCurve(x, y, legend="hhh", color='red')
-            _, y = self.fitted_fit_global_parameters.strain_parameters[0].get_warren_plot(1, 1, 0, L_max=L_max)
+            _, y = self.fitted_fit_global_parameters.get_strain_parameters(0).get_warren_plot(1, 1, 0, L_max=L_max)
             self.plot_strain.addCurve(x, y, legend="hh0", color='green')
 
     # ------------------------------------------------------------------------
@@ -1017,7 +1017,7 @@ class OWFitter(OWGenericWidget):
 
                 strain_parameters = None
                 if not self.fitted_fit_global_parameters.strain_parameters is None:
-                    strain_parameters = self.fitted_fit_global_parameters.strain_parameters[0 if len(self.fitted_fit_global_parameters.strain_parameters) == 1 else diffraction_pattern_index]
+                    strain_parameters = self.fitted_fit_global_parameters.get_strain_parameters(phase_index=0)
 
                 plot_instr = not instrumental_parameters is None
                 plot_size = not size_parameters is None

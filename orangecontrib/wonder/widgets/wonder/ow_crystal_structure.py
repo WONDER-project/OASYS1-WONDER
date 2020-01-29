@@ -562,7 +562,7 @@ class CrystalStructureBox(InnerBox):
         if not self.is_on_init: self.widget.dump_symmetry()
 
     def generate_reflections(self):
-        if self.widget.populate_parameter_in_widget(self, "a", "").function:
+        if OWGenericWidget.populate_parameter_in_widget(self, "a", "").function:
             QMessageBox.critical(self,
                                  "Error",
                                  "a0 value is a function, generation is not possibile",
@@ -625,22 +625,22 @@ class CrystalStructureBox(InnerBox):
         return str(self.index+1) + "_"
 
     def set_data(self, crystal_structure):
-        self.widget.populate_fields_in_widget(self, "a", crystal_structure.a)
+        OWGenericWidget.populate_fields_in_widget(self, "a", crystal_structure.a)
         self.use_structure = 1 if crystal_structure.use_structure else 0
 
         if self.use_structure == 0:
-            existing_crystal_structure = CrystalStructure.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
+            existing_crystal_structure = CrystalStructure.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                                                     symmetry=self.cb_symmetry.currentText(),
                                                                     progressive=self.get_parameter_progressive())
 
         elif self.use_structure == 1:
-            self.widget.populate_fields_in_widget(self, "intensity_scale_factor", crystal_structure.intensity_scale_factor)
+            OWGenericWidget.populate_fields_in_widget(self, "intensity_scale_factor", crystal_structure.intensity_scale_factor)
 
-            existing_crystal_structure = CrystalStructure.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
+            existing_crystal_structure = CrystalStructure.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                                                     symmetry=self.cb_symmetry.currentText(),
                                                                     use_structure=True,
                                                                     formula=congruence.checkEmptyString(self.formula, "Chemical Formula"),
-                                                                    intensity_scale_factor=self.widget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
+                                                                    intensity_scale_factor=OWGenericWidget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
                                                                     progressive=self.get_parameter_progressive())
 
 
@@ -670,7 +670,7 @@ class CrystalStructureBox(InnerBox):
 
     def append_fit_initialization(self):
         if self.use_structure == 0:
-            crystal_structure = CrystalStructure.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
+            crystal_structure = CrystalStructure.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                                            symmetry=self.cb_symmetry.currentText(),
                                                            progressive=self.get_parameter_progressive())
 
@@ -680,11 +680,11 @@ class CrystalStructureBox(InnerBox):
             crystal_structure.parse_reflections(self.reflections, progressive=self.get_parameter_progressive())
 
         elif self.use_structure == 1:
-            crystal_structure = CrystalStructure.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
+            crystal_structure = CrystalStructure.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                                            symmetry=self.cb_symmetry.currentText(),
                                                            use_structure=True,
                                                            formula=congruence.checkEmptyString(self.formula, "Chemical Formula"),
-                                                           intensity_scale_factor=self.widget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
+                                                           intensity_scale_factor=OWGenericWidget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
                                                            progressive=self.get_parameter_progressive())
 
             self.widget.fit_global_parameters.fit_initialization.crystal_structures.append(crystal_structure)
