@@ -148,7 +148,7 @@ class gui:
     def textArea(cls, height=None, width=None, readOnly=True):
         area = QTextEdit()
         area.setReadOnly(readOnly)
-        area.setStyleSheet("background-color: white;")
+        area.setStyleSheet("background-color: white; font-family: Courier, monospace;")
 
         if not height is None: area.setFixedHeight(height)
         if not width is None: area.setFixedWidth(width)
@@ -175,6 +175,7 @@ class ShowTextDialog(QDialog):
         text_edit = QTextEdit("", self)
         text_edit.append(text)
         text_edit.setReadOnly(True)
+        text_edit.setStyleSheet("background-color: white; font-family: Courier, monospace;")
 
         text_area = QScrollArea(self)
         text_area.setWidget(text_edit)

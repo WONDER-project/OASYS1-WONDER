@@ -55,7 +55,6 @@ class OWContrastFactor(OWGenericWidget):
 
         self.text_area = gui.textArea(height=120, width=self.CONTROL_AREA_WIDTH - 70, readOnly=True)
         self.text_area.setText("")
-        self.text_area.setStyleSheet("font-family: Courier, monospace;")
 
         text_area_box.layout().addWidget(self.text_area)
 
@@ -68,17 +67,17 @@ class OWContrastFactor(OWGenericWidget):
     def send_contrast_factor_a_b(self):
         try:
             if not self.fit_global_parameters is None:
-                if self.fit_global_parameters.fit_initialization is None:
-                    raise ValueError("Calculation is not possibile, Crystal Structure is missing")
+                if self.fit_global_parameters.measured_dataset is None:
+                    raise ValueError("Calculation is not possibile, Measured Dataset is missing")
 
-                if self.fit_global_parameters.fit_initialization.crystal_structures is None:
-                    raise ValueError("Calculation is not possibile, Crystal Structure is missing")
+                if self.fit_global_parameters.measured_dataset.phases is None:
+                    raise ValueError("Calculation is not possibile, Phases are missing")
 
                 congruence.checkStrictlyPositiveNumber(self.c11, "c11")
                 congruence.checkStrictlyPositiveNumber(self.c12, "c12")
                 congruence.checkStrictlyPositiveNumber(self.c44, "c44")
 
-                symmetry = self.fit_global_parameters.fit_initialization.crystal_structures[0].symmetry
+                symmetry = self.fit_global_parameters.measured_dataset.phases[0].symmetry
 
                 Ae, Be, As, Bs = calculate_A_B_coefficients(self.c11, self.c12, self.c44, symmetry)
 

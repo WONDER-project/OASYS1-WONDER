@@ -1,11 +1,19 @@
 
-from orangecontrib.wonder.fit.parameters.initialization.crystal_structure import CrystalStructure
+from orangecontrib.wonder.fit.parameters.measured_data.line_profile import LineProfile
+from orangecontrib.wonder.fit.parameters.measured_data.measured_dataset import MeasuredDataset
+from orangecontrib.wonder.fit.parameters.measured_data.incident_radiation import IncidentRadiation
+from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
+from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import  DiffractionPattern
+from orangecontrib.wonder.fit.parameters.measured_data.reflection import Reflection
+
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTTypes
 from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import Beampath, LorentzFormula
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
-from orangecontrib.wonder.fit.parameters.gsasii.gsasii_functions import gsasii_load_reflections, gsasii_intensity_factor
+from orangecontrib.wonder.fit.parameters.gsasii.gsasii_phase import GSASIIPhase
+from orangecontrib.wonder.fit.parameters.gsasii.gsasii_functions import gsasii_intensity_factor
 
 from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
 from orangecontrib.wonder.util.general_functions import ChemicalFormulaParser
@@ -57,7 +65,7 @@ class Normalization:
 
 
 def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_index = 0):
-    incident_radiation = fit_global_parameters.fit_initialization.incident_radiations[0 if len(fit_global_parameters.fit_initialization.incident_radiations) == 1 else diffraction_pattern_index]
+    incident_radiation = fit_global_parameters.measured_dataset.incident_radiations[0 if len(fit_global_parameters.measured_dataset.incident_radiations) == 1 else diffraction_pattern_index]
 
     wavelength = incident_radiation.wavelength.value
 
@@ -68,16 +76,19 @@ def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_ind
 
     # POLARIZATION FACTOR --------------------------------------------------------------------------------------
 
-    if not fit_global_parameters.fit_initialization.thermal_polarization_parameters is None:
-        thermal_polarization_parameters = fit_global_parameters.fit_initialization.thermal_polarization_parameters[0 if len(fit_global_parameters.fit_initialization.thermal_polarization_parameters) == 1 else diffraction_pattern_index]
+    if not fit_global_parameters.instrumental_parameters is None:
+        thermal_polarization_parameters_list = fit_global_parameters.get_instrumental_parameters(ThermalPolarizationParameters.__name__)
 
-        if thermal_polarization_parameters.use_polarization_factor:
-            twotheta_mono = thermal_polarization_parameters.twotheta_mono
+        if not thermal_polarization_parameters_list is None:
+            thermal_polarization_parameters = thermal_polarization_parameters_list[0 if len(thermal_polarization_parameters_list) == 1 else diffraction_pattern_index]
 
-            I *= polarization_factor(numpy.radians(twotheta),
-                                     None if twotheta_mono is None else numpy.radians(twotheta_mono),
-                                     thermal_polarization_parameters.degree_of_polarization,
-                                     thermal_polarization_parameters.beampath)
+            if thermal_polarization_parameters.use_polarization_factor:
+                twotheta_mono = thermal_polarization_parameters.twotheta_mono
+
+                I *= polarization_factor(numpy.radians(twotheta),
+                                         None if twotheta_mono is None else numpy.radians(twotheta_mono),
+                                         thermal_polarization_parameters.degree_of_polarization,
+                                         thermal_polarization_parameters.beampath)
 
     # ADD BACKGROUNDS  ---------------------------------------------------------------------------------------------
 
@@ -115,74 +126,70 @@ def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_ind
     return I
 
 def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index = 0):
-    crystal_structure = fit_global_parameters.fit_initialization.crystal_structures[diffraction_pattern_index]
-    incident_radiation = fit_global_parameters.fit_initialization.incident_radiations[0 if len(fit_global_parameters.fit_initialization.incident_radiations) == 1 else diffraction_pattern_index]
+    phases = fit_global_parameters.measured_dataset.phases
+    line_profile = fit_global_parameters.measured_dataset.line_profiles[diffraction_pattern_index]
 
-    if crystal_structure.use_structure and crystal_structure.use_gsas:
-        diffraction_pattern = fit_global_parameters.fit_initialization.diffraction_patterns[diffraction_pattern_index]
+    incident_radiation = fit_global_parameters.measured_dataset.incident_radiations[0 if len(fit_global_parameters.measured_dataset.incident_radiations) == 1 else diffraction_pattern_index]
 
-        if crystal_structure.gsas_reflections_list is None:
-            crystal_structure.gsas_reflections_list = gsasii_load_reflections(crystal_structure.cif_file,
-                                                                              incident_radiation.wavelength.value,
-                                                                              diffraction_pattern.get_diffraction_point(0).twotheta,
-                                                                              diffraction_pattern.get_diffraction_point(-1).twotheta)
+    for phase in phases:
+        if not Phase.is_cube(phase.symmetry): raise NotImplementedError("Only Cubic structures are supported by fit")
 
-        gsas_reflections_list = crystal_structure.gsas_reflections_list
-    else:
-        gsas_reflections_list = None
+    # CONSTRUCTION OF EACH SEPARATE PEAK ---------------------------------------------------------------------------
 
-    if CrystalStructure.is_cube(crystal_structure.symmetry):
+    separated_peaks_functions = []
 
-        # CONSTRUCTION OF EACH SEPARATE PEAK ---------------------------------------------------------------------------
+    for phase_index in range(fit_global_parameters.measured_dataset.get_phases_number()):
+        for reflection_index in range(line_profile.get_reflections_number(phase_index)):
+            if isinstance(phase, GSASIIPhase):
+                sanalitycal, Ianalitycal = create_one_peak(phase_index, reflection_index, fit_global_parameters, diffraction_pattern_index, phase.get_gsasii_reflections_list())
+            else:
+                sanalitycal, Ianalitycal = create_one_peak(phase_index, reflection_index, fit_global_parameters, diffraction_pattern_index)
 
-        separated_peaks_functions = []
+    separated_peaks_functions.append([sanalitycal, Ianalitycal])
 
-        for reflection_index in range(crystal_structure.get_reflections_count()):
-            sanalitycal, Ianalitycal = create_one_peak(reflection_index, fit_global_parameters, diffraction_pattern_index, gsas_reflections_list)
+    # INTERPOLATION ONTO ORIGINAL S VALUES -------------------------------------------------------------------------
 
-            separated_peaks_functions.append([sanalitycal, Ianalitycal])
+    I = Utilities.merge_functions(separated_peaks_functions, s)
 
-        # INTERPOLATION ONTO ORIGINAL S VALUES -------------------------------------------------------------------------
+    # ADD SAXS
 
-        I = Utilities.merge_functions(separated_peaks_functions, s)
+    if not fit_global_parameters.size_parameters is None:
+        size_parameters = fit_global_parameters.size_parameters[0 if len(fit_global_parameters.size_parameters) == 1 else diffraction_pattern_index]
 
-        # ADD SAXS
+        if size_parameters.distribution == Distribution.DELTA and size_parameters.add_saxs:
+            if not phases[0].use_structure: NotImplementedError("SAXS is available when the structural model is active")
 
-        if not fit_global_parameters.size_parameters is None:
-            size_parameters = fit_global_parameters.size_parameters[0 if len(fit_global_parameters.size_parameters) == 1 else diffraction_pattern_index]
+            I += saxs(s,
+                      size_parameters.mu.value,
+                      phases[0].a.value,
+                      phases[0].formula,
+                      phases[0].symmetry,
+                      size_parameters.normalize_to)
 
-            if size_parameters.distribution == Distribution.DELTA and size_parameters.add_saxs:
-                if not crystal_structure.use_structure: NotImplementedError("SAXS is available when the structural model is active")
+    # ADD DEBYE-WALLER FACTOR --------------------------------------------------------------------------------------
 
-                I += saxs(s,
-                          size_parameters.mu.value,
-                          crystal_structure.a.value,
-                          crystal_structure.formula,
-                          crystal_structure.symmetry,
-                          size_parameters.normalize_to)
+    if not fit_global_parameters.instrumental_parameters is None:
+        thermal_polarization_parameters_list = fit_global_parameters.get_instrumental_parameters(ThermalPolarizationParameters.__name__)
 
-        # ADD DEBYE-WALLER FACTOR --------------------------------------------------------------------------------------
-
-        if not fit_global_parameters.fit_initialization.thermal_polarization_parameters is None:
-            thermal_polarization_parameters = fit_global_parameters.fit_initialization.thermal_polarization_parameters[0 if len(fit_global_parameters.fit_initialization.thermal_polarization_parameters) == 1 else diffraction_pattern_index]
+        if not thermal_polarization_parameters_list is None:
+            thermal_polarization_parameters = thermal_polarization_parameters_list[0 if len(thermal_polarization_parameters_list) == 1 else diffraction_pattern_index]
 
             if not thermal_polarization_parameters.debye_waller_factor is None:
                 I *= debye_waller(s, thermal_polarization_parameters.debye_waller_factor.value)
 
-        if not incident_radiation.is_single_wavelength:
-            principal_wavelength = incident_radiation.wavelength
-            I_scaled = I*incident_radiation.get_principal_wavelenght_weight()
+    if not incident_radiation.is_single_wavelength:
+        principal_wavelength = incident_radiation.wavelength
+        I_scaled = I*incident_radiation.get_principal_wavelenght_weight()
 
-            for secondary_wavelength, secondary_wavelength_weigth in zip(incident_radiation.secondary_wavelengths,
-                                                                         incident_radiation.secondary_wavelengths_weights):
-                s_secondary = s * secondary_wavelength.value/principal_wavelength.value
-                I_scaled += Utilities.merge_functions([[s_secondary, I*secondary_wavelength_weigth.value]], s)
+        for secondary_wavelength, secondary_wavelength_weigth in zip(incident_radiation.secondary_wavelengths,
+                                                                     incident_radiation.secondary_wavelengths_weights):
+            s_secondary = s * secondary_wavelength.value/principal_wavelength.value
+            I_scaled += Utilities.merge_functions([[s_secondary, I*secondary_wavelength_weigth.value]], s)
 
-            I = I_scaled
+        I = I_scaled
 
-        return I
-    else:
-        raise NotImplementedError("Only Cubic structures are supported by fit")
+    return I
+
 
 #################################################
 # FOURIER FUNCTIONS
@@ -273,49 +280,53 @@ class FourierTransformFull(FourierTransform):
 # CALCOLO DI UN SINGOLO PICCO
 #################################################
 
-def create_one_peak(reflection_index, fit_global_parameters, diffraction_pattern_index=0, gsas_reflections_list=None):
+def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffraction_pattern_index=0, gsas_reflections_list=None):
     fft_type = fit_global_parameters.fit_initialization.fft_parameters.fft_type
     fit_space_parameters = fit_global_parameters.space_parameters()
-    crystal_structure = fit_global_parameters.fit_initialization.crystal_structures[diffraction_pattern_index]
-    reflection = crystal_structure.get_reflection(reflection_index)
-    incident_radiation = fit_global_parameters.fit_initialization.incident_radiations[0 if len(fit_global_parameters.fit_initialization.incident_radiations) == 1 else diffraction_pattern_index]
+    phase = fit_global_parameters.measured_dataset.phases[phase_index]
+    line_profile = fit_global_parameters.measured_dataset.line_profiles[diffraction_pattern_index]
+    reflection = line_profile.get_reflection(phase_index, reflection_index)
+    incident_radiation = fit_global_parameters.measured_dataset.incident_radiations[0 if len(fit_global_parameters.measured_dataset.incident_radiations) == 1 else diffraction_pattern_index]
+
 
     wavelength = incident_radiation.wavelength.value
-    lattice_parameter = crystal_structure.a.value
+    lattice_parameter = phase.a.value
 
     fourier_amplitudes = None
 
     # INSTRUMENTAL PROFILE ---------------------------------------------------------------------------------------------
-
     if not fit_global_parameters.instrumental_parameters is None:
-        instrumental_parameters = fit_global_parameters.instrumental_parameters[0 if len(fit_global_parameters.instrumental_parameters) == 1 else diffraction_pattern_index]
-            
-        if fourier_amplitudes is None:
-            fourier_amplitudes = instrumental_function(fit_space_parameters.L,
-                                                       reflection.h,
-                                                       reflection.k,
-                                                       reflection.l,
-                                                       lattice_parameter,
-                                                       wavelength,
-                                                       instrumental_parameters.U.value,
-                                                       instrumental_parameters.V.value,
-                                                       instrumental_parameters.W.value,
-                                                       instrumental_parameters.a.value,
-                                                       instrumental_parameters.b.value,
-                                                       instrumental_parameters.c.value)
-        else:
-            fourier_amplitudes *= instrumental_function(fit_space_parameters.L,
-                                                        reflection.h,
-                                                        reflection.k,
-                                                        reflection.l,
-                                                        lattice_parameter,
-                                                        wavelength,
-                                                        instrumental_parameters.U.value,
-                                                        instrumental_parameters.V.value,
-                                                        instrumental_parameters.W.value,
-                                                        instrumental_parameters.a.value,
-                                                        instrumental_parameters.b.value,
-                                                        instrumental_parameters.c.value)
+        instrumental_parameters_list = fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)
+
+        if not instrumental_parameters_list is None:
+            instrumental_parameters = instrumental_parameters_list[0 if len(instrumental_parameters_list) == 1 else diffraction_pattern_index]
+
+            if fourier_amplitudes is None:
+                fourier_amplitudes = instrumental_function(fit_space_parameters.L,
+                                                           reflection.h,
+                                                           reflection.k,
+                                                           reflection.l,
+                                                           lattice_parameter,
+                                                           wavelength,
+                                                           instrumental_parameters.U.value,
+                                                           instrumental_parameters.V.value,
+                                                           instrumental_parameters.W.value,
+                                                           instrumental_parameters.a.value,
+                                                           instrumental_parameters.b.value,
+                                                           instrumental_parameters.c.value)
+            else:
+                fourier_amplitudes *= instrumental_function(fit_space_parameters.L,
+                                                            reflection.h,
+                                                            reflection.k,
+                                                            reflection.l,
+                                                            lattice_parameter,
+                                                            wavelength,
+                                                            instrumental_parameters.U.value,
+                                                            instrumental_parameters.V.value,
+                                                            instrumental_parameters.W.value,
+                                                            instrumental_parameters.a.value,
+                                                            instrumental_parameters.b.value,
+                                                            instrumental_parameters.c.value)
 
     # SIZE -------------------------------------------------------------------------------------------------------------
 
@@ -462,22 +473,21 @@ def create_one_peak(reflection_index, fit_global_parameters, diffraction_pattern
 
     # INTENSITY MODULATION: STRUCTURAL MODEL YES/NO --------------------------------------------------------------------
 
-    if crystal_structure.use_structure:
-        if crystal_structure.use_gsas:
-            I *= crystal_structure.intensity_scale_factor.value * \
-                 gsasii_intensity_factor(reflection.h,
-                                         reflection.k,
-                                         reflection.l,
-                                         gsas_reflections_list)
+    if phase.use_structure:
+        if isinstance(phase, GSASIIPhase):
+            I *= phase.intensity_scale_factor.value * gsasii_intensity_factor(reflection.h,
+                                                                              reflection.k,
+                                                                              reflection.l,
+                                                                              gsas_reflections_list)
         else:
-            I *= crystal_structure.intensity_scale_factor.value * \
+            I *= phase.intensity_scale_factor.value * \
                  multiplicity_cubic(reflection.h, reflection.k, reflection.l) * \
                  squared_modulus_structure_factor(s_hkl,
-                                                  crystal_structure.formula,
+                                                  phase.formula,
                                                   reflection.h,
                                                   reflection.k,
                                                   reflection.l,
-                                                  crystal_structure.symmetry)
+                                                  phase.symmetry)
     else:
         I *= reflection.intensity.value
 
@@ -506,14 +516,17 @@ def create_one_peak(reflection_index, fit_global_parameters, diffraction_pattern
 
     # LORENTZ FACTOR --------------------------------------------------------------------------------------
 
-    if not fit_global_parameters.fit_initialization.thermal_polarization_parameters is None:
-        thermal_polarization_parameters = fit_global_parameters.fit_initialization.thermal_polarization_parameters[0 if len(fit_global_parameters.fit_initialization.thermal_polarization_parameters) == 1 else diffraction_pattern_index]
+    if not fit_global_parameters.instrumental_parameters is None:
+        thermal_polarization_parameters_list = fit_global_parameters.get_instrumental_parameters(ThermalPolarizationParameters.__name__)
 
-        if thermal_polarization_parameters.use_lorentz_factor:
-            if thermal_polarization_parameters.lorentz_formula == LorentzFormula.Shkl_Shkl:
-                I *= lorentz_factor_simplified_normalized(s_hkl, wavelength)
-            elif thermal_polarization_parameters.lorentz_formula == LorentzFormula.S_Shkl:
-                I *= lorentz_factor_normalized(s, s_hkl, wavelength)
+        if not thermal_polarization_parameters_list is None:
+            thermal_polarization_parameters = thermal_polarization_parameters_list[0 if len(thermal_polarization_parameters_list) == 1 else diffraction_pattern_index]
+
+            if thermal_polarization_parameters.use_lorentz_factor:
+                if thermal_polarization_parameters.lorentz_formula == LorentzFormula.Shkl_Shkl:
+                    I *= lorentz_factor_simplified_normalized(s_hkl, wavelength)
+                elif thermal_polarization_parameters.lorentz_formula == LorentzFormula.S_Shkl:
+                    I *= lorentz_factor_normalized(s, s_hkl, wavelength)
 
     return s, I
 

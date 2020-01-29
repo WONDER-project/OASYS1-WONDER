@@ -20,7 +20,7 @@ class LineProfile(ParametersList):
         self.reflections_of_phases[phase_index][reflection_index] = reflection
         self.update_reflection(phase_index, reflection_index)
 
-    def get_reflections_count(self, phase_index):
+    def get_reflections_number(self, phase_index):
         return len(self.reflections_of_phases[phase_index])
 
     def get_reflection(self, phase_index, reflection_index):
@@ -34,7 +34,7 @@ class LineProfile(ParametersList):
         reflection.d_spacing = self.get_d_spacing(phase_index, reflection.h, reflection.k, reflection.l)
 
     def update_reflections(self, phase_index):
-        for reflection_index in range(self.get_reflections_count(phase_index)): self.update_reflection(phase_index, reflection_index)
+        for reflection_index in range(self.get_reflections_number(phase_index)): self.update_reflection(phase_index, reflection_index)
 
     def existing_reflection(self, phase_index, h, k, l):
         for reflection in self.reflections_of_phases[phase_index]:
@@ -56,84 +56,89 @@ class LineProfile(ParametersList):
         return self.phases[phase_index].get_d_spacing(h, k, l)
 
     def parse_reflections(self, text, phase_index=0, diffraction_pattern_index=0):
-        #congruence.checkEmptyString(text, "Reflections")
-
-        lines = text.splitlines()
+        try:
+            congruence.checkEmptyString(text, "Reflections")
+            empty = False
+        except:
+            empty = True
 
         reflections = []
 
-        progressive_str = str(diffraction_pattern_index + 1) + "_" + str(phase_index + 1) + "_"
+        if not empty:
+            lines = text.splitlines()
 
-        for i in range(len(lines)):
-            congruence.checkEmptyString(lines[i], "Reflections: line " + str(i+1))
+            progressive_str = str(diffraction_pattern_index + 1) + "_" + str(phase_index + 1) + "_"
 
-            if not lines[i].strip().startswith("#"):
-                data = lines[i].strip().split(",")
+            for i in range(len(lines)):
+                congruence.checkEmptyString(lines[i], "Reflections: line " + str(i+1))
 
-                if len(data) < 4: raise ValueError("Reflections, malformed line: " + str(i+1))
+                if not lines[i].strip().startswith("#"):
+                    data = lines[i].strip().split(",")
 
-                h = int(data[0].strip())
-                k = int(data[1].strip())
-                l = int(data[2].strip())
+                    if len(data) < 4: raise ValueError("Reflections, malformed line: " + str(i+1))
 
-                if ":=" in data[3].strip():
-                    intensity_data = data[3].strip().split(":=")
+                    h = int(data[0].strip())
+                    k = int(data[1].strip())
+                    l = int(data[2].strip())
 
-                    if len(intensity_data) == 2:
-                        intensity_name = intensity_data[0].strip()
-                        function_value = intensity_data[1].strip()
+                    if ":=" in data[3].strip():
+                        intensity_data = data[3].strip().split(":=")
+
+                        if len(intensity_data) == 2:
+                            intensity_name = intensity_data[0].strip()
+                            function_value = intensity_data[1].strip()
+                        else:
+                            intensity_name = None
+                            function_value = data[3].strip()
+
+                        if intensity_name is None:
+                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
+                        elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
+                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
+
+                        reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
+                                                                                function=True,
+                                                                                function_value=function_value))
                     else:
-                        intensity_name = None
-                        function_value = data[3].strip()
+                        intensity_data = data[3].strip().split()
 
-                    if intensity_name is None:
-                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
-                    elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
-                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
+                        if len(intensity_data) == 2:
+                            intensity_name = intensity_data[0].strip()
+                            intensity_value = float(intensity_data[1])
+                        else:
+                            intensity_name = None
+                            intensity_value = float(data[3])
 
-                    reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
-                                                                            function=True,
-                                                                            function_value=function_value))
-                else:
-                    intensity_data = data[3].strip().split()
+                        boundary = None
+                        fixed = False
 
-                    if len(intensity_data) == 2:
-                        intensity_name = intensity_data[0].strip()
-                        intensity_value = float(intensity_data[1])
-                    else:
-                        intensity_name = None
-                        intensity_value = float(data[3])
+                        if len(data) > 4:
+                            min_value = PARAM_HWMIN
+                            max_value = PARAM_HWMAX
 
-                    boundary = None
-                    fixed = False
+                            for j in range(4, len(data)):
+                                boundary_data = data[j].strip().split()
 
-                    if len(data) > 4:
-                        min_value = PARAM_HWMIN
-                        max_value = PARAM_HWMAX
+                                if boundary_data[0] == "min": min_value = float(boundary_data[1].strip())
+                                elif boundary_data[0] == "max": max_value = float(boundary_data[1].strip())
+                                elif boundary_data[0] == "fixed": fixed = True
 
-                        for j in range(4, len(data)):
-                            boundary_data = data[j].strip().split()
+                            if not fixed:
+                                if min_value != PARAM_HWMIN or max_value != PARAM_HWMAX:
+                                    boundary = Boundary(min_value=min_value, max_value=max_value)
+                                else:
+                                    boundary = Boundary()
 
-                            if boundary_data[0] == "min": min_value = float(boundary_data[1].strip())
-                            elif boundary_data[0] == "max": max_value = float(boundary_data[1].strip())
-                            elif boundary_data[0] == "fixed": fixed = True
+                        if intensity_name is None:
+                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
+                        elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
+                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
 
-                        if not fixed:
-                            if min_value != PARAM_HWMIN or max_value != PARAM_HWMAX:
-                                boundary = Boundary(min_value=min_value, max_value=max_value)
-                            else:
-                                boundary = Boundary()
-
-                    if intensity_name is None:
-                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
-                    elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
-                        intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
-
-                    reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
-                                                                            value=intensity_value,
-                                                                            fixed=fixed,
-                                                                            boundary=boundary))
-                reflections.append(reflection)
+                        reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
+                                                                                value=intensity_value,
+                                                                                fixed=fixed,
+                                                                                boundary=boundary))
+                    reflections.append(reflection)
 
         self.reflections_of_phases[phase_index] = reflections
         self.update_reflections(phase_index)
@@ -159,7 +164,6 @@ class LineProfile(ParametersList):
         if len(excluded_reflections_of_phase) == 0: excluded_reflections_of_phase = None
 
         return excluded_reflections_of_phase
-
 
 
 

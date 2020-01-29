@@ -78,20 +78,22 @@ class OWDebyeWaller(OWGenericWidget):
                 if self.use_debye_waller_factor == 1 and not self.debye_waller_factor_function==1:
                     congruence.checkStrictlyPositiveNumber(self.debye_waller_factor, "B")
 
-                    if self.fit_global_parameters.fit_initialization.crystal_structures is None:
-                        raise ValueError("Add Crystal Structure(s) before this widget")
+                    if self.fit_global_parameters.measured_dataset.phases is None:
+                        raise ValueError("Add Phase(s) before this widget")
 
-                    if not self.fit_global_parameters.fit_initialization.crystal_structures[0].use_structure:
+                    if not self.fit_global_parameters.measured_dataset.phases[0].use_structure:
                         send_data = ConfirmDialog.confirmed(parent=self, message="Debye-Waller factor is better refined when the structural model is activated.\nProceed anyway?")
 
                 if send_data:
                     debye_waller_factor  = None if self.use_debye_waller_factor==0 else self.populate_parameter("debye_waller_factor", ThermalPolarizationParameters.get_parameters_prefix())
                     if not debye_waller_factor is None: debye_waller_factor.rescale(0.01) # CONVERSIONE from A-2 to nm-2
 
-                    if self.fit_global_parameters.fit_initialization.thermal_polarization_parameters is None:
-                        self.fit_global_parameters.fit_initialization.thermal_polarization_parameters = [ThermalPolarizationParameters(debye_waller_factor=debye_waller_factor)]
+                    thermal_polarization_parameters = self.fit_global_parameters.get_instrumental_parameters(ThermalPolarizationParameters.__name__)
+
+                    if thermal_polarization_parameters is None:
+                        self.fit_global_parameters.set_instrumental_parameters([ThermalPolarizationParameters(debye_waller_factor=debye_waller_factor)])
                     else:
-                        self.fit_global_parameters.fit_initialization.thermal_polarization_parameters[0].debye_waller_factor = debye_waller_factor
+                        thermal_polarization_parameters[0].debye_waller_factor = debye_waller_factor
 
                     self.fit_global_parameters.regenerate_parameters()
 
@@ -108,12 +110,14 @@ class OWDebyeWaller(OWGenericWidget):
         if not data is None:
             self.fit_global_parameters = data.duplicate()
 
-            if not self.fit_global_parameters.fit_initialization.thermal_polarization_parameters is None:
-                if not self.fit_global_parameters.fit_initialization.thermal_polarization_parameters[0].debye_waller_factor is None:
+            thermal_polarization_parameters = self.fit_global_parameters.get_instrumental_parameters(
+                ThermalPolarizationParameters.__name__)
 
+            if not thermal_polarization_parameters is None:
+                if not thermal_polarization_parameters[0].debye_waller_factor is None:
                     self.use_debye_waller_factor = 1
 
-                    debye_waller_factor = self.fit_global_parameters.fit_initialization.thermal_polarization_parameters[0].debye_waller_factor.duplicate()
+                    debye_waller_factor = thermal_polarization_parameters[0].debye_waller_factor.duplicate()
                     debye_waller_factor.rescale(100) # CONVERSIONE from nm-2 to A-2
 
                     self.populate_fields("debye_waller_factor", debye_waller_factor)

@@ -11,6 +11,17 @@ class MeasuredDataset(ParametersList):
 
     initialized = False
 
+    def __init__(self,
+                 diffraction_patterns = None,
+                 incident_radiations = None,
+                 phases = None,
+                 line_profiles = None):
+        self.phases = phases
+        self.diffraction_patterns = diffraction_patterns
+        self.incident_radiations = incident_radiations
+        self.line_profiles = line_profiles
+        self.initialized = False
+
     @classmethod
     def initialize_with_diffraction_pattern(cls, diffraction_patterns=[]):
         if diffraction_patterns is None: raise ValueError("Diffraction Patterns is None")
@@ -27,18 +38,6 @@ class MeasuredDataset(ParametersList):
 
         return dataset
 
-    def __init__(self,
-                 diffraction_patterns = None,
-                 incident_radiations = None,
-                 phases = None,
-                 line_profiles = None):
-        self.phases = phases
-        self.diffraction_patterns = diffraction_patterns
-        self.incident_radiations = incident_radiations
-        self.line_profiles = line_profiles
-        self.initialized = False
-
-
     def set_phases(self, phases=None):
         if phases is None: raise ValueError("Phases is None")
         if not isinstance(phases, list): raise ValueError("Phases is not a list")
@@ -49,7 +48,6 @@ class MeasuredDataset(ParametersList):
         diffraction_patterns_number = self.get_diffraction_patterns_number()
 
         if self.initialized and diffraction_patterns_number > 0:
-
             for diffraction_pattern_index in range(diffraction_patterns_number):
                 self.line_profiles[diffraction_pattern_index] = LineProfile(self.phases)
 

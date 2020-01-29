@@ -21,8 +21,7 @@ from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import SpecimenDisplacement
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
 from orangecontrib.wonder.fit.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
 
@@ -226,7 +225,6 @@ class OWFitter(OWGenericWidget):
         self.tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot, "Integral Breadth")
 
         self.std_output = gui.textArea(height=100, width=800)
-        self.std_output.setStyleSheet("font-family: Courier, monospace;")
 
         out_box = gui.widgetBox(self.mainArea, "System Output", addSpace=False, orientation="horizontal")
         out_box.layout().addWidget(self.std_output)
@@ -656,16 +654,25 @@ class OWFitter(OWGenericWidget):
                 congruence.checkStrictlyPositiveNumber(self.n_iterations, "Nr. Iterations")
 
                 if self.fit_global_parameters.fit_initialization is None:
-                    raise ValueError("Mandatory widgets (Load Data/Fit Initialization/Crystal Structure) are totally missing.")
+                    raise ValueError("Mandatory widgets (Fit Initialization) is missing.")
 
                 if self.fit_global_parameters.fit_initialization.fft_parameters is None:
                     raise ValueError("FFT parameters is missing: add the proper widget before the Fitter")
 
-                if self.fit_global_parameters.fit_initialization.diffraction_patterns is None:
+                if self.fit_global_parameters.measured_dataset is None:
+                    raise ValueError("Mandatory widgets (Load Data/Radiation/Phases/Line Profile) are completely missing.")
+
+                if self.fit_global_parameters.measured_dataset.diffraction_patterns is None:
                     raise ValueError("Diffraction Pattern is missing: add the proper widget before the Fitter")
 
-                if self.fit_global_parameters.fit_initialization.crystal_structures is None:
-                    raise ValueError("Crystal Structure is missing: add the proper widget before the Fitter")
+                if self.fit_global_parameters.measured_dataset.phases is None:
+                    raise ValueError("Phases is missing: add the proper widget before the Fitter")
+
+                if self.fit_global_parameters.measured_dataset.incident_radiations is None:
+                    raise ValueError("Radiation is missing: add the proper widget before the Fitter")
+
+                if self.fit_global_parameters.measured_dataset.line_profiles is None:
+                    raise ValueError("Line Profiles is missing: add the proper widget before the Fitter")
 
                 self.__initialize_fit(is_init=False)
 
@@ -751,7 +758,7 @@ class OWFitter(OWGenericWidget):
                     text = ""
                     for diffraction_pattern_index in range(len(self.fitted_patterns)):
                         fitted_pattern = self.fitted_patterns[diffraction_pattern_index]
-                        diffraction_pattern = self.fit_global_parameters.fit_initialization.diffraction_patterns[diffraction_pattern_index]
+                        diffraction_pattern = self.fit_global_parameters.measured_dataset.diffraction_patterns[diffraction_pattern_index]
 
                         text += "" if diffraction_pattern_index==0 else "\n"
                         text += "------------------------------------------------------------------------\n"
@@ -787,7 +794,7 @@ class OWFitter(OWGenericWidget):
     ##########################################
 
     def __show_data(self, is_init=False):
-        diffraction_pattern_number = self.fitted_fit_global_parameters.fit_initialization.get_diffraction_patterns_number()
+        diffraction_pattern_number = self.fitted_fit_global_parameters.measured_dataset.get_diffraction_patterns_number()
 
         self.__refresh_fit(diffraction_pattern_number, is_init)
         self.__refresh_fit_data()
@@ -808,7 +815,7 @@ class OWFitter(OWGenericWidget):
             self.y = numpy.full(diffraction_pattern_number, None)
 
         for diffraction_pattern_index in range(diffraction_pattern_number):
-            diffraction_pattern = self.fitted_fit_global_parameters.fit_initialization.diffraction_patterns[diffraction_pattern_index]
+            diffraction_pattern = self.fitted_fit_global_parameters.measured_dataset.diffraction_patterns[diffraction_pattern_index]
             fitted_pattern = self.fitted_patterns[diffraction_pattern_index]
 
             nr_points = fitted_pattern.diffraction_points_count()
@@ -857,10 +864,13 @@ class OWFitter(OWGenericWidget):
 
     def __refresh_instrumental_function(self, diffraction_pattern_index=0):
         if not self.fitted_fit_global_parameters.instrumental_parameters is None:
-            instrumental_parameters = self.fitted_fit_global_parameters.instrumental_parameters[0 if len(self.fitted_fit_global_parameters.instrumental_parameters) == 1 else diffraction_pattern_index]
+            instrumental_parameters_list = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)
 
-            self.__refresh_caglioti_fwhm(instrumental_parameters)
-            self.__refresh_caglioti_eta(instrumental_parameters)
+            if not instrumental_parameters_list is None:
+                instrumental_parameters = instrumental_parameters_list[0 if len(self.fitted_fit_global_parameters.instrumental_parameters) == 1 else diffraction_pattern_index]
+
+                self.__refresh_caglioti_fwhm(instrumental_parameters)
+                self.__refresh_caglioti_eta(instrumental_parameters)
 
         shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__)
 
@@ -984,16 +994,18 @@ class OWFitter(OWGenericWidget):
             self.annotations_ib = numpy.full(diffraction_pattern_number, None)
 
             for diffraction_pattern_index in range(diffraction_pattern_number):
-                crystal_structure = self.fitted_fit_global_parameters.fit_initialization.crystal_structures[diffraction_pattern_index]
-                incident_radiation = self.fitted_fit_global_parameters.fit_initialization.incident_radiations[0 if len(self.fitted_fit_global_parameters.fit_initialization.incident_radiations) == 1 else diffraction_pattern_index]
+                phase        = self.fitted_fit_global_parameters.measured_dataset.phases[0] # Plot only the first phase
+                line_profile = self.fitted_fit_global_parameters.measured_dataset.line_profiles[diffraction_pattern_index]
 
-                wavelength = incident_radiation.wavelength.value
-                lattice_parameter = crystal_structure.a.value
+                incident_radiation = self.fitted_fit_global_parameters.measured_dataset.incident_radiations[0 if len(self.fitted_fit_global_parameters.measured_dataset.incident_radiations) == 1 else diffraction_pattern_index]
 
-                nr_points = crystal_structure.get_reflections_count()
+                wavelength        = incident_radiation.wavelength.value
+                lattice_parameter = phase.a.value
 
-                self.x_ib[diffraction_pattern_index]      = crystal_structure.get_s_list()
-                self.labels_ib[diffraction_pattern_index] = crystal_structure.get_hkl_list()
+                nr_points = line_profile.get_reflections_number()
+
+                self.x_ib[diffraction_pattern_index]      = line_profile.get_s_list()
+                self.labels_ib[diffraction_pattern_index] = line_profile.get_hkl_list()
 
                 size_parameters = None
                 if not self.fitted_fit_global_parameters.size_parameters is None:
@@ -1012,7 +1024,7 @@ class OWFitter(OWGenericWidget):
                 plot_strain = not strain_parameters is None
 
                 if not size_parameters is None and not size_parameters.shape == Shape.WULFF:
-                    y_ib_size = numpy.full(crystal_structure.get_reflections_count(), integral_breadth_size(None, size_parameters))
+                    y_ib_size = numpy.full(line_profile.get_reflections_number(), integral_breadth_size(None, size_parameters))
                 else:
                     y_ib_size = numpy.zeros(nr_points)
 
@@ -1021,7 +1033,7 @@ class OWFitter(OWGenericWidget):
                 y_ib_total  = numpy.zeros(nr_points)
 
                 i = -1
-                for reflection in crystal_structure.get_reflections():
+                for reflection in line_profile.get_reflections():
                     i += 1
 
                     if not size_parameters is None and size_parameters.shape == Shape.WULFF:
@@ -1072,7 +1084,7 @@ class OWFitter(OWGenericWidget):
         self.plot_fit = []
         self.tabs_plot_fit_data.clear()
 
-        for index in range(1 if fit_global_parameter is None else len(fit_global_parameter.fit_initialization.diffraction_patterns)):
+        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_diffraction_patterns_number()):
             tab_plot_fit_data = gui.createTabPage(self.tabs_plot_fit_data, "Diff. Patt. " + str(index+1))
 
             plot_fit = PlotWindow()
@@ -1092,7 +1104,7 @@ class OWFitter(OWGenericWidget):
         self.plot_integral_breadth = []
         self.tabs_plot_integral_breadth.clear()
 
-        for index in range(1 if fit_global_parameter is None else fit_global_parameter.fit_initialization.get_diffraction_patterns_number()):
+        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_diffraction_patterns_number()):
             tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, "Diff. Patt. " + str(index+1))
 
             plot_integral_breadth = PlotWindow(control=True)

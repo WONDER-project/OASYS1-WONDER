@@ -49,11 +49,11 @@ class OWPhases(OWGenericWidget):
     fit_global_parameters = None
 
     def __init__(self):
-        super().__init__(show_automatic_box=False)
+        super().__init__(show_automatic_box=True)
 
         main_box = gui.widgetBox(self.controlArea,
                                  "Phases", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 5, height=600)
+                                 width=self.CONTROL_AREA_WIDTH - 5, height=350)
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
@@ -105,6 +105,11 @@ class OWPhases(OWGenericWidget):
         runaction = OWAction("Send Phases", self)
         runaction.triggered.connect(self.send_phases)
         self.addAction(runaction)
+
+        orangegui.rubber(self.controlArea)
+
+    def get_max_height(self):
+        return 450
 
     def insert_before(self):
         current_index = self.phases_tabs.currentIndex()
@@ -220,7 +225,7 @@ class OWPhases(OWGenericWidget):
                         self.phases_box_array = []
 
                         for index in range(len(phases)):
-                            phase_tab = gui.createTabPage(self.crystal_structure_tabs, "Phase " + str(index + 1))
+                            phase_tab = gui.createTabPage(self.phases_tabs, "Phase " + str(index + 1))
 
                             if recycle and index < len(self.a): #keep the existing
                                 phase_box = PhaseBox(widget=self,
@@ -251,7 +256,7 @@ class OWPhases(OWGenericWidget):
                             self.phases_box_array.append(phase_box)
                     else:
                         for index in range(len(phases)):
-                            self.crystal_structure_box_array[index].set_data(phases[index])
+                            self.phases_box_array[index].set_data(phases[index])
 
                 self.dumpSettings()
 

@@ -71,7 +71,7 @@ class GSASIIReflectionData:
                str(self.F2          ) + " "  + \
                str(self.get_intensity_factor())
 
-class GSASIIReflections:
+class GSASIIReflectionList:
     def __init__(self, cif_file, wavelength, twotheta_min=0.0, twotheta_max=180.0):
         self.__data = {}
 
@@ -193,8 +193,11 @@ class GSASIIReflections:
         return python_script_file_name
 
 def gsasii_load_reflections(cif_file, wavelength, twotheta_min=0.0, twotheta_max=180.0):
-    return GSASIIReflections(cif_file, wavelength, twotheta_min, twotheta_max)
+    return GSASIIReflectionList(cif_file, wavelength, twotheta_min, twotheta_max)
 
 def gsasii_intensity_factor(h, k, l, reflections):
-    return reflections.get_reflection(h, k, l).get_intensity_factor()
+    try:
+        return reflections.get_reflection(h, k, l).get_intensity_factor()
+    except:
+        return 0
 

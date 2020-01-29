@@ -122,13 +122,12 @@ class OWInstrumentalProfile(OWGenericWidget):
     def send_intrumental_profile(self):
         try:
             if not self.fit_global_parameters is None:
-
-                self.fit_global_parameters.instrumental_parameters = [Caglioti(U=self.populate_parameter("U", Caglioti.get_parameters_prefix()),
-                                                                               V=self.populate_parameter("V", Caglioti.get_parameters_prefix()),
-                                                                               W=self.populate_parameter("W", Caglioti.get_parameters_prefix()),
-                                                                               a=self.populate_parameter("a", Caglioti.get_parameters_prefix()),
-                                                                               b=self.populate_parameter("b", Caglioti.get_parameters_prefix()),
-                                                                               c=self.populate_parameter("c", Caglioti.get_parameters_prefix()))]
+                self.fit_global_parameters.set_instrumental_parameters([Caglioti(U=self.populate_parameter("U", Caglioti.get_parameters_prefix()),
+                                                                                 V=self.populate_parameter("V", Caglioti.get_parameters_prefix()),
+                                                                                 W=self.populate_parameter("W", Caglioti.get_parameters_prefix()),
+                                                                                 a=self.populate_parameter("a", Caglioti.get_parameters_prefix()),
+                                                                                 b=self.populate_parameter("b", Caglioti.get_parameters_prefix()),
+                                                                                 c=self.populate_parameter("c", Caglioti.get_parameters_prefix()))])
                 self.fit_global_parameters.regenerate_parameters()
 
                 self.send("Fit Global Parameters", self.fit_global_parameters)
@@ -140,18 +139,19 @@ class OWInstrumentalProfile(OWGenericWidget):
 
             if self.IS_DEVELOP: raise e
 
-
     def set_data(self, data):
         if not data is None:
             self.fit_global_parameters = data.duplicate()
 
-            if not self.fit_global_parameters.instrumental_parameters is None:
-                self.populate_fields("U", self.fit_global_parameters.instrumental_parameters[0].U)
-                self.populate_fields("V", self.fit_global_parameters.instrumental_parameters[0].V)
-                self.populate_fields("W", self.fit_global_parameters.instrumental_parameters[0].W)
-                self.populate_fields("a", self.fit_global_parameters.instrumental_parameters[0].a)
-                self.populate_fields("b", self.fit_global_parameters.instrumental_parameters[0].b)
-                self.populate_fields("c", self.fit_global_parameters.instrumental_parameters[0].c)
+            instrumental_parameters = self.fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)
+
+            if not instrumental_parameters is None:
+                self.populate_fields("U", instrumental_parameters[0].U)
+                self.populate_fields("V", instrumental_parameters[0].V)
+                self.populate_fields("W", instrumental_parameters[0].W)
+                self.populate_fields("a", instrumental_parameters[0].a)
+                self.populate_fields("b", instrumental_parameters[0].b)
+                self.populate_fields("c", instrumental_parameters[0].c)
 
             if self.is_automatic_run:
                 self.send_intrumental_profile()

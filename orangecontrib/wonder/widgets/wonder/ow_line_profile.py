@@ -65,6 +65,11 @@ class OWLineProfile(OWGenericWidget):
         runaction.triggered.connect(self.send_line_profiles)
         self.addAction(runaction)
 
+        orangegui.rubber(self.controlArea)
+
+    def get_max_height(self):
+        return 700
+
     def send_line_profiles(self):
         try:
             if not self.fit_global_parameters is None:
@@ -240,7 +245,7 @@ class LineProfileBox(InnerBox):
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
         self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
-        self.setFixedHeight(500)
+        self.setFixedHeight(480)
 
         self.widget = widget
         self.diffraction_pattern_index = diffraction_pattern_index
@@ -356,8 +361,8 @@ class ReflectionsOfPhaseBox(InnerBox):
 
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
-        self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
-        self.setFixedHeight(500)
+        self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 55)
+        self.setFixedHeight(430)
 
         self.widget = widget
         self.diffraction_pattern_index = diffraction_pattern_index
@@ -367,7 +372,7 @@ class ReflectionsOfPhaseBox(InnerBox):
         self.limit                = limit
         self.limit_type           = limit_type
 
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH-45
+        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH-65
 
         parent.layout().addWidget(self)
         container = self
@@ -395,7 +400,7 @@ class ReflectionsOfPhaseBox(InnerBox):
 
         reflection_box = gui.widgetBox(container,
                                        "Reflections", orientation="vertical",
-                                       width=self.CONTROL_AREA_WIDTH - 5)
+                                       width=self.CONTROL_AREA_WIDTH - 10)
 
         orangegui.label(reflection_box, self, "h, k, l, <intensity_name> int <, min value, max value>")
 
@@ -409,7 +414,7 @@ class ReflectionsOfPhaseBox(InnerBox):
 
         self.text_area = gui.textArea(height=500, width=1000, readOnly=False)
         self.text_area.setText(self.reflections_of_phase)
-        self.text_area.setStyleSheet("font-family: Courier, monospace;")
+        #self.text_area.setStyleSheet("font-family: Courier, monospace;")
         self.text_area.textChanged.connect(write_text)
 
         scrollarea.setWidget(self.text_area)

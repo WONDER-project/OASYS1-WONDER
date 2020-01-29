@@ -3,7 +3,8 @@ import numpy
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
 from orangecontrib.wonder.fit.parameters.fit_parameter import FreeInputParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, KrivoglazWilkensModel, WarrenModel
 
 from orangecontrib.wonder.fit.wppm_functions import Distribution, Shape
@@ -28,8 +29,8 @@ class FitGlobalParameters(ParametersList):
     def __init__(self,
                  fit_initialization = None,
                  masured_dataset = None,
+                 instrumental_parameters = {},
                  background_parameters = {},
-                 instrumental_parameters = None,
                  shift_parameters = {},
                  size_parameters = None,
                  strain_parameters = None,
@@ -98,6 +99,20 @@ class FitGlobalParameters(ParametersList):
     def space_parameters(self):
         return FitSpaceParameters(self)
 
+    def get_instrumental_parameters(self, key):
+        try:
+            return self.instrumental_parameters[key]
+        except:
+            return None
+
+    def set_instrumental_parameters(self, instrumental_parameters):
+        if self.instrumental_parameters is None:
+            self.instrumental_parameters = {}
+
+        if not instrumental_parameters is None:
+            key = instrumental_parameters[0].__class__.__name__
+            self.instrumental_parameters[key] = instrumental_parameters
+
     def get_background_parameters(self, key):
         try:
             return self.background_parameters[key]
@@ -150,33 +165,52 @@ class FitGlobalParameters(ParametersList):
                             parameters[last_index + 2] = secondary_wavelength_weigth
                             last_index += 2
 
-        if not self.fit_initialization.crystal_structures is None:
-            for index in range(len(self.fit_initialization.crystal_structures)):
-                crystal_structure = self.fit_initialization.crystal_structures[index]
+        if not self.measured_dataset.phases is None:
+            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
-                parameters[last_index + 1] = crystal_structure.a
-                parameters[last_index + 2] = crystal_structure.b
-                parameters[last_index + 3] = crystal_structure.c
-                parameters[last_index + 4] = crystal_structure.alpha
-                parameters[last_index + 5] = crystal_structure.beta
-                parameters[last_index + 6] = crystal_structure.gamma
+                if not line_profile is None:
+                    for phase_index in range(self.measured_dataset.get_phases_number()):
+                        phase = self.measured_dataset.phases[phase_index]
 
-                if crystal_structure.use_structure:
-                    parameters[last_index + 7] = crystal_structure.intensity_scale_factor
-                    last_index += 7
-                else:
-                    last_index += 6
+                        parameters[last_index + 1] = phase.a
+                        parameters[last_index + 2] = phase.b
+                        parameters[last_index + 3] = phase.c
+                        parameters[last_index + 4] = phase.alpha
+                        parameters[last_index + 5] = phase.beta
+                        parameters[last_index + 6] = phase.gamma
 
-                for reflection_index in range(crystal_structure.get_reflections_count()):
-                    parameters[last_index + 1 + reflection_index] = crystal_structure.get_reflection(reflection_index).intensity
+                        if phase.use_structure:
+                            parameters[last_index + 7] = phase.intensity_scale_factor
+                            last_index += 7
+                        else:
+                            last_index += 6
 
-                last_index += crystal_structure.get_reflections_count()
+                        reflection_number = line_profile.get_reflections_number(phase_index)
 
-        if not self.fit_initialization.thermal_polarization_parameters is None:
-            for thermal_polarization_parameters in self.fit_initialization.thermal_polarization_parameters:
-                if not thermal_polarization_parameters.debye_waller_factor is None:
-                    parameters[last_index + 1] = thermal_polarization_parameters.debye_waller_factor
-                    last_index += 1
+                        for reflection_index in range(reflection_number):
+                            parameters[last_index + 1 + reflection_index] = line_profile.get_reflection(phase_index, reflection_index).intensity
+
+                        last_index += reflection_number
+
+        if not self.instrumental_parameters is None:
+            for key in self.instrumental_parameters.keys():
+                instrumental_parameters_list = self.get_instrumental_parameters(key)
+
+                if not instrumental_parameters_list is None:
+                    for instrumental_parameters in instrumental_parameters_list:
+                        if key == Caglioti.__name__:
+                            parameters[last_index + 1] = instrumental_parameters.U
+                            parameters[last_index + 2] = instrumental_parameters.V
+                            parameters[last_index + 3] = instrumental_parameters.W
+                            parameters[last_index + 4] = instrumental_parameters.a
+                            parameters[last_index + 5] = instrumental_parameters.b
+                            parameters[last_index + 6] = instrumental_parameters.c
+                            last_index += 6
+                        elif key == ThermalPolarizationParameters.__name__:
+                            if not instrumental_parameters.debye_waller_factor is None:
+                                parameters[last_index + 1] = instrumental_parameters.debye_waller_factor
+                                last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -204,16 +238,6 @@ class FitGlobalParameters(ParametersList):
                             parameters[last_index + 5] = background_parameters.a2
                             parameters[last_index + 6] = background_parameters.b2
                             last_index += 6
-
-        if not self.instrumental_parameters is None:
-            for instrumental_parameters in self.instrumental_parameters:
-                parameters[last_index + 1] = instrumental_parameters.U
-                parameters[last_index + 2] = instrumental_parameters.V
-                parameters[last_index + 3] = instrumental_parameters.W
-                parameters[last_index + 4] = instrumental_parameters.a
-                parameters[last_index + 5] = instrumental_parameters.b
-                parameters[last_index + 6] = instrumental_parameters.c
-                last_index += 6
 
         if not self.shift_parameters is None:
             for key in self.shift_parameters.keys():
@@ -279,9 +303,9 @@ class FitGlobalParameters(ParametersList):
     def from_fitted_parameters(self, fitted_parameters):
         last_index = -1
 
-        if not self.fit_initialization.incident_radiations is None:
-            for index in range(len(self.fit_initialization.incident_radiations)):
-                incident_radiation = self.fit_initialization.incident_radiations[index]
+        if not self.measured_dataset.incident_radiations is None:
+            for index in range(len(self.measured_dataset.incident_radiations)):
+                incident_radiation = self.measured_dataset.incident_radiations[index]
                 incident_radiation.wavelength.set_value(fitted_parameters[last_index + 1].value)
 
                 last_index += 1
@@ -293,33 +317,52 @@ class FitGlobalParameters(ParametersList):
                         secondary_wavelength_weigth.set_value(fitted_parameters[last_index + 2].value)
                         last_index += 2
 
-        if not self.fit_initialization.crystal_structures is None:
-            for index in range(len(self.fit_initialization.crystal_structures)):
-                crystal_structure = self.fit_initialization.crystal_structures[index]
+        if not self.measured_dataset.phases is None:
+            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
-                crystal_structure.a.set_value(fitted_parameters[last_index + 1].value)
-                crystal_structure.b.set_value(fitted_parameters[last_index + 2].value)
-                crystal_structure.c.set_value(fitted_parameters[last_index + 3].value)
-                crystal_structure.alpha.set_value(fitted_parameters[last_index + 4].value)
-                crystal_structure.beta.set_value(fitted_parameters[last_index + 5].value)
-                crystal_structure.gamma.set_value(fitted_parameters[last_index + 6].value)
+                if not line_profile is None:
+                    for phase_index in range(self.measured_dataset.get_phases_number()):
+                        phase = self.measured_dataset.phases[phase_index]
 
-                if crystal_structure.use_structure:
-                    crystal_structure.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
-                    last_index += 7
-                else:
-                    last_index += 6
+                        phase.a.set_value(fitted_parameters[last_index + 1].value)
+                        phase.b.set_value(fitted_parameters[last_index + 2].value)
+                        phase.c.set_value(fitted_parameters[last_index + 3].value)
+                        phase.alpha.set_value(fitted_parameters[last_index + 4].value)
+                        phase.beta.set_value(fitted_parameters[last_index + 5].value)
+                        phase.gamma.set_value(fitted_parameters[last_index + 6].value)
 
-                for reflection_index in range(crystal_structure.get_reflections_count()):
-                    crystal_structure.get_reflection(reflection_index).intensity.set_value(fitted_parameters[last_index + 1 + reflection_index].value)
+                        if phase.use_structure:
+                            phase.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
+                            last_index += 7
+                        else:
+                            last_index += 6
 
-                last_index += crystal_structure.get_reflections_count()
+                        reflection_number = line_profile.get_reflections_number(phase_index)
 
-        if not self.fit_initialization.thermal_polarization_parameters is None:
-            for thermal_polarization_parameters in self.fit_initialization.thermal_polarization_parameters:
-                if not thermal_polarization_parameters.debye_waller_factor is None:
-                    thermal_polarization_parameters.debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
-                    last_index += 1
+                        for reflection_index in range(reflection_number):
+                            line_profile.get_reflection(phase_index, reflection_index).intensity.set_value(fitted_parameters[last_index + 1 + reflection_index].value)
+
+                        last_index += reflection_number
+
+        if not self.instrumental_parameters is None:
+            for key in self.instrumental_parameters.keys():
+                instrumental_parameters_list = self.get_instrumental_parameters(key)
+
+                if not instrumental_parameters_list is None:
+                    for instrumental_parameters in instrumental_parameters_list:
+                        if key == Caglioti.__name__:
+                            instrumental_parameters.U.set_value(fitted_parameters[last_index + 1].value)
+                            instrumental_parameters.V.set_value(fitted_parameters[last_index + 2].value)
+                            instrumental_parameters.W.set_value(fitted_parameters[last_index + 3].value)
+                            instrumental_parameters.a.set_value(fitted_parameters[last_index + 4].value)
+                            instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
+                            instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
+                            last_index += 6
+                        elif key == ThermalPolarizationParameters.__name__:
+                            if not instrumental_parameters.debye_waller_factor is None:
+                                instrumental_parameters.debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
+                                last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -347,16 +390,6 @@ class FitGlobalParameters(ParametersList):
                             background_parameters.a2.set_value(fitted_parameters[last_index + 5].value)
                             background_parameters.b2.set_value(fitted_parameters[last_index + 6].value)
                             last_index += 6
-
-        if not self.instrumental_parameters is None:
-            for instrumental_parameters in self.instrumental_parameters:
-                instrumental_parameters.U.set_value(fitted_parameters[last_index + 1].value)
-                instrumental_parameters.V.set_value(fitted_parameters[last_index + 2].value)
-                instrumental_parameters.W.set_value(fitted_parameters[last_index + 3].value)
-                instrumental_parameters.a.set_value(fitted_parameters[last_index + 4].value)
-                instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
-                instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
-                last_index += 6
 
         if not self.shift_parameters is None:
             for key in self.shift_parameters.keys():
@@ -425,9 +458,9 @@ class FitGlobalParameters(ParametersList):
     def from_fitted_errors(self, errors):
         last_index = -1
 
-        if not self.fit_initialization.incident_radiations is None:
-            for index in range(len(self.fit_initialization.incident_radiations)):
-                incident_radiation = self.fit_initialization.incident_radiations[index]
+        if not self.measured_dataset.incident_radiations is None:
+            for index in range(len(self.measured_dataset.incident_radiations)):
+                incident_radiation = self.measured_dataset.incident_radiations[index]
                 incident_radiation.wavelength.error = errors[last_index + 1]
 
                 last_index += 1
@@ -440,33 +473,52 @@ class FitGlobalParameters(ParametersList):
                         secondary_wavelength_weigth.error = errors[last_index + 2]
                         last_index += 2
 
-        if not self.fit_initialization.crystal_structures is None:
-            for index in range(len(self.fit_initialization.crystal_structures)):
-                crystal_structure = self.fit_initialization.crystal_structures[index]
+        if not self.measured_dataset.phases is None:
+            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
-                crystal_structure.a.error = errors[last_index + 1]
-                crystal_structure.b.error = errors[last_index + 2]
-                crystal_structure.c.error = errors[last_index + 3]
-                crystal_structure.alpha.error = errors[last_index + 4]
-                crystal_structure.beta.error = errors[last_index + 5]
-                crystal_structure.gamma.error = errors[last_index + 6]
+                if not line_profile is None:
+                    for phase_index in range(self.measured_dataset.get_phases_number()):
+                        phase = self.measured_dataset.phases[phase_index]
 
-                if crystal_structure.use_structure:
-                    crystal_structure.intensity_scale_factor.error = errors[last_index + 7]
-                    last_index += 7
-                else:
-                    last_index += 6
+                        phase.a.error = errors[last_index + 1]
+                        phase.b.error = errors[last_index + 2]
+                        phase.c.error = errors[last_index + 3]
+                        phase.alpha.error = errors[last_index + 4]
+                        phase.beta.error = errors[last_index + 5]
+                        phase.gamma.error = errors[last_index + 6]
 
-                for reflection_index in range(crystal_structure.get_reflections_count()):
-                    crystal_structure.get_reflection(reflection_index).intensity.error = errors[last_index+reflection_index]
+                        if phase.use_structure:
+                            phase.intensity_scale_factor.error = errors[last_index + 7]
+                            last_index += 7
+                        else:
+                            last_index += 6
 
-                last_index += crystal_structure.get_reflections_count()
+                        reflection_number = line_profile.get_reflections_number(phase_index)
 
-        if not self.fit_initialization.thermal_polarization_parameters is None:
-            for thermal_polarization_parameters in self.fit_initialization.thermal_polarization_parameters:
-                if not thermal_polarization_parameters.debye_waller_factor is None:
-                    thermal_polarization_parameters.debye_waller_factor.error = errors[last_index + 1]
-                    last_index += 1
+                        for reflection_index in range(reflection_number):
+                            line_profile.get_reflection(phase_index, reflection_index).intensity.intensity.error = errors[last_index + 1 + reflection_index]
+
+                        last_index += reflection_number
+
+        if not self.instrumental_parameters is None:
+            for key in self.instrumental_parameters.keys():
+                instrumental_parameters_list = self.get_instrumental_parameters(key)
+
+                if not instrumental_parameters_list is None:
+                    for instrumental_parameters in instrumental_parameters_list:
+                        if key == Caglioti.__name__:
+                            instrumental_parameters.U.error = errors[last_index + 1]
+                            instrumental_parameters.V.error = errors[last_index + 2]
+                            instrumental_parameters.W.error = errors[last_index + 3]
+                            instrumental_parameters.a.error = errors[last_index + 4]
+                            instrumental_parameters.b.error = errors[last_index + 5]
+                            instrumental_parameters.c.error = errors[last_index + 6]
+                            last_index += 6
+                        elif key == ThermalPolarizationParameters.__name__:
+                            if not instrumental_parameters.debye_waller_factor is None:
+                                instrumental_parameters.debye_waller_factor.error = errors[last_index + 1]
+                                last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -494,16 +546,6 @@ class FitGlobalParameters(ParametersList):
                             background_parameters.a2.error = errors[last_index + 5]
                             background_parameters.b2.error = errors[last_index + 6]
                             last_index += 6
-
-        if not self.instrumental_parameters is None:
-            for instrumental_parameters in self.instrumental_parameters:
-                instrumental_parameters.U.error = errors[last_index + 1]
-                instrumental_parameters.V.error = errors[last_index + 2]
-                instrumental_parameters.W.error = errors[last_index + 3]
-                instrumental_parameters.a.error = errors[last_index + 4]
-                instrumental_parameters.b.error = errors[last_index + 5]
-                instrumental_parameters.c.error = errors[last_index + 6]
-                last_index += 6
 
         if not self.shift_parameters is None:
             for key in self.shift_parameters.keys():
@@ -567,9 +609,9 @@ class FitGlobalParameters(ParametersList):
     def from_fitted_parameters_and_errors(self, fitted_parameters, errors):
         last_index = -1
 
-        if not self.fit_initialization.incident_radiations is None:
-            for index in range(len(self.fit_initialization.incident_radiations)):
-                incident_radiation = self.fit_initialization.incident_radiations[index]
+        if not self.measured_dataset.incident_radiations is None:
+            for index in range(len(self.measured_dataset.incident_radiations)):
+                incident_radiation = self.measured_dataset.incident_radiations[index]
                 incident_radiation.wavelength.set_value(fitted_parameters[last_index + 1].value)
                 incident_radiation.wavelength.error = errors[last_index + 1]
 
@@ -584,43 +626,67 @@ class FitGlobalParameters(ParametersList):
                         secondary_wavelength_weigth.error = errors[last_index + 2]
                         last_index += 2
 
-        if not self.fit_initialization.crystal_structures is None:
-            for index in range(len(self.fit_initialization.crystal_structures)):
-                crystal_structure = self.fit_initialization.crystal_structures[index]
+        if not self.measured_dataset.phases is None:
+            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
-                crystal_structure.a.set_value(fitted_parameters[last_index + 1].value)
-                crystal_structure.b.set_value(fitted_parameters[last_index + 2].value)
-                crystal_structure.c.set_value(fitted_parameters[last_index + 3].value)
-                crystal_structure.alpha.set_value(fitted_parameters[last_index + 4].value)
-                crystal_structure.beta.set_value(fitted_parameters[last_index + 5].value)
-                crystal_structure.gamma.set_value(fitted_parameters[last_index + 6].value)
-                crystal_structure.a.error = errors[last_index + 1]
-                crystal_structure.b.error = errors[last_index + 2]
-                crystal_structure.c.error = errors[last_index + 3]
-                crystal_structure.alpha.error = errors[last_index + 4]
-                crystal_structure.beta.error = errors[last_index + 5]
-                crystal_structure.gamma.error = errors[last_index + 6]
+                if not line_profile is None:
+                    for phase_index in range(self.measured_dataset.get_phases_number()):
+                        phase = self.measured_dataset.phases[phase_index]
 
-                if crystal_structure.use_structure:
-                    crystal_structure.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
-                    crystal_structure.intensity_scale_factor.error = errors[last_index + 7]
-                    last_index += 7
-                else:
-                    last_index += 6
+                        phase.a.set_value(fitted_parameters[last_index + 1].value)
+                        phase.b.set_value(fitted_parameters[last_index + 2].value)
+                        phase.c.set_value(fitted_parameters[last_index + 3].value)
+                        phase.alpha.set_value(fitted_parameters[last_index + 4].value)
+                        phase.beta.set_value(fitted_parameters[last_index + 5].value)
+                        phase.gamma.set_value(fitted_parameters[last_index + 6].value)
+                        phase.a.error = errors[last_index + 1]
+                        phase.b.error = errors[last_index + 2]
+                        phase.c.error = errors[last_index + 3]
+                        phase.alpha.error = errors[last_index + 4]
+                        phase.beta.error = errors[last_index + 5]
+                        phase.gamma.error = errors[last_index + 6]
 
-                for reflection_index in range(crystal_structure.get_reflections_count()):
-                    intensity = crystal_structure.get_reflection(reflection_index).intensity
-                    intensity.set_value(fitted_parameters[last_index + 1 + reflection_index].value)
-                    intensity.error = errors[last_index+reflection_index]
+                        if phase.use_structure:
+                            phase.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
+                            phase.intensity_scale_factor.error = errors[last_index + 7]
+                            last_index += 7
+                        else:
+                            last_index += 6
 
-                last_index += crystal_structure.get_reflections_count()
+                        reflection_number = line_profile.get_reflections_number(phase_index)
 
-        if not self.fit_initialization.thermal_polarization_parameters is None:
-            for thermal_polarization_parameters in self.fit_initialization.thermal_polarization_parameters:
-                if not thermal_polarization_parameters.debye_waller_factor is None:
-                    thermal_polarization_parameters.debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
-                    thermal_polarization_parameters.debye_waller_factor.error = errors[last_index + 1]
-                    last_index += 1
+                        for reflection_index in range(reflection_number):
+                            line_profile.get_reflection(phase_index, reflection_index).intensity.set_value(fitted_parameters[last_index + 1 + reflection_index].value)
+                            line_profile.get_reflection(phase_index, reflection_index).intensity.error = errors[last_index + 1 + reflection_index]
+
+                        last_index += reflection_number
+
+        if not self.instrumental_parameters is None:
+            for key in self.instrumental_parameters.keys():
+                instrumental_parameters_list = self.get_instrumental_parameters(key)
+
+                if not instrumental_parameters_list is None:
+                    for instrumental_parameters in instrumental_parameters_list:
+                        if key == Caglioti.__name__:
+                            instrumental_parameters.U.set_value(fitted_parameters[last_index + 1].value)
+                            instrumental_parameters.V.set_value(fitted_parameters[last_index + 2].value)
+                            instrumental_parameters.W.set_value(fitted_parameters[last_index + 3].value)
+                            instrumental_parameters.a.set_value(fitted_parameters[last_index + 4].value)
+                            instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
+                            instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
+                            instrumental_parameters.U.error = errors[last_index + 1]
+                            instrumental_parameters.V.error = errors[last_index + 2]
+                            instrumental_parameters.W.error = errors[last_index + 3]
+                            instrumental_parameters.a.error = errors[last_index + 4]
+                            instrumental_parameters.b.error = errors[last_index + 5]
+                            instrumental_parameters.c.error = errors[last_index + 6]
+                            last_index += 6
+                        elif key == ThermalPolarizationParameters.__name__:
+                            if not instrumental_parameters.debye_waller_factor is None:
+                                instrumental_parameters.debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
+                                instrumental_parameters.debye_waller_factor.error = errors[last_index + 1]
+                                last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -664,22 +730,6 @@ class FitGlobalParameters(ParametersList):
                             background_parameters.a2.error = errors[last_index + 5]
                             background_parameters.b2.error = errors[last_index + 6]
                             last_index += 6
-
-        if not self.instrumental_parameters is None:
-            for instrumental_parameters in self.instrumental_parameters:
-                instrumental_parameters.U.set_value(fitted_parameters[last_index + 1].value)
-                instrumental_parameters.V.set_value(fitted_parameters[last_index + 2].value)
-                instrumental_parameters.W.set_value(fitted_parameters[last_index + 3].value)
-                instrumental_parameters.a.set_value(fitted_parameters[last_index + 4].value)
-                instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
-                instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
-                instrumental_parameters.U.error = errors[last_index + 1]
-                instrumental_parameters.V.error = errors[last_index + 2]
-                instrumental_parameters.W.error = errors[last_index + 3]
-                instrumental_parameters.a.error = errors[last_index + 4]
-                instrumental_parameters.b.error = errors[last_index + 5]
-                instrumental_parameters.c.error = errors[last_index + 6]
-                last_index += 6
 
         if not self.shift_parameters is None:
             for key in self.shift_parameters.keys():

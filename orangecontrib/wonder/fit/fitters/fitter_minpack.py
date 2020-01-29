@@ -82,14 +82,14 @@ class FitterMinpack(FitterInterface):
         self.parameters    = self.fit_global_parameters.get_parameters()
         self.has_functions = FitGlobalParameters.parameters_have_functions(self.parameters)
 
-        self.diffraction_patterns_number = self.fit_global_parameters.fit_initialization.get_diffraction_patterns_number()
+        self.diffraction_patterns_number = self.fit_global_parameters.measured_dataset.get_diffraction_patterns_number()
 
         self.twotheta_experimental_list = numpy.full(self.diffraction_patterns_number, None)
         self.intensity_experimental_list = numpy.full(self.diffraction_patterns_number, None)
         self.error_experimental_list = numpy.full(self.diffraction_patterns_number, None)
 
         for index in range(self.diffraction_patterns_number):
-            twotheta_experimental, intensity_experimental, error_experimental, _ = self.fit_global_parameters.fit_initialization.diffraction_patterns[index].tuples()
+            twotheta_experimental, intensity_experimental, error_experimental, _ = self.fit_global_parameters.measured_dataset.diffraction_patterns[index].tuples()
 
             self.twotheta_experimental_list[index] = twotheta_experimental
             self.intensity_experimental_list[index] = intensity_experimental
@@ -348,8 +348,7 @@ class FitterMinpack(FitterInterface):
         fitted_patterns = numpy.full(self.diffraction_patterns_number, None)
 
         for index in range(self.diffraction_patterns_number):
-            wavelength = fit_global_parameters.fit_initialization.incident_radiations[
-                0 if len(fit_global_parameters.fit_initialization.incident_radiations) == 1 else index].wavelength
+            wavelength = fit_global_parameters.measured_dataset.incident_radiations[0 if len(fit_global_parameters.measured_dataset.incident_radiations) == 1 else index].wavelength
 
             fitted_pattern = DiffractionPattern()
 
