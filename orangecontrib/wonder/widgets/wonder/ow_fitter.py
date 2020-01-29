@@ -298,7 +298,7 @@ class OWFitter(OWGenericWidget):
         def refresh_caglioti_fwhm():
             if not self.fitted_fit_global_parameters.instrumental_parameters is None:
                 index = 0
-                instrumental_parameters = self.fitted_fit_global_parameters.instrumental_parameters[index]
+                instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)[index]
                 self.__refresh_caglioti_fwhm(instrumental_parameters)
 
         self.le_fwhm_xmin = gui.lineEdit(boxr, self, "fwhm_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
@@ -333,7 +333,7 @@ class OWFitter(OWGenericWidget):
         def refresh_caglioti_eta():
             if not self.fitted_fit_global_parameters.instrumental_parameters is None:
                 index = 0
-                instrumental_parameters = self.fitted_fit_global_parameters.instrumental_parameters[index]
+                instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)[index]
                 self.__refresh_caglioti_eta(instrumental_parameters)
 
         self.le_eta_xmin = gui.lineEdit(boxr, self, "eta_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
@@ -1002,10 +1002,10 @@ class OWFitter(OWGenericWidget):
                 wavelength        = incident_radiation.wavelength.value
                 lattice_parameter = phase.a.value
 
-                nr_points = line_profile.get_reflections_number()
+                nr_points = line_profile.get_reflections_number(phase_index=0)
 
-                self.x_ib[diffraction_pattern_index]      = line_profile.get_s_list()
-                self.labels_ib[diffraction_pattern_index] = line_profile.get_hkl_list()
+                self.x_ib[diffraction_pattern_index]      = line_profile.get_s_list(phase_index=0)
+                self.labels_ib[diffraction_pattern_index] = line_profile.get_hkl_list(phase_index=0)
 
                 size_parameters = None
                 if not self.fitted_fit_global_parameters.size_parameters is None:
@@ -1013,7 +1013,7 @@ class OWFitter(OWGenericWidget):
 
                 instrumental_parameters = None
                 if not self.fitted_fit_global_parameters.instrumental_parameters is None:
-                    instrumental_parameters = self.fitted_fit_global_parameters.instrumental_parameters[0 if len(self.fitted_fit_global_parameters.instrumental_parameters) == 1 else diffraction_pattern_index]
+                    instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)[0 if len(self.fitted_fit_global_parameters.instrumental_parameters) == 1 else diffraction_pattern_index]
 
                 strain_parameters = None
                 if not self.fitted_fit_global_parameters.strain_parameters is None:
@@ -1024,7 +1024,7 @@ class OWFitter(OWGenericWidget):
                 plot_strain = not strain_parameters is None
 
                 if not size_parameters is None and not size_parameters.shape == Shape.WULFF:
-                    y_ib_size = numpy.full(line_profile.get_reflections_number(), integral_breadth_size(None, size_parameters))
+                    y_ib_size = numpy.full(line_profile.get_reflections_number(phase_index=0), integral_breadth_size(None, size_parameters))
                 else:
                     y_ib_size = numpy.zeros(nr_points)
 
@@ -1033,7 +1033,7 @@ class OWFitter(OWGenericWidget):
                 y_ib_total  = numpy.zeros(nr_points)
 
                 i = -1
-                for reflection in line_profile.get_reflections():
+                for reflection in line_profile.get_reflections(phase_index=0):
                     i += 1
 
                     if not size_parameters is None and size_parameters.shape == Shape.WULFF:

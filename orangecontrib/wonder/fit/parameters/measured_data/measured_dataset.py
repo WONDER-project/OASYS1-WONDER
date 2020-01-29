@@ -49,7 +49,10 @@ class MeasuredDataset(ParametersList):
 
         if self.initialized and diffraction_patterns_number > 0:
             for diffraction_pattern_index in range(diffraction_patterns_number):
-                self.line_profiles[diffraction_pattern_index] = LineProfile(self.phases)
+                if self.line_profiles[diffraction_pattern_index] is None:
+                    self.line_profiles[diffraction_pattern_index] = LineProfile(self.phases)
+                else:
+                    self.line_profiles[diffraction_pattern_index].set_phases(self.phases)
 
     def get_diffraction_patterns_number(self):
         return 0 if self.diffraction_patterns is None else len(self.diffraction_patterns)

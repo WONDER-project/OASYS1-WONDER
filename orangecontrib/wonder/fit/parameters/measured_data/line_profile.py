@@ -12,6 +12,17 @@ class LineProfile(ParametersList):
         self.phases = phases
         self.reflections_of_phases = [[]]*len(phases)
 
+    def set_phases(self, phases=[]):
+        self.phases = phases
+
+        if len(self.reflections_of_phases) != len(self.phases):
+            reflections_of_phases = [[]]*len(phases)
+
+            for phase_index in range(min(len(phases), len(self.reflections_of_phases))):
+                reflections_of_phases[phase_index] = self.reflections_of_phases[phase_index]
+
+            self.reflections_of_phases = reflections_of_phases
+
     def add_reflection(self, phase_index, reflection):
         self.reflections_of_phases[phase_index].append(reflection)
         self.update_reflection(phase_index, -1)
@@ -165,5 +176,13 @@ class LineProfile(ParametersList):
 
         return excluded_reflections_of_phase
 
+    def generate_additional_parameters(self):
+        self.additional_parameters = [None]*len(self.phases)
+
+    def set_additional_parameters_of_phase(self, phase_index, additional_parameters):
+        self.additional_parameters[phase_index] = additional_parameters
+
+    def get_additional_parameters_of_phase(self, phase_index):
+        return self.additional_parameters[phase_index]
 
 

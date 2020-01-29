@@ -507,6 +507,7 @@ class PhaseBox(InnerBox):
 
         gui.lineEdit(self.structure_box_1, self, "formula", "Chemical Formula", labelWidth=110, valueType=str,
                      callback=widget.dump_formula)
+
         OWGenericWidget.create_box_in_widget(self, self.structure_box_1, "intensity_scale_factor", "I0",
                                              add_callback=True, min_value=0.0, min_accepted=False, trim=5)
 

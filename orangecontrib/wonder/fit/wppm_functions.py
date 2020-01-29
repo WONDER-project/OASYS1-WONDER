@@ -1,11 +1,5 @@
 
-from orangecontrib.wonder.fit.parameters.measured_data.line_profile import LineProfile
-from orangecontrib.wonder.fit.parameters.measured_data.measured_dataset import MeasuredDataset
-from orangecontrib.wonder.fit.parameters.measured_data.incident_radiation import IncidentRadiation
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
-from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import  DiffractionPattern
-from orangecontrib.wonder.fit.parameters.measured_data.reflection import Reflection
-
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTTypes
 from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import Beampath, LorentzFormula
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
@@ -128,7 +122,6 @@ def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_ind
 def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index = 0):
     phases = fit_global_parameters.measured_dataset.phases
     line_profile = fit_global_parameters.measured_dataset.line_profiles[diffraction_pattern_index]
-
     incident_radiation = fit_global_parameters.measured_dataset.incident_radiations[0 if len(fit_global_parameters.measured_dataset.incident_radiations) == 1 else diffraction_pattern_index]
 
     for phase in phases:
@@ -136,35 +129,46 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
 
     # CONSTRUCTION OF EACH SEPARATE PEAK ---------------------------------------------------------------------------
 
-    separated_peaks_functions = []
-
+    intensity = None
     for phase_index in range(fit_global_parameters.measured_dataset.get_phases_number()):
+        separated_peaks_functions = []
+
         for reflection_index in range(line_profile.get_reflections_number(phase_index)):
             if isinstance(phase, GSASIIPhase):
-                sanalitycal, Ianalitycal = create_one_peak(phase_index, reflection_index, fit_global_parameters, diffraction_pattern_index, phase.get_gsasii_reflections_list())
+                s_analytical, intensity_analytical = create_one_peak(phase_index,
+                                                                     reflection_index,
+                                                                     fit_global_parameters,
+                                                                     diffraction_pattern_index,
+                                                                     gsas_reflections_list=line_profile.get_additional_parameters_of_phase(phase_index))
             else:
-                sanalitycal, Ianalitycal = create_one_peak(phase_index, reflection_index, fit_global_parameters, diffraction_pattern_index)
+                s_analytical, intensity_analytical = create_one_peak(phase_index,
+                                                                     reflection_index,
+                                                                     fit_global_parameters,
+                                                                     diffraction_pattern_index)
 
-    separated_peaks_functions.append([sanalitycal, Ianalitycal])
+            separated_peaks_functions.append([s_analytical, intensity_analytical])
 
-    # INTERPOLATION ONTO ORIGINAL S VALUES -------------------------------------------------------------------------
+        # INTERPOLATION ONTO ORIGINAL S VALUES -------------------------------------------------------------------------
 
-    I = Utilities.merge_functions(separated_peaks_functions, s)
+        intensity_phase = Utilities.merge_functions(separated_peaks_functions, s)
 
-    # ADD SAXS
+        # ADD SAXS
 
-    if not fit_global_parameters.size_parameters is None:
-        size_parameters = fit_global_parameters.size_parameters[0 if len(fit_global_parameters.size_parameters) == 1 else diffraction_pattern_index]
+        if not fit_global_parameters.size_parameters is None:
+            size_parameters = fit_global_parameters.size_parameters[0 if len(fit_global_parameters.size_parameters) == 1 else diffraction_pattern_index]
 
-        if size_parameters.distribution == Distribution.DELTA and size_parameters.add_saxs:
-            if not phases[0].use_structure: NotImplementedError("SAXS is available when the structural model is active")
+            if size_parameters.distribution == Distribution.DELTA and size_parameters.add_saxs:
+                if not phases[phase_index].use_structure: NotImplementedError("SAXS is available when the structural model is active")
 
-            I += saxs(s,
-                      size_parameters.mu.value,
-                      phases[0].a.value,
-                      phases[0].formula,
-                      phases[0].symmetry,
-                      size_parameters.normalize_to)
+                intensity_phase += saxs(s,
+                                        size_parameters.mu.value,
+                                        phases[phase_index].a.value,
+                                        phases[phase_index].formula,
+                                        phases[phase_index].symmetry,
+                                        size_parameters.normalize_to)
+
+        if intensity is None: intensity = intensity_phase
+        else: intensity = Utilities.merge_functions([intensity, intensity_phase], s)
 
     # ADD DEBYE-WALLER FACTOR --------------------------------------------------------------------------------------
 
@@ -175,20 +179,20 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
             thermal_polarization_parameters = thermal_polarization_parameters_list[0 if len(thermal_polarization_parameters_list) == 1 else diffraction_pattern_index]
 
             if not thermal_polarization_parameters.debye_waller_factor is None:
-                I *= debye_waller(s, thermal_polarization_parameters.debye_waller_factor.value)
+                intensity *= debye_waller(s, thermal_polarization_parameters.debye_waller_factor.value)
 
     if not incident_radiation.is_single_wavelength:
         principal_wavelength = incident_radiation.wavelength
-        I_scaled = I*incident_radiation.get_principal_wavelenght_weight()
+        I_scaled = intensity*incident_radiation.get_principal_wavelenght_weight()
 
         for secondary_wavelength, secondary_wavelength_weigth in zip(incident_radiation.secondary_wavelengths,
                                                                      incident_radiation.secondary_wavelengths_weights):
             s_secondary = s * secondary_wavelength.value/principal_wavelength.value
-            I_scaled += Utilities.merge_functions([[s_secondary, I*secondary_wavelength_weigth.value]], s)
+            I_scaled += Utilities.merge_functions([[s_secondary, intensity*secondary_wavelength_weigth.value]], s)
 
-        I = I_scaled
+        intensity = I_scaled
 
-    return I
+    return intensity
 
 
 #################################################
@@ -331,7 +335,7 @@ def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffra
     # SIZE -------------------------------------------------------------------------------------------------------------
 
     if not fit_global_parameters.size_parameters is None:
-        size_parameters = fit_global_parameters.size_parameters[0 if len(fit_global_parameters.size_parameters) == 1 else diffraction_pattern_index]
+        size_parameters = fit_global_parameters.size_parameters[0 if len(fit_global_parameters.size_parameters) == 1 else phase_index]
 
         if size_parameters.distribution == Distribution.LOGNORMAL:
             if size_parameters.shape == Shape.SPHERE:
@@ -383,7 +387,7 @@ def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffra
     # STRAIN -----------------------------------------------------------------------------------------------------------
 
     if not fit_global_parameters.strain_parameters is None:
-        strain_parameters = fit_global_parameters.strain_parameters[0 if len(fit_global_parameters.strain_parameters) == 1 else diffraction_pattern_index]
+        strain_parameters = fit_global_parameters.strain_parameters[0 if len(fit_global_parameters.strain_parameters) == 1 else phase_index]
 
         if isinstance(strain_parameters, InvariantPAH): # INVARIANT PAH
             if fourier_amplitudes is None:

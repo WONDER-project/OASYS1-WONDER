@@ -114,7 +114,7 @@ class OWStrainKW(OWGenericWidget):
     b_function = Setting(1)
 
     mix_function_value = Setting("")
-    b_function_value = Setting("crystal_structure_a*sqrt(3)/2")
+    b_function_value = Setting("phase_1_a*sqrt(3)/2")
 
     inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
     outputs = [("Fit Global Parameters", FitGlobalParameters)]

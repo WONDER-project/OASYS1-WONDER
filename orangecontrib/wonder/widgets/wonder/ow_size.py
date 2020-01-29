@@ -150,7 +150,7 @@ class OWSize(OWGenericWidget):
                 if not self.mu_function==1: congruence.checkStrictlyPositiveNumber(self.mu, "\u03bc or D")
                 if self.cb_distribution.currentText() != Distribution.DELTA and not self.sigma_function==1:
                     congruence.checkStrictlyPositiveNumber(self.sigma, "\u03c3")
-                if self.cb_distribution.currentText() == Distribution.DELTA and not self.fit_global_parameters.fit_initialization.crystal_structures[0].use_structure:
+                if self.cb_distribution.currentText() == Distribution.DELTA and not self.fit_global_parameters.measured_dataset.phases[0].use_structure:
                         raise Exception("Delta Distribution cannot be used when the structural model is not activated")
 
                 self.fit_global_parameters.size_parameters = [SizeParameters(shape=self.cb_shape.currentText(),

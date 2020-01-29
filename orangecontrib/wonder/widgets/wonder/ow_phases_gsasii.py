@@ -34,6 +34,7 @@ class OWGSASIIPhases(OWGenericWidget):
     a_function_value                      = Setting([""])
     symmetry                              = Setting([2])
     cif_file                              = Setting([""])
+    formula                               = Setting([""])
     intensity_scale_factor                = Setting([1.0])
     intensity_scale_factor_fixed          = Setting([0])
     intensity_scale_factor_has_min        = Setting([0])
@@ -89,6 +90,7 @@ class OWGSASIIPhases(OWGenericWidget):
                                  a_function_value                     = self.a_function_value[index],
                                  symmetry                             = self.symmetry[index],
                                  cif_file                             = self.cif_file[index],
+                                 formula                              = self.formula[index],
                                  intensity_scale_factor               = self.intensity_scale_factor[index],
                                  intensity_scale_factor_fixed         = self.intensity_scale_factor_fixed[index],
                                  intensity_scale_factor_has_min       = self.intensity_scale_factor_has_min[index],
@@ -183,17 +185,23 @@ class OWGSASIIPhases(OWGenericWidget):
 
                 self.fit_global_parameters.measured_dataset.set_phases([self.phases_box_array[index].get_phase() for index in range(len(self.phases_box_array))])
 
-                for diffraction_pattern_index in range(self.fit_global_parameters.measured_dataset.get_diffraction_patterns_number()):
-                    diffraction_pattern = self.fit_global_parameters.measured_dataset.diffraction_patterns[diffraction_pattern_index]
-                    incident_radiations = self.fit_global_parameters.measured_dataset.incident_radiations
+                measured_dataset = self.fit_global_parameters.measured_dataset
+                incident_radiations = measured_dataset.incident_radiations
+
+                for diffraction_pattern_index in range(measured_dataset.get_diffraction_patterns_number()):
                     incident_radiation  = incident_radiations[0 if len(incident_radiations) == 1 else diffraction_pattern_index]
+                    diffraction_pattern = measured_dataset.diffraction_patterns[diffraction_pattern_index]
+                    line_profile = measured_dataset.line_profiles[diffraction_pattern_index]
+                    line_profile.generate_additional_parameters()
 
                     for phase_index in range(self.fit_global_parameters.measured_dataset.get_phases_number()):
-                        gsasii_phase = self.fit_global_parameters.measured_dataset.phases[phase_index]
-                        gsasii_phase.set_gsasii_reflections_list(gsasii_load_reflections(gsasii_phase.cif_file,
-                                                                                         incident_radiation.wavelength.value,
-                                                                                         diffraction_pattern.get_diffraction_point(0).twotheta,
-                                                                                         diffraction_pattern.get_diffraction_point(-1).twotheta))
+                        gsasii_phase = measured_dataset.phases[phase_index]
+
+                        line_profile.set_additional_parameters_of_phase(phase_index=phase_index,
+                                                                        additional_parameters=gsasii_load_reflections(gsasii_phase.cif_file,
+                                                                                                                      incident_radiation.wavelength.value,
+                                                                                                                      diffraction_pattern.get_diffraction_point(0).twotheta,
+                                                                                                                      diffraction_pattern.get_diffraction_point(-1).twotheta))
 
                 self.fit_global_parameters.evaluate_functions()  # in case that a is a function of other parameters
                 self.fit_global_parameters.regenerate_parameters()
@@ -245,6 +253,7 @@ class OWGSASIIPhases(OWGenericWidget):
                                                      a_function_value                     = self.a_function_value[index],
                                                      symmetry                             = self.symmetry[index],
                                                      cif_file                             = self.cif_file[index],
+                                                     formula                              = self.formula[index],
                                                      intensity_scale_factor               = self.intensity_scale_factor[index],
                                                      intensity_scale_factor_fixed         = self.intensity_scale_factor_fixed[index],
                                                      intensity_scale_factor_has_min       = self.intensity_scale_factor_has_min[index],
@@ -281,6 +290,7 @@ class OWGSASIIPhases(OWGenericWidget):
         self.dump_a()
         self.dump_symmetry()
         self.dump_cif_file()
+        self.dump_formula()
         self.dump_intensity_scale_factor()
 
     def dump_a(self):
@@ -346,6 +356,17 @@ class OWGSASIIPhases(OWGenericWidget):
         except:
             self.cif_file = copy.deepcopy(bkp_cif_file)
 
+    def dump_formula(self):
+        bkp_formula = copy.deepcopy(self.formula)
+
+        try:
+            self.formula = []
+
+            for index in range(len(self.phases_box_array)):
+                self.formula.append(self.phases_box_array[index].formula)
+        except:
+            self.formula = copy.deepcopy(bkp_formula)
+
     def dump_intensity_scale_factor(self):
         bkp_intensity_scale_factor = copy.deepcopy(self.intensity_scale_factor)
         bkp_intensity_scale_factor_fixed = copy.deepcopy(self.intensity_scale_factor_fixed)
@@ -400,6 +421,7 @@ class PhaseBox(InnerBox):
     a_function_value = ""
     symmetry = 2
     cif_file = ""
+    formula = ""
     intensity_scale_factor = 1.0
     intensity_scale_factor_fixed = 0
     intensity_scale_factor_has_min = 0
@@ -432,6 +454,7 @@ class PhaseBox(InnerBox):
                  a_function_value="",
                  symmetry=2,
                  cif_file="",
+                 formula="",
                  intensity_scale_factor=1.0,
                  intensity_scale_factor_fixed=0,
                  intensity_scale_factor_has_min=0,
@@ -460,6 +483,7 @@ class PhaseBox(InnerBox):
         self.a_function_value = a_function_value
         self.symmetry = symmetry
         self.cif_file = cif_file
+        self.formula = formula
         self.intensity_scale_factor = intensity_scale_factor
         self.intensity_scale_factor_fixed = intensity_scale_factor_fixed
         self.intensity_scale_factor_has_min = intensity_scale_factor_has_min
@@ -488,12 +512,15 @@ class PhaseBox(InnerBox):
 
         self.structure_box_1 = gui.widgetBox(structure_box,
                                              "", orientation="vertical",
-                                             width=self.CONTROL_AREA_WIDTH - 5, height=60)
+                                             width=self.CONTROL_AREA_WIDTH - 5, height=90)
 
         file_box = gui.widgetBox(self.structure_box_1, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH-10)
 
         self.le_cif_file = gui.lineEdit(file_box, self, value="cif_file", valueType=str, label="CIF File", labelWidth=50, callback=widget.dump_cif_file)
         orangegui.button(file_box, self, "...", callback=self.open_folders)
+
+        gui.lineEdit(self.structure_box_1, self, "formula", "Chemical Formula", labelWidth=110, valueType=str,
+                     callback=widget.dump_formula)
 
         OWGenericWidget.create_box_in_widget(self, self.structure_box_1, "intensity_scale_factor", "I0",
                                              add_callback=True, min_value=0.0, min_accepted=False, trim=5)
@@ -537,24 +564,22 @@ class PhaseBox(InnerBox):
 
     def set_data(self, phase):
         self.widget.populate_fields_in_widget(self, "a", phase.a)
-        self.use_structure = 1 if phase.use_structure else 0
-
-        if self.use_structure == 1:
-            self.widget.populate_fields_in_widget(self, "intensity_scale_factor", phase.intensity_scale_factor)
-            self.formula = phase.formula
+        self.widget.populate_fields_in_widget(self, "intensity_scale_factor", phase.intensity_scale_factor)
+        self.cif_file = phase.cif_file
+        self.formula = phase.formula
 
         simmetries = Symmetry.tuple()
         for index in range(0, len(simmetries)):
             if simmetries[index] == phase.symmetry:
                 self.symmetry = index
 
-        self.set_structure()
         self.set_symmetry()
 
     def get_phase(self):
         phase = GSASIIPhase.init_cube(a0=self.widget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
                                       symmetry=self.cb_symmetry.currentText(),
                                       cif_file=self.cif_file,
+                                      formula=congruence.checkEmptyString(self.formula, "Chemical Formula"),
                                       intensity_scale_factor=self.widget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
                                       progressive=self.get_parameter_progressive())
 

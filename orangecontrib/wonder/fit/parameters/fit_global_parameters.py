@@ -166,32 +166,32 @@ class FitGlobalParameters(ParametersList):
                             last_index += 2
 
         if not self.measured_dataset.phases is None:
-            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
-                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
+            for phase_index in range(self.measured_dataset.get_phases_number()):
+                phase = self.measured_dataset.phases[phase_index]
 
-                if not line_profile is None:
-                    for phase_index in range(self.measured_dataset.get_phases_number()):
-                        phase = self.measured_dataset.phases[phase_index]
+                parameters[last_index + 1] = phase.a
+                parameters[last_index + 2] = phase.b
+                parameters[last_index + 3] = phase.c
+                parameters[last_index + 4] = phase.alpha
+                parameters[last_index + 5] = phase.beta
+                parameters[last_index + 6] = phase.gamma
 
-                        parameters[last_index + 1] = phase.a
-                        parameters[last_index + 2] = phase.b
-                        parameters[last_index + 3] = phase.c
-                        parameters[last_index + 4] = phase.alpha
-                        parameters[last_index + 5] = phase.beta
-                        parameters[last_index + 6] = phase.gamma
+                if phase.use_structure:
+                    parameters[last_index + 7] = phase.intensity_scale_factor
+                    last_index += 7
+                else:
+                    last_index += 6
 
-                        if phase.use_structure:
-                            parameters[last_index + 7] = phase.intensity_scale_factor
-                            last_index += 7
-                        else:
-                            last_index += 6
+                for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                    line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
-                        reflection_number = line_profile.get_reflections_number(phase_index)
+                    if not line_profile is None:
+                        reflections_number = line_profile.get_reflections_number(phase_index)
 
-                        for reflection_index in range(reflection_number):
+                        for reflection_index in range(reflections_number):
                             parameters[last_index + 1 + reflection_index] = line_profile.get_reflection(phase_index, reflection_index).intensity
 
-                        last_index += reflection_number
+                        last_index += reflections_number
 
         if not self.instrumental_parameters is None:
             for key in self.instrumental_parameters.keys():
@@ -306,8 +306,8 @@ class FitGlobalParameters(ParametersList):
         if not self.measured_dataset.incident_radiations is None:
             for index in range(len(self.measured_dataset.incident_radiations)):
                 incident_radiation = self.measured_dataset.incident_radiations[index]
-                incident_radiation.wavelength.set_value(fitted_parameters[last_index + 1].value)
 
+                incident_radiation.wavelength.set_value(fitted_parameters[last_index + 1].value)
                 last_index += 1
 
                 if not incident_radiation.is_single_wavelength:
@@ -318,32 +318,32 @@ class FitGlobalParameters(ParametersList):
                         last_index += 2
 
         if not self.measured_dataset.phases is None:
-            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
-                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
+            for phase_index in range(self.measured_dataset.get_phases_number()):
+                phase = self.measured_dataset.phases[phase_index]
 
-                if not line_profile is None:
-                    for phase_index in range(self.measured_dataset.get_phases_number()):
-                        phase = self.measured_dataset.phases[phase_index]
+                phase.a.set_value(fitted_parameters[last_index + 1].value)
+                phase.b.set_value(fitted_parameters[last_index + 2].value)
+                phase.c.set_value(fitted_parameters[last_index + 3].value)
+                phase.alpha.set_value(fitted_parameters[last_index + 4].value)
+                phase.beta.set_value(fitted_parameters[last_index + 5].value)
+                phase.gamma.set_value(fitted_parameters[last_index + 6].value)
 
-                        phase.a.set_value(fitted_parameters[last_index + 1].value)
-                        phase.b.set_value(fitted_parameters[last_index + 2].value)
-                        phase.c.set_value(fitted_parameters[last_index + 3].value)
-                        phase.alpha.set_value(fitted_parameters[last_index + 4].value)
-                        phase.beta.set_value(fitted_parameters[last_index + 5].value)
-                        phase.gamma.set_value(fitted_parameters[last_index + 6].value)
+                if phase.use_structure:
+                    phase.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
+                    last_index += 7
+                else:
+                    last_index += 6
 
-                        if phase.use_structure:
-                            phase.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
-                            last_index += 7
-                        else:
-                            last_index += 6
+                for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                    line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
-                        reflection_number = line_profile.get_reflections_number(phase_index)
+                    if not line_profile is None:
+                        reflections_number = line_profile.get_reflections_number(phase_index)
 
-                        for reflection_index in range(reflection_number):
+                        for reflection_index in range(reflections_number):
                             line_profile.get_reflection(phase_index, reflection_index).intensity.set_value(fitted_parameters[last_index + 1 + reflection_index].value)
 
-                        last_index += reflection_number
+                        last_index += reflections_number
 
         if not self.instrumental_parameters is None:
             for key in self.instrumental_parameters.keys():
@@ -474,26 +474,26 @@ class FitGlobalParameters(ParametersList):
                         last_index += 2
 
         if not self.measured_dataset.phases is None:
-            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
-                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
+            for phase_index in range(self.measured_dataset.get_phases_number()):
+                phase = self.measured_dataset.phases[phase_index]
 
-                if not line_profile is None:
-                    for phase_index in range(self.measured_dataset.get_phases_number()):
-                        phase = self.measured_dataset.phases[phase_index]
+                phase.a.error = errors[last_index + 1]
+                phase.b.error = errors[last_index + 2]
+                phase.c.error = errors[last_index + 3]
+                phase.alpha.error = errors[last_index + 4]
+                phase.beta.error = errors[last_index + 5]
+                phase.gamma.error = errors[last_index + 6]
 
-                        phase.a.error = errors[last_index + 1]
-                        phase.b.error = errors[last_index + 2]
-                        phase.c.error = errors[last_index + 3]
-                        phase.alpha.error = errors[last_index + 4]
-                        phase.beta.error = errors[last_index + 5]
-                        phase.gamma.error = errors[last_index + 6]
+                if phase.use_structure:
+                    phase.intensity_scale_factor.error = errors[last_index + 7]
+                    last_index += 7
+                else:
+                    last_index += 6
 
-                        if phase.use_structure:
-                            phase.intensity_scale_factor.error = errors[last_index + 7]
-                            last_index += 7
-                        else:
-                            last_index += 6
+                for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                    line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
+                    if not line_profile is None:
                         reflection_number = line_profile.get_reflections_number(phase_index)
 
                         for reflection_index in range(reflection_number):
@@ -627,33 +627,33 @@ class FitGlobalParameters(ParametersList):
                         last_index += 2
 
         if not self.measured_dataset.phases is None:
-            for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
-                line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
+            for phase_index in range(self.measured_dataset.get_phases_number()):
+                phase = self.measured_dataset.phases[phase_index]
 
-                if not line_profile is None:
-                    for phase_index in range(self.measured_dataset.get_phases_number()):
-                        phase = self.measured_dataset.phases[phase_index]
+                phase.a.set_value(fitted_parameters[last_index + 1].value)
+                phase.b.set_value(fitted_parameters[last_index + 2].value)
+                phase.c.set_value(fitted_parameters[last_index + 3].value)
+                phase.alpha.set_value(fitted_parameters[last_index + 4].value)
+                phase.beta.set_value(fitted_parameters[last_index + 5].value)
+                phase.gamma.set_value(fitted_parameters[last_index + 6].value)
+                phase.a.error = errors[last_index + 1]
+                phase.b.error = errors[last_index + 2]
+                phase.c.error = errors[last_index + 3]
+                phase.alpha.error = errors[last_index + 4]
+                phase.beta.error = errors[last_index + 5]
+                phase.gamma.error = errors[last_index + 6]
 
-                        phase.a.set_value(fitted_parameters[last_index + 1].value)
-                        phase.b.set_value(fitted_parameters[last_index + 2].value)
-                        phase.c.set_value(fitted_parameters[last_index + 3].value)
-                        phase.alpha.set_value(fitted_parameters[last_index + 4].value)
-                        phase.beta.set_value(fitted_parameters[last_index + 5].value)
-                        phase.gamma.set_value(fitted_parameters[last_index + 6].value)
-                        phase.a.error = errors[last_index + 1]
-                        phase.b.error = errors[last_index + 2]
-                        phase.c.error = errors[last_index + 3]
-                        phase.alpha.error = errors[last_index + 4]
-                        phase.beta.error = errors[last_index + 5]
-                        phase.gamma.error = errors[last_index + 6]
+                if phase.use_structure:
+                    phase.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
+                    phase.intensity_scale_factor.error = errors[last_index + 7]
+                    last_index += 7
+                else:
+                    last_index += 6
 
-                        if phase.use_structure:
-                            phase.intensity_scale_factor.set_value(fitted_parameters[last_index + 7].value)
-                            phase.intensity_scale_factor.error = errors[last_index + 7]
-                            last_index += 7
-                        else:
-                            last_index += 6
+                for diffraction_pattern_index in range(self.measured_dataset.get_diffraction_patterns_number()):
+                    line_profile = self.measured_dataset.line_profiles[diffraction_pattern_index]
 
+                    if not line_profile is None:
                         reflection_number = line_profile.get_reflections_number(phase_index)
 
                         for reflection_index in range(reflection_number):
