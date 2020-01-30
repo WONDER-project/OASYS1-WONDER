@@ -14,7 +14,7 @@ from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.microstructure.size import SizeParameters
 from orangecontrib.wonder.fit.wppm_functions import Distribution, Normalization, Shape, WulffCubeFace
 
-class OWSizeNew(OWGenericWidget):
+class OWSize(OWGenericWidget):
 
     name = "Size"
     description = "Define Size"
