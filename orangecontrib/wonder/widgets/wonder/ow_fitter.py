@@ -94,8 +94,6 @@ class OWFitter(OWGenericWidget):
     lab6_ymax = Setting(1.0)
 
     # accessories
-
-    text_size = None
     annotations_ib = None
 
     def __fix_flags(self):
@@ -253,14 +251,9 @@ class OWFitter(OWGenericWidget):
 
         self.tab_plot_fit_gof.layout().addWidget(self.plot_fit_gof)
 
-        self.plot_size = PlotWindow()
-        self.plot_size.setDefaultPlotLines(True)
-        self.plot_size.setActiveCurveColor(color="#00008B")
-        self.plot_size.setGraphTitle("Crystalline Domains Size Distribution")
-        self.plot_size.setGraphXLabel(r"D [nm]")
-        self.plot_size.setGraphYLabel("Frequency")
+        self.tabs_plot_size = gui.tabWidget(self.tab_plot_size)
 
-        self.tab_plot_size.layout().addWidget(self.plot_size)
+        self.__build_plot_size()
 
         self.plot_strain = PlotWindow(control=True)
         legends_dock_widget = LegendsDockWidget(plot=self.plot_strain)
@@ -794,27 +787,32 @@ class OWFitter(OWGenericWidget):
     ##########################################
 
     def __show_data(self, is_init=False):
-        diffraction_pattern_number = self.fitted_fit_global_parameters.measured_dataset.get_diffraction_patterns_number()
+        diffraction_patterns_number = self.fitted_fit_global_parameters.measured_dataset.get_diffraction_patterns_number()
+        phases_number               = self.fitted_fit_global_parameters.measured_dataset.get_phases_number()
+        
+        if is_init:
+            self.distributions = [None] * phases_number
+            self.text_size     = [None] * phases_number
 
-        self.__refresh_fit(diffraction_pattern_number, is_init)
+        self.__refresh_fit(diffraction_patterns_number, is_init)
         self.__refresh_fit_data()
         self.__refresh_instrumental_function()
-        self.__refresh_size(is_init)
+        self.__refresh_size(phases_number, is_init)
         self.__refresh_strain()
-        self.__refresh_integral_breadth(diffraction_pattern_number, is_init)
+        self.__refresh_integral_breadth(phases_number, is_init)
 
         self.set_interactive()
 
     # ------------------------------------------------------------------------
 
-    def __refresh_fit(self, diffraction_pattern_number, is_init=False):
+    def __refresh_fit(self, diffraction_patterns_number, is_init=False):
         if is_init:
             self.__build_plot_fit()
 
-            self.x = numpy.full(diffraction_pattern_number, None)
-            self.y = numpy.full(diffraction_pattern_number, None)
+            self.x = numpy.full(diffraction_patterns_number, None)
+            self.y = numpy.full(diffraction_patterns_number, None)
 
-        for diffraction_pattern_index in range(diffraction_pattern_number):
+        for diffraction_pattern_index in range(diffraction_patterns_number):
             diffraction_pattern = self.fitted_fit_global_parameters.measured_dataset.diffraction_patterns[diffraction_pattern_index]
             fitted_pattern = self.fitted_patterns[diffraction_pattern_index]
 
@@ -940,32 +938,42 @@ class OWFitter(OWGenericWidget):
 
     # ------------------------------------------------------------------------
 
-    def __refresh_size(self, is_init=False):
-        if not self.text_size is None: self.text_size.remove()
-
+    def __refresh_size(self, phases_number=0, is_init=False):
         if is_init:
-            self.distribution = None
+            self.__build_plot_size()
 
-        if not self.fitted_fit_global_parameters.size_parameters is None and self.show_size==1:
-            if self.current_iteration <= 1: #TO BE SURE...
-                self.distribution = self.fitted_fit_global_parameters.size_parameters[0].get_distribution(auto=True)
+        for phase_index in range(phases_number):
+            if not self.text_size[phase_index] is None: self.text_size[phase_index].remove()
+
+            size_parameters = self.fitted_fit_global_parameters.get_size_parameters(phase_index)
+
+            if not size_parameters is None and self.show_size==1:
+                self.plot_size[phase_index].setEnabled(True)
+
+                if self.current_iteration <= 1: #TO BE SURE...
+                    self.distributions[phase_index] = size_parameters.get_distribution(auto=True)
+                else:
+                    self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
+                                                                                       D_min=self.distributions[phase_index].D_min,
+                                                                                       D_max=self.distributions[phase_index].D_max)
+
+                distribution = self.distributions[phase_index]
+
+                self.plot_size[phase_index].addCurve(distribution.x, distribution.y, legend="distribution", color="blue")
+                self.text_size[phase_index] = self.plot_size[phase_index]._backend.ax.text(numpy.max(distribution.x) * 0.65, numpy.max(distribution.y) * 0.7,
+                                                                                           "<D>        = " + str(round(distribution.D_avg, 3)) + " nm\n" + \
+                                                                                           "<D> s.w. = " + str(round(distribution.D_avg_surface_weighted, 3)) + " nm\n" + \
+                                                                                           "<D> v.w. = " + str(round(distribution.D_avg_volume_weighted, 3)) + " nm\n" + \
+                                                                                           "s.d.           = " + str(round(distribution.standard_deviation, 3)) + " nm", fontsize=12)
             else:
-                self.distribution = self.fitted_fit_global_parameters.size_parameters[0].get_distribution(auto=False, D_min=self.distribution.D_min, D_max=self.distribution.D_max)
-
-            self.plot_size.addCurve(self.distribution.x, self.distribution.y, legend="distribution", color="blue")
-
-            self.text_size = self.plot_size._backend.ax.text(numpy.max(self.distribution.x) * 0.65, numpy.max(self.distribution.y) * 0.7,
-                                                             "<D>        = " + str(round(self.distribution.D_avg, 3)) + " nm\n" + \
-                                                             "<D> s.w. = " + str(round(self.distribution.D_avg_surface_weighted, 3)) + " nm\n" + \
-                                                             "<D> v.w. = " + str(round(self.distribution.D_avg_volume_weighted, 3)) + " nm\n" + \
-                                                             "s.d.           = " + str(round(self.distribution.standard_deviation, 3)) + " nm", fontsize=12)
+                self.plot_size[phase_index].setEnabled(False)
 
     # ------------------------------------------------------------------------
 
     def __refresh_strain(self):
         if not self.fitted_fit_global_parameters.strain_parameters is None and self.show_warren==1:
-            if self.distribution is None: L_max = 20
-            else: L_max = 2*self.distribution.D_avg
+            if self.distributions is None: L_max = 20
+            else: L_max = 2*self.distributions[0].D_avg
 
             x, y = self.fitted_fit_global_parameters.get_strain_parameters(0).get_warren_plot(1, 0, 0, L_max=L_max)
             self.plot_strain.addCurve(x, y, legend="h00", color='blue')
@@ -1098,14 +1106,63 @@ class OWFitter(OWGenericWidget):
 
     # ------------------------------------------------------------------------
 
+    def __build_plot_size(self):
+        fit_global_parameter = self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
+
+        self.plot_size = []
+        self.tabs_plot_size.clear()
+
+        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()):
+            tab_plot_size = gui.createTabPage(self.tabs_plot_size, "Phase nr. " + str(index+1))
+
+            plot_size = PlotWindow()
+            plot_size.setDefaultPlotLines(True)
+            plot_size.setActiveCurveColor(color="#00008B")
+            plot_size.setGraphTitle("Crystalline Domains Size Distribution")
+            plot_size.setGraphXLabel(r"D [nm]")
+            plot_size.setGraphYLabel("Frequency")
+
+            self.plot_size.append(plot_size)
+            tab_plot_size.layout().addWidget(plot_size)
+
+    # ------------------------------------------------------------------------
+
+    def __build_plot_strain(self):
+        fit_global_parameter = self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
+
+        self.plot_strain = []
+        self.tabs_plot_strain.clear()
+
+        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()):
+            tab_plot_strain = gui.createTabPage(self.tabs_plot_strain, "Phase nr. " + str(index+1))
+
+            plot_strain = PlotWindow(control=True)
+            legends_dock_widget = LegendsDockWidget(plot=plot_strain)
+            plot_strain._legendsDockWidget = legends_dock_widget
+            plot_strain._dockWidgets.append(legends_dock_widget)
+            plot_strain.addDockWidget(qt.Qt.RightDockWidgetArea, legends_dock_widget)
+            plot_strain._legendsDockWidget.setFixedWidth(120)
+            plot_strain.getLegendsDockWidget().show()
+
+            plot_strain.setDefaultPlotLines(True)
+            plot_strain.setActiveCurveColor(color="#00008B")
+            plot_strain.setGraphTitle("Warren's plot")
+            plot_strain.setGraphXLabel(r"L [nm]")
+            plot_strain.setGraphYLabel("$\sqrt{<{\Delta}L^{2}>}$ [nm]")
+
+            self.plot_strain.append(plot_strain)
+            tab_plot_strain.layout().addWidget(plot_strain)
+
+    # ------------------------------------------------------------------------
+
     def __build_plot_integral_breadth(self):
         fit_global_parameter = self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
 
         self.plot_integral_breadth = []
         self.tabs_plot_integral_breadth.clear()
 
-        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_diffraction_patterns_number()):
-            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, "Diff. Patt. " + str(index+1))
+        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()):
+            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, "Phase nr. " + str(index+1))
 
             plot_integral_breadth = PlotWindow(control=True)
             legends_dock_widget = LegendsDockWidget(plot=plot_integral_breadth)

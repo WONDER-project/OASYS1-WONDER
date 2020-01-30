@@ -22,7 +22,7 @@ class OWSizeNew(OWGenericWidget):
 
     want_main_area =  False
 
-    active = Setting([0])
+    active = Setting([1])
 
     shape = Setting([1])
     distribution = Setting([1])
@@ -67,7 +67,7 @@ class OWSizeNew(OWGenericWidget):
 
         main_box = gui.widgetBox(self.controlArea,
                                  "Size", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 10, height=600)
+                                 width=self.CONTROL_AREA_WIDTH - 10, height=380)
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
@@ -124,7 +124,7 @@ class OWSizeNew(OWGenericWidget):
         orangegui.rubber(self.controlArea)
 
     def get_max_height(self):
-        return 500
+        return 480
 
     def set_data(self, data):
         if not data is None:
@@ -135,21 +135,36 @@ class OWSizeNew(OWGenericWidget):
 
                 if phases is None: raise ValueError("No Phases in input data!")
 
-                self.sizes_tabs.clear()
-                self.sizes_box_array = []
+                tabs_to_remove = len(self.shape)-len(phases)
 
-                for phase_index in range(len(phases)):
-                    size_parameters = self.fit_global_parameters.get_size_parameters(phase_index)
+                if tabs_to_remove > 0:
+                    for index in range(tabs_to_remove):
+                        self.sizes_tabs.removeTab(-1)
 
-                    size_box = SizeBox(widget=self,
-                                       parent=gui.createTabPage(self.sizes_tabs, "Phase nr. " + str(phase_index + 1)),
-                                       index=phase_index)
+                if not self.fit_global_parameters.size_parameters is None:
+                    for phase_index in range(len(phases)):
+                        size_parameters = self.fit_global_parameters.get_size_parameters(phase_index)
 
-                    if not size_parameters is None: size_box.set_data(size_parameters)
+                        if phase_index < len(self.shape):
+                            size_box = self.sizes_box_array[phase_index]
 
-                    self.sizes_box_array.append(size_box)
+                            if not size_parameters is None:
+                                size_box.set_data(size_parameters)
+                            else:
+                                size_box.active = 0
+                                size_box.set_active()
+                        else:
+                            size_box = SizeBox(widget=self,
+                                               parent=gui.createTabPage(self.sizes_tabs, "Phase nr. " + str(phase_index + 1)),
+                                               index=phase_index,
+                                               active=0)
 
-                self.dumpSettings()
+                            if not size_parameters is None:
+                                size_box.set_data(size_parameters)
+
+                            self.sizes_box_array.append(size_box)
+
+                    self.dumpSettings()
 
                 if self.is_automatic_run:
                     self.send_sizes()
@@ -199,10 +214,12 @@ class OWSizeNew(OWGenericWidget):
         try:
             self.active = []
 
-            for index in range(len(self.size_box_array)):
-                self.active.append(self.size_box_array[index].active)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.active.append(self.sizes_box_array[index].active)
+        except Exception as e:
             self.active = copy.deepcopy(bkp_active)
+
+            if self.IS_DEVELOP: raise  e
 
     def dump_shape(self):
         bkp_shape = copy.deepcopy(self.shape)
@@ -210,10 +227,12 @@ class OWSizeNew(OWGenericWidget):
         try:
             self.shape = []
 
-            for index in range(len(self.size_box_array)):
-                self.shape.append(self.size_box_array[index].shape)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.shape.append(self.sizes_box_array[index].shape)
+        except Exception as e:
             self.shape = copy.deepcopy(bkp_shape)
+
+            if self.IS_DEVELOP: raise  e
 
     def dump_distribution(self):
         bkp_distribution = copy.deepcopy(self.distribution)
@@ -221,10 +240,13 @@ class OWSizeNew(OWGenericWidget):
         try:
             self.distribution = []
 
-            for index in range(len(self.size_box_array)):
-                self.distribution.append(self.size_box_array[index].distribution)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.distribution.append(self.sizes_box_array[index].distribution)
+        except Exception as e:
             self.distribution = copy.deepcopy(bkp_distribution)
+
+            if self.IS_DEVELOP: raise e
+
 
     def dump_mu(self):
         bkp_mu = copy.deepcopy(self.mu)
@@ -246,16 +268,16 @@ class OWSizeNew(OWGenericWidget):
             self.mu_function = []
             self.mu_function_value = []
 
-            for index in range(len(self.radiation_box_array)):
-                self.mu.append(self.radiation_box_array[index].mu)
-                self.mu_fixed.append(self.radiation_box_array[index].mu_fixed)
-                self.mu_has_min.append(self.radiation_box_array[index].mu_has_min)
-                self.mu_min.append(self.radiation_box_array[index].mu_min)
-                self.mu_has_max.append(self.radiation_box_array[index].mu_has_max)
-                self.mu_max.append(self.radiation_box_array[index].mu_max)
-                self.mu_function.append(self.radiation_box_array[index].mu_function)
-                self.mu_function_value.append(self.radiation_box_array[index].mu_function_value)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.mu.append(self.sizes_box_array[index].mu)
+                self.mu_fixed.append(self.sizes_box_array[index].mu_fixed)
+                self.mu_has_min.append(self.sizes_box_array[index].mu_has_min)
+                self.mu_min.append(self.sizes_box_array[index].mu_min)
+                self.mu_has_max.append(self.sizes_box_array[index].mu_has_max)
+                self.mu_max.append(self.sizes_box_array[index].mu_max)
+                self.mu_function.append(self.sizes_box_array[index].mu_function)
+                self.mu_function_value.append(self.sizes_box_array[index].mu_function_value)
+        except Exception as e:
             self.mu = copy.deepcopy(bkp_mu)
             self.mu_fixed = copy.deepcopy(bkp_mu_fixed)
             self.mu_has_min = copy.deepcopy(bkp_mu_has_min)
@@ -264,6 +286,8 @@ class OWSizeNew(OWGenericWidget):
             self.mu_max = copy.deepcopy(bkp_mu_max)
             self.mu_function = copy.deepcopy(bkp_mu_function)
             self.mu_function_value = copy.deepcopy(bkp_mu_function_value)
+
+            if self.IS_DEVELOP: raise  e
 
     def dump_sigma(self):
         bkp_sigma = copy.deepcopy(self.sigma)
@@ -285,16 +309,16 @@ class OWSizeNew(OWGenericWidget):
             self.sigma_function = []
             self.sigma_function_value = []
 
-            for index in range(len(self.radiation_box_array)):
-                self.sigma.append(self.radiation_box_array[index].sigma)
-                self.sigma_fixed.append(self.radiation_box_array[index].sigma_fixed)
-                self.sigma_has_min.append(self.radiation_box_array[index].sigma_has_min)
-                self.sigma_min.append(self.radiation_box_array[index].sigma_min)
-                self.sigma_has_max.append(self.radiation_box_array[index].sigma_has_max)
-                self.sigma_max.append(self.radiation_box_array[index].sigma_max)
-                self.sigma_function.append(self.radiation_box_array[index].sigma_function)
-                self.sigma_function_value.append(self.radiation_box_array[index].sigma_function_value)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.sigma.append(self.sizes_box_array[index].sigma)
+                self.sigma_fixed.append(self.sizes_box_array[index].sigma_fixed)
+                self.sigma_has_min.append(self.sizes_box_array[index].sigma_has_min)
+                self.sigma_min.append(self.sizes_box_array[index].sigma_min)
+                self.sigma_has_max.append(self.sizes_box_array[index].sigma_has_max)
+                self.sigma_max.append(self.sizes_box_array[index].sigma_max)
+                self.sigma_function.append(self.sizes_box_array[index].sigma_function)
+                self.sigma_function_value.append(self.sizes_box_array[index].sigma_function_value)
+        except Exception as e:
             self.sigma = copy.deepcopy(bkp_sigma)
             self.sigma_fixed = copy.deepcopy(bkp_sigma_fixed)
             self.sigma_has_min = copy.deepcopy(bkp_sigma_has_min)
@@ -303,6 +327,8 @@ class OWSizeNew(OWGenericWidget):
             self.sigma_max = copy.deepcopy(bkp_sigma_max)
             self.sigma_function = copy.deepcopy(bkp_sigma_function)
             self.sigma_function_value = copy.deepcopy(bkp_sigma_function_value)
+
+            if self.IS_DEVELOP: raise  e
 
     def dump_truncation(self):
         bkp_truncation = copy.deepcopy(self.truncation)
@@ -324,16 +350,16 @@ class OWSizeNew(OWGenericWidget):
             self.truncation_function = []
             self.truncation_function_value = []
 
-            for index in range(len(self.radiation_box_array)):
-                self.truncation.append(self.radiation_box_array[index].truncation)
-                self.truncation_fixed.append(self.radiation_box_array[index].truncation_fixed)
-                self.truncation_has_min.append(self.radiation_box_array[index].truncation_has_min)
-                self.truncation_min.append(self.radiation_box_array[index].truncation_min)
-                self.truncation_has_max.append(self.radiation_box_array[index].truncation_has_max)
-                self.truncation_max.append(self.radiation_box_array[index].truncation_max)
-                self.truncation_function.append(self.radiation_box_array[index].truncation_function)
-                self.truncation_function_value.append(self.radiation_box_array[index].truncation_function_value)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.truncation.append(self.sizes_box_array[index].truncation)
+                self.truncation_fixed.append(self.sizes_box_array[index].truncation_fixed)
+                self.truncation_has_min.append(self.sizes_box_array[index].truncation_has_min)
+                self.truncation_min.append(self.sizes_box_array[index].truncation_min)
+                self.truncation_has_max.append(self.sizes_box_array[index].truncation_has_max)
+                self.truncation_max.append(self.sizes_box_array[index].truncation_max)
+                self.truncation_function.append(self.sizes_box_array[index].truncation_function)
+                self.truncation_function_value.append(self.sizes_box_array[index].truncation_function_value)
+        except Exception as e:
             self.truncation = copy.deepcopy(bkp_truncation)
             self.truncation_fixed = copy.deepcopy(bkp_truncation_fixed)
             self.truncation_has_min = copy.deepcopy(bkp_truncation_has_min)
@@ -343,16 +369,20 @@ class OWSizeNew(OWGenericWidget):
             self.truncation_function = copy.deepcopy(bkp_truncation_function)
             self.truncation_function_value = copy.deepcopy(bkp_truncation_function_value)
 
+            if self.IS_DEVELOP: raise  e
+
     def dump_cube_face(self):
         bkp_cube_face = copy.deepcopy(self.cube_face)
 
         try:
             self.cube_face = []
 
-            for index in range(len(self.size_box_array)):
-                self.cube_face.append(self.size_box_array[index].cube_face)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.cube_face.append(self.sizes_box_array[index].cube_face)
+        except Exception as e:
             self.cube_face = copy.deepcopy(bkp_cube_face)
+
+            if self.IS_DEVELOP: raise  e
 
     def dump_add_saxs(self):
         bkp_add_saxs = copy.deepcopy(self.add_saxs)
@@ -360,10 +390,12 @@ class OWSizeNew(OWGenericWidget):
         try:
             self.add_saxs = []
 
-            for index in range(len(self.size_box_array)):
-                self.add_saxs.append(self.size_box_array[index].add_saxs)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.add_saxs.append(self.sizes_box_array[index].add_saxs)
+        except Exception as e:
             self.add_saxs = copy.deepcopy(bkp_add_saxs)
+
+            if self.IS_DEVELOP: raise  e
 
     def dump_normalize_to(self):
         bkp_normalize_to = copy.deepcopy(self.normalize_to)
@@ -371,17 +403,19 @@ class OWSizeNew(OWGenericWidget):
         try:
             self.normalize_to = []
 
-            for index in range(len(self.size_box_array)):
-                self.normalize_to.append(self.size_box_array[index].normalize_to)
-        except:
+            for index in range(len(self.sizes_box_array)):
+                self.normalize_to.append(self.sizes_box_array[index].normalize_to)
+        except Exception as e:
             self.normalize_to = copy.deepcopy(bkp_normalize_to)
-            
+
+            if self.IS_DEVELOP: raise  e
+
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtCore import Qt
 from orangecontrib.wonder.util.gui_utility import InnerBox
 
 class SizeBox(InnerBox):
-    active = 0
+    active = 1
     shape = 1
     distribution = 1
     mu = 4.0
@@ -423,7 +457,7 @@ class SizeBox(InnerBox):
                  widget=None,
                  parent=None,
                  index = 0,
-                 active = 0,
+                 active = 1,
                  shape = 1,
                  distribution = 1,
                  mu = 4.0,
@@ -460,11 +494,11 @@ class SizeBox(InnerBox):
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
         self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
-        self.setFixedHeight(500)
+        self.setFixedHeight(300)
 
         self.index = index
 
-        self.active                  = active
+        self.active                    = active
         self.shape                     = shape                    
         self.distribution              = distribution             
         self.mu                        = mu                       
@@ -502,21 +536,21 @@ class SizeBox(InnerBox):
 
         self.cb_active = orangegui.comboBox(container, self, "active", label="Active", items=["No", "Yes"], callback=self.set_active, orientation="horizontal")
 
-        self.main_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
+        self.main_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-10)
 
         self.cb_shape = orangegui.comboBox(self.main_box, self, "shape", label="Shape", items=Shape.tuple(), callback=self.set_shape, orientation="horizontal")
         self.cb_distribution = orangegui.comboBox(self.main_box, self, "distribution", label="Distribution", items=Distribution.tuple(), callback=self.set_distribution, orientation="horizontal")
 
-        size_box = gui.widgetBox(self.main_box, "Size Parameters", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
+        size_box = gui.widgetBox(self.main_box, "Size Parameters", orientation="vertical", width=self.CONTROL_AREA_WIDTH-10)
 
         self.sigma_box = gui.widgetBox(size_box, "", orientation="vertical")
 
-        OWGenericWidget.create_box_in_widget(self, self.sigma_box, "mu", label="\u03bc or D", add_callback=True, min_value=0.0, min_accepted=False)
-        OWGenericWidget.create_box_in_widget(self, self.sigma_box,  "sigma", label="\u03c3", add_callback=True, min_value=0.0, min_accepted=False)
+        OWGenericWidget.create_box_in_widget(self, self.sigma_box, "mu", label="\u03bc or D", add_callback=True, min_value=0.0, min_accepted=False, trim=25)
+        OWGenericWidget.create_box_in_widget(self, self.sigma_box,  "sigma", label="\u03c3", add_callback=True, min_value=0.0, min_accepted=False, trim=25)
 
         self.truncation_box = gui.widgetBox(size_box, "", orientation="vertical")
 
-        OWGenericWidget.create_box_in_widget(self, self.truncation_box, "truncation", label="trunc.", add_callback=True, min_value=0.0, max_value=1.0, min_accepted=True)
+        OWGenericWidget.create_box_in_widget(self, self.truncation_box, "truncation", label="trunc.", add_callback=True, min_value=0.0, max_value=1.0, min_accepted=True, trim=25)
 
         self.cb_cube_face = orangegui.comboBox(self.truncation_box, self, "cube_face", label="Cube Face", items=WulffCubeFace.tuple(), 
                                                callback=self.callback_cube_face, labelWidth=300, orientation="horizontal")
