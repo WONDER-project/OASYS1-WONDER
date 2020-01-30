@@ -14,8 +14,9 @@ from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.util import congruence
 
-from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPatternFactory, DiffractionPatternLimits
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
+from orangecontrib.wonder.fit.parameters.measured_data.measured_dataset import MeasuredDataset
+from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern, DiffractionPatternFactory, DiffractionPatternLimits
 from orangecontrib.wonder.fit.parameters.initialization.fit_initialization import FitInitialization
 
 class OWDiffractionPattern(OWGenericWidget):
@@ -34,6 +35,8 @@ class OWDiffractionPattern(OWGenericWidget):
     twotheta_has_min = Setting([0])
     twotheta_max = Setting([0.0])
     twotheta_has_max = Setting([0])
+
+    diffraction_pattern_name = Setting([""])
 
     horizontal_headers = ["2Theta [deg]", "s [nm^-1]", "Intensity", "Error"]
 
@@ -77,8 +80,8 @@ class OWDiffractionPattern(OWGenericWidget):
                                                             twotheta_min                = self.twotheta_min[index],
                                                             twotheta_has_min            = self.twotheta_has_min[index],
                                                             twotheta_max                = self.twotheta_max[index],
-                                                            twotheta_has_max            = self.twotheta_has_max[index]
-                                                            )
+                                                            twotheta_has_max            = self.twotheta_has_max[index],
+                                                            diffraction_pattern_name    = self.diffraction_pattern_name[index])
 
             self.diffraction_pattern_box_array.append(diffraction_pattern_box)
 
@@ -113,7 +116,7 @@ class OWDiffractionPattern(OWGenericWidget):
         runaction = OWAction("Load Diffraction Patterns", self)
         runaction.triggered.connect(self.load_diffraction_patterns)
         self.addAction(runaction)
-
+        
     def insert_before(self):
         current_index = self.diffraction_pattern_tabs.currentIndex()
 
@@ -231,9 +234,9 @@ class OWDiffractionPattern(OWGenericWidget):
                 self.tab_data[current_index + 1].layout().addWidget(scrollarea, alignment=Qt.AlignHCenter)
 
             for index in range(current_index, self.diffraction_pattern_tabs.count()):
-                self.diffraction_pattern_tabs.setTabText(index, "Diff. Patt." + str(index + 1))
+                self.diffraction_pattern_tabs.setTabText(index, DiffractionPattern.get_default_name(index))
                 self.diffraction_pattern_box_array[index].index = index
-                self.tabs.setTabText(index, "Diff. Patt." + str(index + 1))
+                self.tabs.setTabText(index, DiffractionPattern.get_default_name(index))
 
             self.dumpSettings()
             self.diffraction_pattern_tabs.setCurrentIndex(current_index + 1)
@@ -260,9 +263,9 @@ class OWDiffractionPattern(OWGenericWidget):
                 self.table_data.pop(current_index)
 
                 for index in range(current_index, self.diffraction_pattern_tabs.count()):
-                    self.diffraction_pattern_tabs.setTabText(index, "Diff. Patt." + str(index + 1))
+                    self.diffraction_pattern_tabs.setTabText(index, DiffractionPattern.get_default_name(index))
                     self.diffraction_pattern_box_array[index].index = index
-                    self.tabs.setTabText(index, "Diff. Patt." + str(index + 1))
+                    self.tabs.setTabText(index, DiffractionPattern.get_default_name(index))
 
                 self.dumpSettings()
                 self.diffraction_pattern_tabs.setCurrentIndex(current_index)
@@ -282,7 +285,8 @@ class OWDiffractionPattern(OWGenericWidget):
             self.tabs.setCurrentIndex(self.diffraction_pattern_tabs.currentIndex())
             self.tabs_data_plot[self.diffraction_pattern_tabs.currentIndex()].setCurrentIndex(1)
 
-            fit_global_parameters = FitGlobalParameters(fit_initialization=FitInitialization(diffraction_patterns=self.diffraction_patterns))
+            fit_global_parameters = FitGlobalParameters(masured_dataset=MeasuredDataset.initialize_with_diffraction_pattern(diffraction_patterns=self.diffraction_patterns),
+                                                        fit_initialization=FitInitialization())
             fit_global_parameters.regenerate_parameters()
 
             self.send("Fit Global Parameters", fit_global_parameters)
@@ -371,6 +375,7 @@ class OWDiffractionPattern(OWGenericWidget):
         self.dump_twotheta_min()
         self.dump_twotheta_has_max()
         self.dump_twotheta_max()
+        self.dump_diffraction_pattern_name()
 
     def dump_filename(self):
         bkp_filename = copy.deepcopy(self.filename)
@@ -427,7 +432,18 @@ class OWDiffractionPattern(OWGenericWidget):
         except:
             self.twotheta_has_max = copy.deepcopy(bkp_twotheta_has_max)
 
+    def dump_diffraction_pattern_name(self):
+        bkp_diffraction_pattern_name = copy.deepcopy(self.diffraction_pattern_name)
 
+        try:
+            self.diffraction_pattern_name = []
+
+            for index in range(len(self.diffraction_pattern_box_array)):
+                self.diffraction_pattern_name.append(self.diffraction_pattern_box_array[index].diffraction_pattern_name)
+        except Exception as e:
+            self.diffraction_pattern_name = copy.deepcopy(bkp_diffraction_pattern_name)
+
+            if self.IS_DEVELOP: raise e
 
 
 from PyQt5.QtWidgets import QVBoxLayout
@@ -440,6 +456,7 @@ class DiffractionPatternBox(InnerBox):
     twotheta_has_min = 0
     twotheta_max = 0.0
     twotheta_has_max = 0
+    diffraction_pattern_name = ""
 
     widget = None
     is_on_init = True
@@ -458,7 +475,8 @@ class DiffractionPatternBox(InnerBox):
                  twotheta_min = 0.0,
                  twotheta_has_min = 0,
                  twotheta_max = 0.0,
-                 twotheta_has_max = 0):
+                 twotheta_has_max = 0,
+                 diffraction_pattern_name = ""):
         super(DiffractionPatternBox, self).__init__()
 
 
@@ -475,11 +493,14 @@ class DiffractionPatternBox(InnerBox):
         self.twotheta_has_min            = twotheta_has_min
         self.twotheta_max                = twotheta_max
         self.twotheta_has_max            = twotheta_has_max
+        self.diffraction_pattern_name    = diffraction_pattern_name
 
         self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH-45
 
         parent.layout().addWidget(self)
         container = self
+
+        gui.lineEdit(container, self, "diffraction_pattern_name", "Diff. Patt. id", labelWidth=110, valueType=str, callback=widget.dump_diffraction_pattern_name)
 
         file_box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH)
 
@@ -533,10 +554,10 @@ class DiffractionPatternBox(InnerBox):
         else:
             limits=None
 
-        self.diffraction_pattern = DiffractionPatternFactory.create_diffraction_pattern_from_file(self.filename, limits)
+        self.diffraction_pattern = DiffractionPatternFactory.create_diffraction_pattern_from_file(self.filename, limits, self.diffraction_pattern_name)
 if __name__ == "__main__":
     a = QApplication(sys.argv)
-    ow = OWDiffractionPattern()
+    ow = OWDiffractionPatternNew()
     ow.show()
     a.exec_()
     ow.saveSettings()
