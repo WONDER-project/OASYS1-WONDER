@@ -23,6 +23,18 @@ class LineProfile(ParametersList):
 
             self.reflections_of_phases = reflections_of_phases
 
+    def get_phases_number(self):
+        try:
+            return len(self.phases)
+        except:
+            return 0
+
+    def get_phase(self, phase_index):
+        try:
+            return self.phases[phase_index]
+        except:
+            return None
+
     def add_reflection(self, phase_index, reflection):
         self.reflections_of_phases[phase_index].append(reflection)
         self.update_reflection(phase_index, -1)

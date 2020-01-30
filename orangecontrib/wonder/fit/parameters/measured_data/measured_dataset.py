@@ -55,10 +55,40 @@ class MeasuredDataset(ParametersList):
                     self.line_profiles[diffraction_pattern_index].set_phases(self.phases)
 
     def get_diffraction_patterns_number(self):
-        return 0 if self.diffraction_patterns is None else len(self.diffraction_patterns)
+        try:
+            return len(self.diffraction_patterns)
+        except:
+            return 0
 
     def get_phases_number(self):
-        return 0 if self.phases is None else len(self.phases)
+        try:
+            return len(self.phases)
+        except:
+            return 0
+
+    def get_diffraction_pattern(self, diffraction_pattern_index):
+        try:
+            return self.diffraction_patterns[diffraction_pattern_index]
+        except:
+            return None
+
+    def get_phase(self, phase_index):
+        try:
+            return self.phases[phase_index]
+        except:
+            return None
+
+    def get_line_profile(self, diffraction_pattern_index):
+        try:
+            return self.line_profiles[diffraction_pattern_index]
+        except:
+            return None
+
+    def get_incident_radiations_item(self, diffraction_pattern_index):
+        try:
+            return self.incident_radiations[0 if len(self.incident_radiations) == 1 else diffraction_pattern_index]
+        except:
+            return None
 
     def duplicate(self):
         if self.diffraction_patterns is None: diffraction_patterns = None

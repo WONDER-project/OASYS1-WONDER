@@ -93,13 +93,12 @@ class Phase(ParametersList):
         else:
             NotImplementedError("Only Cubic supported: TODO!!!!!!")
 
-
     def get_name(self, phase_index=0):
         try:
-            congruence.checkEmptyString(self.name, "")
+            congruence.checkEmptyString(self.name, "--")
 
             return self.name.strip()
         except:
-            Phase.get_default_name(phase_index)
+            return Phase.get_default_name(phase_index)
 
 

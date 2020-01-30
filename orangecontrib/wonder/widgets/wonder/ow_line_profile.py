@@ -283,7 +283,7 @@ class LineProfileBox(InnerBox):
                 reflections_of_phases_box = self.reflections_of_phases_box_array[phase_index]
                 reflections_of_phases_box.set_data(line_profile)
 
-                self.reflections_of_phases_tabs.setTabText(phase_index, line_profile.phases[phase_index].get_name(phase_index))
+                self.reflections_of_phases_tabs.setTabText(phase_index, line_profile.get_phase(phase_index).get_name(phase_index))
 
     def update_line_profile(self):
         for reflections_of_phases_box in self.reflections_of_phases_box_array:

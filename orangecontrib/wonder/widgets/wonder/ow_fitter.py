@@ -93,8 +93,11 @@ class OWFitter(OWGenericWidget):
     lab6_ymin = Setting(-1.0)
     lab6_ymax = Setting(1.0)
 
-    # accessories
+    x_ib           = None
+    labels_ib      = None
     annotations_ib = None
+    distributions  = None
+    text_size      = None
 
     def __fix_flags(self):
         self.is_incremental = OWGenericWidget.fix_flag(self.is_incremental)
@@ -255,21 +258,9 @@ class OWFitter(OWGenericWidget):
 
         self.__build_plot_size()
 
-        self.plot_strain = PlotWindow(control=True)
-        legends_dock_widget = LegendsDockWidget(plot=self.plot_strain)
-        self.plot_strain._legendsDockWidget = legends_dock_widget
-        self.plot_strain._dockWidgets.append(legends_dock_widget)
-        self.plot_strain.addDockWidget(qt.Qt.RightDockWidgetArea, legends_dock_widget)
-        self.plot_strain._legendsDockWidget.setFixedWidth(120)
-        self.plot_strain.getLegendsDockWidget().show()
+        self.tabs_plot_strain = gui.tabWidget(self.tab_plot_strain)
 
-        self.plot_strain.setDefaultPlotLines(True)
-        self.plot_strain.setActiveCurveColor(color="#00008B")
-        self.plot_strain.setGraphTitle("Warren's plot")
-        self.plot_strain.setGraphXLabel(r"L [nm]")
-        self.plot_strain.setGraphYLabel("$\sqrt{<{\Delta}L^{2}>}$ [nm]")
-
-        self.tab_plot_strain.layout().addWidget(self.plot_strain)
+        self.__build_plot_strain()
 
         self.tabs_plot_integral_breadth = gui.tabWidget(self.tab_plot_integral_breadth)
 
@@ -289,10 +280,8 @@ class OWFitter(OWGenericWidget):
         orangegui.checkBox(boxr, self, "fwhm_autoscale", "Autoscale", callback=set_fwhm_autoscale)
 
         def refresh_caglioti_fwhm():
-            if not self.fitted_fit_global_parameters.instrumental_parameters is None:
-                index = 0
-                instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)[index]
-                self.__refresh_caglioti_fwhm(instrumental_parameters)
+            instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, 0)
+            if not instrumental_parameters is None: self.__refresh_caglioti_fwhm(instrumental_parameters)
 
         self.le_fwhm_xmin = gui.lineEdit(boxr, self, "fwhm_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
         self.le_fwhm_xmax = gui.lineEdit(boxr, self, "fwhm_xmax", "2\u03b8 max", labelWidth=70, valueType=float)
@@ -324,10 +313,8 @@ class OWFitter(OWGenericWidget):
         orangegui.checkBox(boxr, self, "eta_autoscale", "Autoscale", callback=set_eta_autoscale)
 
         def refresh_caglioti_eta():
-            if not self.fitted_fit_global_parameters.instrumental_parameters is None:
-                index = 0
-                instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)[index]
-                self.__refresh_caglioti_eta(instrumental_parameters)
+            instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, 0)
+            if not instrumental_parameters is None: self.__refresh_caglioti_eta(instrumental_parameters)
 
         self.le_eta_xmin = gui.lineEdit(boxr, self, "eta_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
         self.le_eta_xmax = gui.lineEdit(boxr, self, "eta_xmax", "2\u03b8 max", labelWidth=70, valueType=float)
@@ -359,8 +346,7 @@ class OWFitter(OWGenericWidget):
         orangegui.checkBox(boxr, self, "lab6_autoscale", "Autoscale", callback=set_lab6_autoscale)
 
         def refresh_lab6():
-            shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__)
-
+            shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, 0)
             if not shift_parameters is None: self.__refresh_lab6(shift_parameters)
 
         self.le_lab6_xmin = gui.lineEdit(boxr, self, "lab6_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
@@ -751,7 +737,7 @@ class OWFitter(OWGenericWidget):
                     text = ""
                     for diffraction_pattern_index in range(len(self.fitted_patterns)):
                         fitted_pattern = self.fitted_patterns[diffraction_pattern_index]
-                        diffraction_pattern = self.fit_global_parameters.measured_dataset.diffraction_patterns[diffraction_pattern_index]
+                        diffraction_pattern = self.fit_global_parameters.measured_dataset.get_diffraction_pattern(diffraction_pattern_index)
 
                         text += "" if diffraction_pattern_index==0 else "\n"
                         text += "------------------------------------------------------------------------\n"
@@ -789,17 +775,13 @@ class OWFitter(OWGenericWidget):
     def __show_data(self, is_init=False):
         diffraction_patterns_number = self.fitted_fit_global_parameters.measured_dataset.get_diffraction_patterns_number()
         phases_number               = self.fitted_fit_global_parameters.measured_dataset.get_phases_number()
-        
-        if is_init:
-            self.distributions = [None] * phases_number
-            self.text_size     = [None] * phases_number
 
         self.__refresh_fit(diffraction_patterns_number, is_init)
         self.__refresh_fit_data()
-        self.__refresh_instrumental_function()
+        self.__refresh_instrumental_function(diffraction_patterns_number)
         self.__refresh_size(phases_number, is_init)
-        self.__refresh_strain()
-        self.__refresh_integral_breadth(phases_number, is_init)
+        self.__refresh_strain(phases_number, is_init)
+        self.__refresh_integral_breadth(phases_number, diffraction_patterns_number, is_init)
 
         self.set_interactive()
 
@@ -813,8 +795,8 @@ class OWFitter(OWGenericWidget):
             self.y = numpy.full(diffraction_patterns_number, None)
 
         for diffraction_pattern_index in range(diffraction_patterns_number):
-            diffraction_pattern = self.fitted_fit_global_parameters.measured_dataset.diffraction_patterns[diffraction_pattern_index]
-            fitted_pattern = self.fitted_patterns[diffraction_pattern_index]
+            diffraction_pattern = self.fitted_fit_global_parameters.measured_dataset.get_diffraction_pattern(diffraction_pattern_index)
+            fitted_pattern      = self.fitted_patterns[diffraction_pattern_index]
 
             nr_points = fitted_pattern.diffraction_points_count()
 
@@ -861,27 +843,20 @@ class OWFitter(OWGenericWidget):
     # ------------------------------------------------------------------------
 
     def __refresh_instrumental_function(self, diffraction_pattern_index=0):
-        if not self.fitted_fit_global_parameters.instrumental_parameters is None:
-            instrumental_parameters_list = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)
+        instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+        if not instrumental_parameters is None:
+            self.__refresh_caglioti_fwhm(instrumental_parameters)
+            self.__refresh_caglioti_eta(instrumental_parameters)
 
-            if not instrumental_parameters_list is None:
-                instrumental_parameters = instrumental_parameters_list[0 if len(self.fitted_fit_global_parameters.instrumental_parameters) == 1 else diffraction_pattern_index]
-
-                self.__refresh_caglioti_fwhm(instrumental_parameters)
-                self.__refresh_caglioti_eta(instrumental_parameters)
-
-        shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__)
-
+        shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
         if not shift_parameters is None: self.__refresh_lab6(shift_parameters)
 
     # ------------------------------------------------------------------------
 
     def __refresh_caglioti_fwhm(self, instrumental_parameters):
         if self.show_ipf==1:
-            if self.fwhm_autoscale == 1:
-                twotheta_fwhm = numpy.arange(0.0, 150.0, 0.5)
-            else:
-                twotheta_fwhm = numpy.arange(self.fwhm_xmin, self.fwhm_xmax, 0.5)
+            if self.fwhm_autoscale == 1: twotheta_fwhm = numpy.arange(0.0, 150.0, 0.5)
+            else:                        twotheta_fwhm = numpy.arange(self.fwhm_xmin, self.fwhm_xmax, 0.5)
 
             theta_fwhm_radians = numpy.radians(0.5*twotheta_fwhm)
 
@@ -898,10 +873,8 @@ class OWFitter(OWGenericWidget):
 
     def __refresh_caglioti_eta(self, instrumental_parameters):
         if self.show_ipf==1:
-            if self.eta_autoscale == 1:
-                twotheta_eta = numpy.arange(0.0, 150.0, 0.5)
-            else:
-                twotheta_eta = numpy.arange(self.eta_xmin, self.eta_xmax, 0.5)
+            if self.eta_autoscale == 1: twotheta_eta = numpy.arange(0.0, 150.0, 0.5)
+            else:                       twotheta_eta = numpy.arange(self.eta_xmin, self.eta_xmax, 0.5)
 
             theta_eta_radians = numpy.radians(0.5*twotheta_eta)
 
@@ -918,18 +891,16 @@ class OWFitter(OWGenericWidget):
 
     def __refresh_lab6(self, shift_parameters):
         if self.show_shift==1:
-            if self.lab6_autoscale == 1:
-                twotheta_lab6 = numpy.arange(0.0, 150.0, 0.5)
-            else:
-                twotheta_lab6 = numpy.arange(self.lab6_xmin, self.lab6_xmax, 0.5)
+            if self.lab6_autoscale == 1: twotheta_lab6 = numpy.arange(0.0, 150.0, 0.5)
+            else:                        twotheta_lab6 = numpy.arange(self.lab6_xmin, self.lab6_xmax, 0.5)
 
             theta_lab6_radians = numpy.radians(0.5*twotheta_lab6)
 
-            y = delta_two_theta_lab6(shift_parameters[0].ax.value,
-                                     shift_parameters[0].bx.value,
-                                     shift_parameters[0].cx.value,
-                                     shift_parameters[0].dx.value,
-                                     shift_parameters[0].ex.value,
+            y = delta_two_theta_lab6(shift_parameters.ax.value,
+                                     shift_parameters.bx.value,
+                                     shift_parameters.cx.value,
+                                     shift_parameters.dx.value,
+                                     shift_parameters.ex.value,
                                      theta_lab6_radians)
 
             self.plot_ipf_lab6.addCurve(twotheta_lab6, y, legend="lab6", color="blue")
@@ -938,12 +909,18 @@ class OWFitter(OWGenericWidget):
 
     # ------------------------------------------------------------------------
 
+    def __clear_text_size(self, phase_index):
+        if not self.text_size[phase_index] is None: self.text_size[phase_index].remove()
+
     def __refresh_size(self, phases_number=0, is_init=False):
         if is_init:
+            self.distributions = numpy.full(phases_number, None)
+            self.text_size = numpy.full(phases_number, None)
+
             self.__build_plot_size()
 
         for phase_index in range(phases_number):
-            if not self.text_size[phase_index] is None: self.text_size[phase_index].remove()
+            self.__clear_text_size(phase_index)
 
             size_parameters = self.fitted_fit_global_parameters.get_size_parameters(phase_index)
 
@@ -970,130 +947,151 @@ class OWFitter(OWGenericWidget):
 
     # ------------------------------------------------------------------------
 
-    def __refresh_strain(self):
-        if not self.fitted_fit_global_parameters.strain_parameters is None and self.show_warren==1:
-            if self.distributions is None: L_max = 20
-            else: L_max = 2*self.distributions[0].D_avg
+    def __refresh_strain(self, phases_number=0, is_init=False):
+        if is_init: self.__build_plot_strain()
 
-            x, y = self.fitted_fit_global_parameters.get_strain_parameters(0).get_warren_plot(1, 0, 0, L_max=L_max)
-            self.plot_strain.addCurve(x, y, legend="h00", color='blue')
-            _, y = self.fitted_fit_global_parameters.get_strain_parameters(0).get_warren_plot(1, 1, 1, L_max=L_max)
-            self.plot_strain.addCurve(x, y, legend="hhh", color='red')
-            _, y = self.fitted_fit_global_parameters.get_strain_parameters(0).get_warren_plot(1, 1, 0, L_max=L_max)
-            self.plot_strain.addCurve(x, y, legend="hh0", color='green')
+        for phase_index in range(phases_number):
+            strain_parameters = self.fitted_fit_global_parameters.get_strain_parameters(phase_index)
+
+            if not strain_parameters is None and self.show_warren==1:
+                if self.distributions is None: L_max = 20
+                else: L_max = 2*self.distributions[0].D_avg
+
+                x, y = strain_parameters.get_warren_plot(1, 0, 0, L_max=L_max)
+                self.plot_strain[phase_index].addCurve(x, y, legend="h00", color='blue')
+                _, y = strain_parameters.get_warren_plot(1, 1, 1, L_max=L_max)
+                self.plot_strain[phase_index].addCurve(x, y, legend="hhh", color='red')
+                _, y = strain_parameters.get_warren_plot(1, 1, 0, L_max=L_max)
+                self.plot_strain[phase_index].addCurve(x, y, legend="hh0", color='green')
 
     # ------------------------------------------------------------------------
 
-    def __refresh_integral_breadth(self, diffraction_pattern_number, is_init=False):
-        if not self.annotations_ib is None:
-            for annotations in self.annotations_ib:
-                if not annotations is None:
-                    for annotation in annotations: annotation.remove()
+    def __clear_annotations(self, diffraction_pattern_index, phase_index):
+        annotations = self.annotations_ib[diffraction_pattern_index, phase_index]
+        if not annotations is None:
+            for annotation in self.annotations_ib[diffraction_pattern_index, phase_index]:
+                if not annotation is None: annotation.remove()
+
+    def __refresh_integral_breadth(self, phases_number, diffraction_pattern_number, is_init=False):
+        if is_init:
+            self.x_ib           = numpy.full((diffraction_pattern_number, phases_number), None)
+            self.labels_ib      = numpy.full((diffraction_pattern_number, phases_number), None)
+            self.annotations_ib = numpy.full((diffraction_pattern_number, phases_number), None)
+
+            self.__build_plot_integral_breadth()
 
         if not (self.fitted_fit_global_parameters.strain_parameters is None and \
                 self.fitted_fit_global_parameters.size_parameters is None and \
                 self.fitted_fit_global_parameters.instrumental_parameters is None) and \
                 self.show_integral_breadth==1:
-            if is_init:
-                self.__build_plot_integral_breadth()
-
-            self.x_ib           = numpy.full(diffraction_pattern_number, None)
-            self.labels_ib      = numpy.full(diffraction_pattern_number, None)
-            self.annotations_ib = numpy.full(diffraction_pattern_number, None)
-
             for diffraction_pattern_index in range(diffraction_pattern_number):
-                phase        = self.fitted_fit_global_parameters.measured_dataset.phases[0] # Plot only the first phase
-                line_profile = self.fitted_fit_global_parameters.measured_dataset.line_profiles[diffraction_pattern_index]
+                line_profile       = self.fitted_fit_global_parameters.measured_dataset.get_line_profile(diffraction_pattern_index)
+                incident_radiation = self.fitted_fit_global_parameters.measured_dataset.get_incident_radiations_item(diffraction_pattern_index)
+                wavelength         = incident_radiation.wavelength.value
 
-                incident_radiation = self.fitted_fit_global_parameters.measured_dataset.incident_radiations[0 if len(self.fitted_fit_global_parameters.measured_dataset.incident_radiations) == 1 else diffraction_pattern_index]
+                instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
 
-                wavelength        = incident_radiation.wavelength.value
-                lattice_parameter = phase.a.value
+                for phase_index in range(phases_number):
+                    self.__clear_annotations(diffraction_pattern_index, phase_index)
 
-                nr_points = line_profile.get_reflections_number(phase_index=0)
+                    phase             = self.fitted_fit_global_parameters.measured_dataset.get_phase(phase_index)
+                    lattice_parameter = phase.a.value
 
-                self.x_ib[diffraction_pattern_index]      = line_profile.get_s_list(phase_index=0)
-                self.labels_ib[diffraction_pattern_index] = line_profile.get_hkl_list(phase_index=0)
+                    nr_points = line_profile.get_reflections_number(phase_index=phase_index)
 
-                size_parameters = None
-                if not self.fitted_fit_global_parameters.size_parameters is None:
-                    size_parameters = self.fitted_fit_global_parameters.size_parameters[0 if len(self.fitted_fit_global_parameters.size_parameters) == 1 else diffraction_pattern_index]
+                    self.x_ib[diffraction_pattern_index, phase_index]      = line_profile.get_s_list(phase_index)
+                    self.labels_ib[diffraction_pattern_index, phase_index] = line_profile.get_hkl_list(phase_index)
 
-                instrumental_parameters = None
-                if not self.fitted_fit_global_parameters.instrumental_parameters is None:
-                    instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)[0 if len(self.fitted_fit_global_parameters.instrumental_parameters) == 1 else diffraction_pattern_index]
+                    size_parameters = self.fitted_fit_global_parameters.get_size_parameters(phase_index)
+                    strain_parameters = self.fitted_fit_global_parameters.get_strain_parameters(phase_index)
 
-                strain_parameters = None
-                if not self.fitted_fit_global_parameters.strain_parameters is None:
-                    strain_parameters = self.fitted_fit_global_parameters.get_strain_parameters(phase_index=0)
+                    plot_instr = not instrumental_parameters is None
+                    plot_size = not size_parameters is None
+                    plot_strain = not strain_parameters is None
 
-                plot_instr = not instrumental_parameters is None
-                plot_size = not size_parameters is None
-                plot_strain = not strain_parameters is None
+                    ##########################################
 
-                if not size_parameters is None and not size_parameters.shape == Shape.WULFF:
-                    y_ib_size = numpy.full(line_profile.get_reflections_number(phase_index=0), integral_breadth_size(None, size_parameters))
-                else:
-                    y_ib_size = numpy.zeros(nr_points)
+                    if not size_parameters is None and not size_parameters.shape == Shape.WULFF:
+                        y_ib_size = numpy.full(line_profile.get_reflections_number(phase_index), integral_breadth_size(None, size_parameters))
+                    else:
+                        y_ib_size = numpy.zeros(nr_points)
 
-                y_ib_strain = numpy.zeros(nr_points)
-                y_ib_instr  = numpy.zeros(nr_points)
-                y_ib_total  = numpy.zeros(nr_points)
+                    y_ib_strain = numpy.zeros(nr_points)
+                    y_ib_instr  = numpy.zeros(nr_points)
+                    y_ib_total  = numpy.zeros(nr_points)
 
-                i = -1
-                for reflection in line_profile.get_reflections(phase_index=0):
-                    i += 1
+                    i = -1
+                    for reflection in line_profile.get_reflections(phase_index):
+                        i += 1
 
-                    if not size_parameters is None and size_parameters.shape == Shape.WULFF:
-                        y_ib_size[i] = integral_breadth_size(reflection, size_parameters)
+                        if not size_parameters is None and size_parameters.shape == Shape.WULFF:
+                            y_ib_size[i] = integral_breadth_size(reflection, size_parameters)
 
-                    if not strain_parameters is None:
-                        y_ib_strain[i] = integral_breadth_strain(reflection, lattice_parameter,
-                                                                 strain_parameters)
+                        if not strain_parameters is None:
+                            y_ib_strain[i] = integral_breadth_strain(reflection,
+                                                                     lattice_parameter,
+                                                                     strain_parameters)
 
-                    if not instrumental_parameters is None:
-                        y_ib_instr[i] = integral_breadth_instrumental_function(reflection, lattice_parameter, wavelength,
-                                                                               instrumental_parameters)
+                        if not instrumental_parameters is None:
+                            y_ib_instr[i] = integral_breadth_instrumental_function(reflection,
+                                                                                   lattice_parameter,
+                                                                                   wavelength,
+                                                                                   instrumental_parameters)
 
-                    y_ib_total[i] = integral_breadth_total(reflection, lattice_parameter, wavelength,
-                                                           instrumental_parameters,
-                                                           size_parameters,
-                                                           strain_parameters)
+                        y_ib_total[i] = integral_breadth_total(reflection,
+                                                               lattice_parameter,
+                                                               wavelength,
+                                                               instrumental_parameters,
+                                                               size_parameters,
+                                                               strain_parameters)
 
-                x_ib = self.x_ib[diffraction_pattern_index]
+                    x_ib = self.x_ib[diffraction_pattern_index, phase_index]
 
-                if plot_instr:  self.plot_integral_breadth[diffraction_pattern_index].addCurve(x_ib, y_ib_instr, legend="IPF", symbol='o', color="black")
-                if plot_size:   self.plot_integral_breadth[diffraction_pattern_index].addCurve(x_ib, y_ib_size, legend="Size", symbol='o', color="red")
-                if plot_strain: self.plot_integral_breadth[diffraction_pattern_index].addCurve(x_ib, y_ib_strain, legend="Strain", symbol='o', color="blue")
+                    if plot_instr:  self.plot_integral_breadth[diffraction_pattern_index][phase_index].addCurve(x_ib, y_ib_instr, legend="IPF", symbol='o', color="black")
+                    if plot_size:   self.plot_integral_breadth[diffraction_pattern_index][phase_index].addCurve(x_ib, y_ib_size, legend="Size", symbol='o', color="red")
+                    if plot_strain: self.plot_integral_breadth[diffraction_pattern_index][phase_index].addCurve(x_ib, y_ib_strain, legend="Strain", symbol='o', color="blue")
 
-                y_ib_total[numpy.where(numpy.logical_or(numpy.isinf(y_ib_total), numpy.isnan(y_ib_total)))] = 0.0
+                    y_ib_total[numpy.where(numpy.logical_or(numpy.isinf(y_ib_total), numpy.isnan(y_ib_total)))] = 0.0
 
-                self.plot_integral_breadth[diffraction_pattern_index].addCurve(x_ib, y_ib_total, legend="Total", symbol='o', color="#2D811B")
-                self.plot_integral_breadth[diffraction_pattern_index].setGraphYLimits(-0.05,
-                                                                                      numpy.max(y_ib_total)*1.2)
-                self.plot_integral_breadth[diffraction_pattern_index].setGraphXLimits(x_ib[0] - abs(x_ib[0])*0.1,
-                                                                                      x_ib[-1] + abs(x_ib[0])*0.1)
+                    self.plot_integral_breadth[diffraction_pattern_index][phase_index].addCurve(x_ib, y_ib_total, legend="Total", symbol='o', color="#2D811B")
+                    self.plot_integral_breadth[diffraction_pattern_index][phase_index].setGraphYLimits(-0.05, numpy.max(y_ib_total)*1.2)
+                    self.plot_integral_breadth[diffraction_pattern_index][phase_index].setGraphXLimits(x_ib[0] - abs(x_ib[0])*0.1, x_ib[-1] + abs(x_ib[0])*0.1)
 
-                ax          = self.plot_integral_breadth[diffraction_pattern_index]._backend.ax
-                annotations = numpy.full(nr_points, None)
-                labels      = self.labels_ib[diffraction_pattern_index]
-                dy = (numpy.max(y_ib_total)-numpy.min(y_ib_instr))*0.125
+                    ax     = self.plot_integral_breadth[diffraction_pattern_index][phase_index]._backend.ax
+                    labels = self.labels_ib[diffraction_pattern_index, phase_index]
+                    dy     = (numpy.max(y_ib_total)-numpy.min(y_ib_instr))*0.125
 
-                self.annotations_ib[diffraction_pattern_index] = annotations
+                    self.annotations_ib[diffraction_pattern_index, phase_index] = [ax.annotate(hkl, (x_ib[i], y_ib_total[i] + dy), rotation=90) for i, hkl in enumerate(labels)]
 
-                for i, hkl in enumerate(labels):
-                    annotations[i] = ax.annotate(hkl, (x_ib[i], y_ib_total[i] + dy), rotation=90)
+    # ------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
 
+    def __fit_global_parameters(self):
+        return self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
+
+    def __diffraction_patterns_range(self, fit_global_parameter):
+        return 1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_diffraction_patterns_number()
+
+    def __diffraction_pattern_name(self, fit_global_parameter, diffraction_pattern_index):
+        return "Diff. Patt. nr 1" if fit_global_parameter is None else "Diff. Patt. " + str(diffraction_pattern_index + 1)
+
+    def __phases_range(self, fit_global_parameter):
+        return 1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()
+
+    def __phase_name(self, fit_global_parameter, phase_index):
+        return "Phase nr 1" if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phase(phase_index).get_name(phase_index)
+
+    # ------------------------------------------------------------------------
     # ------------------------------------------------------------------------
 
     def __build_plot_fit(self):
-        fit_global_parameter = self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
+        fit_global_parameter = self.__fit_global_parameters()
 
         self.plot_fit = []
         self.tabs_plot_fit_data.clear()
 
-        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_diffraction_patterns_number()):
-            tab_plot_fit_data = gui.createTabPage(self.tabs_plot_fit_data, "Diff. Patt. " + str(index+1))
+        for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameter)):
+            tab_plot_fit_data = gui.createTabPage(self.tabs_plot_fit_data, self.__diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
 
             plot_fit = PlotWindow()
             plot_fit.setDefaultPlotLines(True)
@@ -1107,13 +1105,13 @@ class OWFitter(OWGenericWidget):
     # ------------------------------------------------------------------------
 
     def __build_plot_size(self):
-        fit_global_parameter = self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
+        fit_global_parameter = self.__fit_global_parameters()
 
         self.plot_size = []
         self.tabs_plot_size.clear()
 
-        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()):
-            tab_plot_size = gui.createTabPage(self.tabs_plot_size, "Phase nr. " + str(index+1))
+        for phase_index in range(self.__phases_range(fit_global_parameter)):
+            tab_plot_size = gui.createTabPage(self.tabs_plot_size, self.__phase_name(fit_global_parameter, phase_index))
 
             plot_size = PlotWindow()
             plot_size.setDefaultPlotLines(True)
@@ -1128,13 +1126,13 @@ class OWFitter(OWGenericWidget):
     # ------------------------------------------------------------------------
 
     def __build_plot_strain(self):
-        fit_global_parameter = self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
+        fit_global_parameter = self.__fit_global_parameters()
 
         self.plot_strain = []
         self.tabs_plot_strain.clear()
 
-        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()):
-            tab_plot_strain = gui.createTabPage(self.tabs_plot_strain, "Phase nr. " + str(index+1))
+        for phase_index in range(self.__phases_range(fit_global_parameter)):
+            tab_plot_strain = gui.createTabPage(self.tabs_plot_strain, self.__phase_name(fit_global_parameter, phase_index))
 
             plot_strain = PlotWindow(control=True)
             legends_dock_widget = LegendsDockWidget(plot=plot_strain)
@@ -1156,31 +1154,40 @@ class OWFitter(OWGenericWidget):
     # ------------------------------------------------------------------------
 
     def __build_plot_integral_breadth(self):
-        fit_global_parameter = self.fit_global_parameters if self.fitted_fit_global_parameters is None else self.fitted_fit_global_parameters
+        fit_global_parameter = self.__fit_global_parameters()
 
         self.plot_integral_breadth = []
         self.tabs_plot_integral_breadth.clear()
 
-        for index in range(1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()):
-            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, "Phase nr. " + str(index+1))
+        for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameter)):
+            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, self.__diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
 
-            plot_integral_breadth = PlotWindow(control=True)
-            legends_dock_widget = LegendsDockWidget(plot=plot_integral_breadth)
-            plot_integral_breadth._legendsDockWidget = legends_dock_widget
-            plot_integral_breadth._dockWidgets.append(legends_dock_widget)
-            plot_integral_breadth.addDockWidget(qt.Qt.RightDockWidgetArea, legends_dock_widget)
-            plot_integral_breadth._legendsDockWidget.setFixedWidth(130)
-            plot_integral_breadth.getLegendsDockWidget().show()
+            tabs_plot_integral_breadth_phases = gui.tabWidget(tab_plot_integral_breadth)
+            plot_integral_breadth_phases = []
 
-            plot_integral_breadth.setDefaultPlotLines(True)
-            plot_integral_breadth.setDefaultPlotPoints(True)
-            plot_integral_breadth.setActiveCurveColor(color="#00008B")
-            plot_integral_breadth.setGraphTitle("Integral Breadth plot")
-            plot_integral_breadth.setGraphXLabel(r"s [$nm^{-1}$]")
-            plot_integral_breadth.setGraphYLabel("${\\beta}(s)$ [$nm^{-1}$]")
+            for phase_index in range(self.__phases_range(fit_global_parameter)):
+                tab_plot_integral_breadth_phase = gui.createTabPage(tabs_plot_integral_breadth_phases, self.__phase_name(fit_global_parameter, phase_index))
 
-            self.plot_integral_breadth.append(plot_integral_breadth)
-            tab_plot_integral_breadth.layout().addWidget(plot_integral_breadth)
+                plot_integral_breadth = PlotWindow(control=True)
+                legends_dock_widget = LegendsDockWidget(plot=plot_integral_breadth)
+                plot_integral_breadth._legendsDockWidget = legends_dock_widget
+                plot_integral_breadth._dockWidgets.append(legends_dock_widget)
+                plot_integral_breadth.addDockWidget(qt.Qt.RightDockWidgetArea, legends_dock_widget)
+                plot_integral_breadth._legendsDockWidget.setFixedWidth(130)
+                plot_integral_breadth.getLegendsDockWidget().show()
+
+                plot_integral_breadth.setDefaultPlotLines(True)
+                plot_integral_breadth.setDefaultPlotPoints(True)
+                plot_integral_breadth.setActiveCurveColor(color="#00008B")
+                plot_integral_breadth.setGraphTitle("Integral Breadth plot")
+                plot_integral_breadth.setGraphXLabel(r"s [$nm^{-1}$]")
+                plot_integral_breadth.setGraphYLabel("${\\beta}(s)$ [$nm^{-1}$]")
+
+                tab_plot_integral_breadth_phase.layout().addWidget(plot_integral_breadth)
+                plot_integral_breadth_phases.append(plot_integral_breadth)
+
+            self.plot_integral_breadth.append(plot_integral_breadth_phases)
+
 
     ##########################################
     # THREADING

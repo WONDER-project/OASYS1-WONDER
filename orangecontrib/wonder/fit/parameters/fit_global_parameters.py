@@ -105,10 +105,15 @@ class FitGlobalParameters(ParametersList):
         except:
             return None
 
-    def set_instrumental_parameters(self, instrumental_parameters):
-        if self.instrumental_parameters is None:
-            self.instrumental_parameters = {}
+    def get_instrumental_parameters_item(self, key, diffraction_pattern_index):
+        try:
+            instrumental_parameters_list = self.instrumental_parameters[key]
+            return instrumental_parameters_list[0 if len(instrumental_parameters_list) == 1 else diffraction_pattern_index]
+        except:
+            return None
 
+    def set_instrumental_parameters(self, instrumental_parameters):
+        if self.instrumental_parameters is None: self.instrumental_parameters = {}
         if not instrumental_parameters is None:
             key = instrumental_parameters[0].__class__.__name__
             self.instrumental_parameters[key] = instrumental_parameters
@@ -119,10 +124,15 @@ class FitGlobalParameters(ParametersList):
         except:
             return None
 
+    def get_background_parameters_item(self, key, diffraction_pattern_index):
+        try:
+            background_parameters_list = self.background_parameters[key]
+            return background_parameters_list[0 if len(background_parameters_list) == 1 else diffraction_pattern_index]
+        except:
+            return None
+        
     def set_background_parameters(self, background_parameters):
-        if self.background_parameters is None:
-            self.background_parameters = {}
-
+        if self.background_parameters is None: self.background_parameters = {}
         if not background_parameters is None:
             key = background_parameters[0].__class__.__name__
             self.background_parameters[key] = background_parameters
@@ -133,10 +143,15 @@ class FitGlobalParameters(ParametersList):
         except:
             return None
 
-    def set_shift_parameters(self, shift_parameters):
-        if self.shift_parameters is None:
-            self.shift_parameters = {}
+    def get_shift_parameters_item(self, key, diffraction_pattern_index):
+        try:
+            shift_parameters_list = self.shift_parameters[key]
+            return shift_parameters_list[0 if len(shift_parameters_list) == 1 else diffraction_pattern_index]
+        except:
+            return None
 
+    def set_shift_parameters(self, shift_parameters):
+        if self.shift_parameters is None: self.shift_parameters = {}
         if not shift_parameters is None:
             key = shift_parameters[0].__class__.__name__
             self.shift_parameters[key] = shift_parameters
@@ -145,23 +160,19 @@ class FitGlobalParameters(ParametersList):
         self.size_parameters = size_parameters
 
     def get_size_parameters(self, phase_index):
-        if self.size_parameters is None: return None
-        else:
-            try:
-                return self.size_parameters[phase_index]
-            except:
-                return None
+        try:
+            return self.size_parameters[phase_index]
+        except:
+            return None
 
     def set_strain_parameters(self, strain_parameters):
         self.strain_parameters = strain_parameters
 
     def get_strain_parameters(self, phase_index):
-        if self.strain_parameters is None: return None
-        else:
-            try:
-                return self.strain_parameters[phase_index]
-            except:
-                return None
+        try:
+            return self.strain_parameters[phase_index]
+        except:
+            return None
 
     def evaluate_functions(self):
         FitGlobalParameters.compute_functions(self.get_parameters(), self.free_input_parameters, self.free_output_parameters)

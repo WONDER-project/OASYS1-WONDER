@@ -43,7 +43,7 @@ class OWGSASIIPhases(OWGenericWidget):
     intensity_scale_factor_max            = Setting([0.0])
     intensity_scale_factor_function       = Setting([0])
     intensity_scale_factor_function_value = Setting([""])
-    phase_name                                  = Setting([""])
+    phase_name                            = Setting([""])
 
     inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
     outputs = [("Fit Global Parameters", FitGlobalParameters)]
@@ -100,7 +100,7 @@ class OWGSASIIPhases(OWGenericWidget):
                                  intensity_scale_factor_max           = self.intensity_scale_factor_max[index],
                                  intensity_scale_factor_function      = self.intensity_scale_factor_function[index],
                                  intensity_scale_factor_function_value= self.intensity_scale_factor_function_value[index],
-                                 phase_name                                 = self.phase_name[index])
+                                 phase_name                           = self.phase_name[index])
 
             self.phases_box_array.append(phase_box)
 
@@ -264,7 +264,7 @@ class OWGSASIIPhases(OWGenericWidget):
                                                      intensity_scale_factor_max           = self.intensity_scale_factor_max[index],
                                                      intensity_scale_factor_function      = self.intensity_scale_factor_function[index],
                                                      intensity_scale_factor_function_value= self.intensity_scale_factor_function_value[index],
-                                                     phase_name                                 = self.phase_name[index])
+                                                     phase_name                           = self.phase_name[index])
                             else:
                                 phase_box = PhaseBox(widget=self, parent=phase_tab, index = index)
 
