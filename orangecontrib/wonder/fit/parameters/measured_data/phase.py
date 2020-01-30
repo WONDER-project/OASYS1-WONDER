@@ -40,7 +40,7 @@ class Phase(ParametersList):
 
     @classmethod
     def get_default_name(cls, phase_index=0):
-        return "Phase nr " + str(phase_index + 1)
+        return "Phase " + str(phase_index + 1)
 
     @classmethod
     def is_cube(cls, symmetry):

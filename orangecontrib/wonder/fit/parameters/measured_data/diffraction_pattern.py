@@ -55,18 +55,24 @@ class DiffractionPoint:
             congruence.checkPositiveNumber(self.twotheta, "twotheta")
 
 class DiffractionPattern(ParametersList):
-
     diffraction_pattern = None
+    name = ""
 
     @classmethod
     def get_parameters_prefix(cls):
         return "diffraction_pattern_"
 
-    def __init__(self, n_points = 0):
+    @classmethod
+    def get_default_name(cls, diffraction_pattern_index=0):
+        return "Diff. Patt. " + str(diffraction_pattern_index + 1)
+
+    def __init__(self, n_points = 0, name=""):
         if n_points > 0:
             self.diffraction_pattern = numpy.full(n_points, None)
         else:
             self.diffraction_pattern = None
+
+        self.name = name
 
     def add_diffraction_point (self, diffraction_point):
         if diffraction_point is None: raise ValueError ("Diffraction Point is None")
@@ -107,6 +113,14 @@ class DiffractionPattern(ParametersList):
 
         return data[:, 0], data[:, 1], data[:, 2], data[:, 3]
 
+    def get_name(self, diffraction_pattern_index=0):
+        try:
+            congruence.checkEmptyString(self.name, "--")
+
+            return self.name.strip()
+        except:
+            return DiffractionPattern.get_default_name(diffraction_pattern_index)
+
     # "PRIVATE METHODS"
     def __check_diffraction_pattern(self):
         if self.diffraction_pattern is None:
@@ -125,8 +139,8 @@ class DiffractionPatternLimits:
 
 class DiffractionPatternFactory:
     @classmethod
-    def create_diffraction_pattern_from_file(clscls, file_name, limits=None):
-        return DiffractionPatternFactoryChain.Instance().create_diffraction_pattern_from_file(file_name, limits)
+    def create_diffraction_pattern_from_file(clscls, file_name, limits=None, name=""):
+        return DiffractionPatternFactoryChain.Instance().create_diffraction_pattern_from_file(file_name, limits, name)
 
 import os
 
@@ -135,7 +149,7 @@ import os
 # ----------------------------------------------------
 
 class DiffractionPatternFactoryInterface():
-    def create_diffraction_pattern_from_file(self, file_name, limits=None):
+    def create_diffraction_pattern_from_file(self, file_name, limits=None, name=""):
         raise NotImplementedError ("Method is Abstract")
 
     def _get_extension(self, file_name):
@@ -173,12 +187,12 @@ class DiffractionPatternFactoryChain(DiffractionPatternFactoryInterface):
 
         self._chain_of_handlers.append(handler)
 
-    def create_diffraction_pattern_from_file(self, file_name, limits=None):
+    def create_diffraction_pattern_from_file(self, file_name, limits=None, name=""):
         file_extension = self._get_extension(file_name)
 
         for handler in self._chain_of_handlers:
             if handler.is_handler(file_extension):
-                return handler.create_diffraction_pattern_from_file(file_name, limits)
+                return handler.create_diffraction_pattern_from_file(file_name, limits, name)
 
         raise ValueError ("File Extension not recognized")
 
@@ -208,8 +222,8 @@ class DiffractionPatternXyeFactoryHandler(DiffractionPatternFactoryHandler):
     def _get_handled_extension(self):
         return ".xye"
 
-    def create_diffraction_pattern_from_file(self, file_name, limits=None):
-        return DiffractionPatternXye(file_name = file_name, limits=limits)
+    def create_diffraction_pattern_from_file(self, file_name, limits=None, name=""):
+        return DiffractionPatternXye(file_name = file_name, limits=limits, name=name)
 
 class DiffractionPatterXyFactoryHandler(DiffractionPatternXyeFactoryHandler):
 
@@ -221,8 +235,8 @@ class DiffractionPatternRawFactoryHandler(DiffractionPatternFactoryHandler):
     def _get_handled_extension(self):
         return ".raw"
 
-    def create_diffraction_pattern_from_file(self, file_name, limits=None):
-        return DiffractionPatternRaw(file_name= file_name, limits=limits)
+    def create_diffraction_pattern_from_file(self, file_name, limits=None, name=""):
+        return DiffractionPatternRaw(file_name= file_name, limits=limits, name=name)
 
 
 # ----------------------------------------------------
@@ -230,8 +244,8 @@ class DiffractionPatternRawFactoryHandler(DiffractionPatternFactoryHandler):
 # ----------------------------------------------------
 
 class DiffractionPatternXye(DiffractionPattern):
-    def __init__(self, file_name= "", limits=None):
-        super(DiffractionPatternXye, self).__init__(n_points=0)
+    def __init__(self, file_name= "", limits=None, name=""):
+        super(DiffractionPatternXye, self).__init__(n_points=0, name=name)
 
         self.__initialize_from_file(file_name, limits)
 
@@ -268,8 +282,8 @@ class DiffractionPatternXye(DiffractionPattern):
                                                                                   error=error))
 
 class DiffractionPatternRaw(DiffractionPattern):
-    def __init__(self, file_name= "", wavelength=None, limits=None):
-        super(DiffractionPatternRaw, self).__init__(n_points = 0)
+    def __init__(self, file_name= "", wavelength=None, limits=None, name=""):
+        super(DiffractionPatternRaw, self).__init__(n_points = 0, name=name)
 
         self.__initialize_from_file(file_name, limits)
 

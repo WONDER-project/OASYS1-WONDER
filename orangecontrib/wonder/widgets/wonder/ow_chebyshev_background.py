@@ -135,17 +135,16 @@ class OWChebyshevBackground(OWGenericWidget):
         runaction.triggered.connect(self.send_background)
         self.addAction(runaction)
 
-
-    def set_use_single_parameter_set(self, on_init=False):
+    def set_use_single_parameter_set(self, on_init=False, recycle=True):
         self.chebyshev_tabs.clear()
         self.chebyshev_box_array = []
 
         dimension = len(self.c0) if self.fit_global_parameters is None else self.fit_global_parameters.measured_dataset.get_diffraction_patterns_number()
 
         for index in range(1 if self.use_single_parameter_set == 1 else dimension):
-            chebyshev_tab = gui.createTabPage(self.chebyshev_tabs, "All Patterns" if self.use_single_parameter_set==1 else "Diff. Patt. " + str(index + 1))
+            chebyshev_tab = gui.createTabPage(self.chebyshev_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, index, self.use_single_parameter_set==1))
 
-            if index < len(self.c0): #keep the existing
+            if index < len(self.c0) and recycle: #keep the existing
                 chebyshev_box = ChebyshevBackgroundBox(widget=self,
                                                        parent=chebyshev_tab,
                                                        index = index,
@@ -253,23 +252,63 @@ class OWChebyshevBackground(OWGenericWidget):
 
             if self.IS_DEVELOP: raise e
 
+    def __check_data_congruence(self, background_parameters):
+        if (len(background_parameters) == 1 and self.use_single_parameter_set == 0) or (len(background_parameters) > 1 and self.use_single_parameter_set == 1):
+            raise ValueError("Previous Chebyshev parameters are incongruent with the current choice of using a single set")
+
     def set_data(self, data):
         if not data is None:
             try:
                 self.fit_global_parameters = data.duplicate()
 
                 diffraction_patterns = self.fit_global_parameters.measured_dataset.diffraction_patterns
-
                 if diffraction_patterns is None: raise ValueError("No Diffraction Pattern in input data!")
 
                 background_parameters = self.fit_global_parameters.get_background_parameters(ChebyshevBackground.__name__)
 
-                if len(diffraction_patterns) != len(self.chebyshev_box_array):
-                    if ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences", title="Warning"):
-                        self.set_use_single_parameter_set()
-                elif not background_parameters is None:
-                        for index in range(1 if self.use_single_parameter_set == 0 else len(background_parameters)):
-                            self.chebyshev_box_array[index].set_data(background_parameters[index])
+                if self.use_single_parameter_set == 0: # NO
+                    if background_parameters is None:
+                        if len(diffraction_patterns) != len(self.chebyshev_box_array):
+                            self.set_use_single_parameter_set(recycle=ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing data where possible?\n\nIf yes, check for possible incongruences", title="Warning"))
+                        else:
+                            self.set_use_single_parameter_set(True)
+                    else:
+                        self.__check_data_congruence(background_parameters)
+
+                        tabs_to_remove = len(self.c0)-len(background_parameters)
+
+                        if tabs_to_remove > 0:
+                            for index in range(tabs_to_remove):
+                                self.chebyshev_tabs.removeTab(-1)
+                                self.chebyshev_box_array.pop()
+
+                        for diffraction_pattern_index in range(len(background_parameters)):
+                            background_parameters_item = self.fit_global_parameters.get_background_parameters_item(ChebyshevBackground.__name__, diffraction_pattern_index)
+
+                            if diffraction_pattern_index < len(self.c0):
+                                self.chebyshev_tabs.setTabText(diffraction_pattern_index,
+                                                               OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False))
+
+                                chebyshev_box = self.chebyshev_box_array[diffraction_pattern_index]
+                                if not background_parameters_item is None: chebyshev_box.set_data(background_parameters_item)
+                            else:
+                                chebyshev_box = ChebyshevBackgroundBox(widget=self,
+                                                                       parent=gui.createTabPage(self.chebyshev_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, index, False)),
+                                                                       index=diffraction_pattern_index)
+
+                                if not background_parameters_item is None: chebyshev_box.set_data(background_parameters_item)
+
+                                self.chebyshev_box_array.append(chebyshev_box)
+                else:
+                    if background_parameters is None:
+                        self.set_use_single_parameter_set(True)
+                    else:
+                        self.__check_data_congruence(background_parameters)
+
+                        background_parameters_item = self.fit_global_parameters.get_background_parameters_item(ChebyshevBackground.__name__, 0)
+
+                        self.chebyshev_tabs.setTabText(0, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, 0, True))
+                        if not background_parameters_item is None: self.chebyshev_box_array[0].set_data(background_parameters_item)
 
                 self.dumpSettings()
 

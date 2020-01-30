@@ -20,6 +20,8 @@ from orangecontrib.wonder.fit.fitters.fitter_factory import FitterFactory, Fitte
 from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
+from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
+from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
 from orangecontrib.wonder.fit.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
@@ -1072,14 +1074,8 @@ class OWFitter(OWGenericWidget):
     def __diffraction_patterns_range(self, fit_global_parameter):
         return 1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_diffraction_patterns_number()
 
-    def __diffraction_pattern_name(self, fit_global_parameter, diffraction_pattern_index):
-        return "Diff. Patt. nr 1" if fit_global_parameter is None else "Diff. Patt. " + str(diffraction_pattern_index + 1)
-
     def __phases_range(self, fit_global_parameter):
         return 1 if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phases_number()
-
-    def __phase_name(self, fit_global_parameter, phase_index):
-        return "Phase nr 1" if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phase(phase_index).get_name(phase_index)
 
     # ------------------------------------------------------------------------
     # ------------------------------------------------------------------------
@@ -1091,7 +1087,7 @@ class OWFitter(OWGenericWidget):
         self.tabs_plot_fit_data.clear()
 
         for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameter)):
-            tab_plot_fit_data = gui.createTabPage(self.tabs_plot_fit_data, self.__diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
+            tab_plot_fit_data = gui.createTabPage(self.tabs_plot_fit_data, OWGenericWidget.diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
 
             plot_fit = PlotWindow()
             plot_fit.setDefaultPlotLines(True)
@@ -1111,7 +1107,7 @@ class OWFitter(OWGenericWidget):
         self.tabs_plot_size.clear()
 
         for phase_index in range(self.__phases_range(fit_global_parameter)):
-            tab_plot_size = gui.createTabPage(self.tabs_plot_size, self.__phase_name(fit_global_parameter, phase_index))
+            tab_plot_size = gui.createTabPage(self.tabs_plot_size, OWGenericWidget.phase_name(fit_global_parameter, phase_index))
 
             plot_size = PlotWindow()
             plot_size.setDefaultPlotLines(True)
@@ -1132,7 +1128,7 @@ class OWFitter(OWGenericWidget):
         self.tabs_plot_strain.clear()
 
         for phase_index in range(self.__phases_range(fit_global_parameter)):
-            tab_plot_strain = gui.createTabPage(self.tabs_plot_strain, self.__phase_name(fit_global_parameter, phase_index))
+            tab_plot_strain = gui.createTabPage(self.tabs_plot_strain, OWGenericWidget.phase_name(fit_global_parameter, phase_index))
 
             plot_strain = PlotWindow(control=True)
             legends_dock_widget = LegendsDockWidget(plot=plot_strain)
@@ -1160,13 +1156,13 @@ class OWFitter(OWGenericWidget):
         self.tabs_plot_integral_breadth.clear()
 
         for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameter)):
-            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, self.__diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
+            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, OWGenericWidget.diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
 
             tabs_plot_integral_breadth_phases = gui.tabWidget(tab_plot_integral_breadth)
             plot_integral_breadth_phases = []
 
             for phase_index in range(self.__phases_range(fit_global_parameter)):
-                tab_plot_integral_breadth_phase = gui.createTabPage(tabs_plot_integral_breadth_phases, self.__phase_name(fit_global_parameter, phase_index))
+                tab_plot_integral_breadth_phase = gui.createTabPage(tabs_plot_integral_breadth_phases, OWGenericWidget.phase_name(fit_global_parameter, phase_index))
 
                 plot_integral_breadth = PlotWindow(control=True)
                 legends_dock_widget = LegendsDockWidget(plot=plot_integral_breadth)

@@ -10,6 +10,8 @@ from PyQt5.QtGui import QDoubleValidator, QValidator
 from orangecontrib.wonder.util.gui_utility import ConfirmDialog, gui, ShowTextDialog, OW_IS_DEVELOP
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, Boundary
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
+from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
+from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
 class QMinValueValidator(QDoubleValidator):
 
@@ -291,3 +293,20 @@ class OWGenericWidget(widget.OWWidget):
 
     def show_available_parameters(self):
         ShowTextDialog.show_text("Available Parameters", "" if self.fit_global_parameters is None else self.fit_global_parameters.get_available_parameters(), parent=self)
+
+    ############################################################
+    ############################################################
+    ############################################################
+
+    @classmethod
+    def diffraction_pattern_name(cls, fit_global_parameter, diffraction_pattern_index, use_single_set=False):
+        if use_single_set:
+            return "All Diffraction Patterns"
+        elif fit_global_parameter is None:
+            return DiffractionPattern.get_default_name(0)
+        else:
+            return fit_global_parameter.measured_dataset.get_diffraction_pattern(diffraction_pattern_index).get_name(diffraction_pattern_index)
+
+    @classmethod
+    def phase_name(cls, fit_global_parameter, phase_index):
+        return Phase.get_default_name(0) if fit_global_parameter is None else fit_global_parameter.measured_dataset.get_phase(phase_index).get_name(phase_index)

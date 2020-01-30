@@ -15,6 +15,7 @@ from orangecontrib.wonder.util.fit_utilities import Utilities, list_of_s_bragg
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, Boundary
 from orangecontrib.wonder.fit.parameters.measured_data.reflection import Reflection
+from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
 class OWLineProfile(OWGenericWidget):
@@ -51,7 +52,7 @@ class OWLineProfile(OWGenericWidget):
         self.line_profiles_box_array = []
 
         for index in range(len(self.reflections_of_phases)):
-            line_profiles_tab = gui.createTabPage(self.line_profiles_tabs, "Diff. Patt. " + str(index + 1))
+            line_profiles_tab = gui.createTabPage(self.line_profiles_tabs, DiffractionPattern.get_default_name(index))
 
             line_profiles_box = LineProfileBox(widget=self,
                                                parent=line_profiles_tab,
@@ -120,7 +121,7 @@ class OWLineProfile(OWGenericWidget):
                     self.line_profiles_box_array = []
 
                     for diffraction_pattern_index in range(len(diffraction_patterns)):
-                        line_profile_tab = gui.createTabPage(self.line_profiles_tabs, "Diff. Patt. " + str(diffraction_pattern_index + 1))
+                        line_profile_tab = gui.createTabPage(self.line_profiles_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index))
 
                         if (recycle_patterns or recycle_phases) and diffraction_pattern_index < len(self.reflections_of_phases): #keep the existing
                             reflections_of_phases = []
@@ -155,6 +156,7 @@ class OWLineProfile(OWGenericWidget):
 
                 elif not line_profiles is None:
                     for diffraction_pattern_index in range(len(diffraction_patterns)):
+                        self.line_profiles_tabs.setTabText(diffraction_pattern_index, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index))
                         self.line_profiles_box_array[diffraction_pattern_index].set_data(line_profiles[diffraction_pattern_index])
 
                 self.dumpSettings()
@@ -282,8 +284,7 @@ class LineProfileBox(InnerBox):
             for phase_index in range(len(self.reflections_of_phases_box_array)):
                 reflections_of_phases_box = self.reflections_of_phases_box_array[phase_index]
                 reflections_of_phases_box.set_data(line_profile)
-
-                self.reflections_of_phases_tabs.setTabText(phase_index, line_profile.get_phase(phase_index).get_name(phase_index))
+                self.reflections_of_phases_tabs.setTabText(phase_index, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
 
     def update_line_profile(self):
         for reflections_of_phases_box in self.reflections_of_phases_box_array:
@@ -418,7 +419,6 @@ class ReflectionsOfPhaseBox(InnerBox):
 
         self.text_area = gui.textArea(height=500, width=1000, readOnly=False)
         self.text_area.setText(self.reflections_of_phase)
-        #self.text_area.setStyleSheet("font-family: Courier, monospace;")
         self.text_area.textChanged.connect(write_text)
 
         scrollarea.setWidget(self.text_area)

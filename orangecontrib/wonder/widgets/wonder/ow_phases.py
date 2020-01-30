@@ -42,7 +42,7 @@ class OWPhases(OWGenericWidget):
     intensity_scale_factor_max            = Setting([0.0])
     intensity_scale_factor_function       = Setting([0])
     intensity_scale_factor_function_value = Setting([""])
-    phase_name                                  = Setting([""])
+    phase_name                            = Setting([""])
 
     inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
     outputs = [("Fit Global Parameters", FitGlobalParameters)]
@@ -80,27 +80,26 @@ class OWPhases(OWGenericWidget):
             phase_box = PhaseBox(widget=self,
                                  parent=phase_tab,
                                  index = index,
-                                 a                                    = self.a[index],
-                                 a_fixed                              = self.a_fixed[index],
-                                 a_has_min                            = self.a_has_min[index],
-                                 a_min                                = self.a_min[index],
-                                 a_has_max                            = self.a_has_max[index],
-                                 a_max                                = self.a_max[index],
-                                 a_function                           = self.a_function[index],
-                                 a_function_value                     = self.a_function_value[index],
-                                 symmetry                             = self.symmetry[index],
-                                 use_structure                        = self.use_structure[index],
-                                 formula                              = self.formula[index],
-                                 intensity_scale_factor               = self.intensity_scale_factor[index],
-                                 intensity_scale_factor_fixed         = self.intensity_scale_factor_fixed[index],
-                                 intensity_scale_factor_has_min       = self.intensity_scale_factor_has_min[index],
-                                 intensity_scale_factor_min           = self.intensity_scale_factor_min[index],
-                                 intensity_scale_factor_has_max       = self.intensity_scale_factor_has_max[index],
-                                 intensity_scale_factor_max           = self.intensity_scale_factor_max[index],
-                                 intensity_scale_factor_function      = self.intensity_scale_factor_function[index],
-                                 intensity_scale_factor_function_value= self.intensity_scale_factor_function_value[index],
-                                 phase_name                                 = self.phase_name[index])
-
+                                 a                                     = self.a[index],
+                                 a_fixed                               = self.a_fixed[index],
+                                 a_has_min                             = self.a_has_min[index],
+                                 a_min                                 = self.a_min[index],
+                                 a_has_max                             = self.a_has_max[index],
+                                 a_max                                 = self.a_max[index],
+                                 a_function                            = self.a_function[index],
+                                 a_function_value                      = self.a_function_value[index],
+                                 symmetry                              = self.symmetry[index],
+                                 use_structure                         = self.use_structure[index],
+                                 formula                               = self.formula[index],
+                                 intensity_scale_factor                = self.intensity_scale_factor[index],
+                                 intensity_scale_factor_fixed          = self.intensity_scale_factor_fixed[index],
+                                 intensity_scale_factor_has_min        = self.intensity_scale_factor_has_min[index],
+                                 intensity_scale_factor_min            = self.intensity_scale_factor_min[index],
+                                 intensity_scale_factor_has_max        = self.intensity_scale_factor_has_max[index],
+                                 intensity_scale_factor_max            = self.intensity_scale_factor_max[index],
+                                 intensity_scale_factor_function       = self.intensity_scale_factor_function[index],
+                                 intensity_scale_factor_function_value = self.intensity_scale_factor_function_value[index],
+                                 phase_name                            = self.phase_name[index])
 
             self.phases_box_array.append(phase_box)
 
@@ -127,7 +126,7 @@ class OWPhases(OWGenericWidget):
             self.phases_box_array.insert(current_index, phase_box)
 
             for index in range(current_index, self.phases_tabs.count()):
-                self.phases_tabs.setTabText(index, "Phase" + str(index + 1))
+                self.phases_tabs.setTabText(index, Phase.get_default_name(index))
                 self.phases_box_array[index].index = index
 
             self.dumpSettings()
@@ -151,7 +150,7 @@ class OWPhases(OWGenericWidget):
                 self.phases_box_array.insert(current_index + 1, phase_box)
 
             for index in range(current_index, self.phases_tabs.count()):
-                self.phases_tabs.setTabText(index, "Phase" + str(index + 1))
+                self.phases_tabs.setTabText(index, Phase.get_default_name(index))
                 self.phases_box_array[index].index = index
 
             self.dumpSettings()
@@ -172,7 +171,7 @@ class OWPhases(OWGenericWidget):
                 self.phases_box_array.pop(current_index)
 
                 for index in range(current_index, self.phases_tabs.count()):
-                    self.phases_tabs.setTabText(index, "Phase" + str(index + 1))
+                    self.phases_tabs.setTabText(index, Phase.get_default_name(index))
                     self.phases_box_array[index].index = index
 
                 self.dumpSettings()
