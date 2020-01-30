@@ -43,6 +43,7 @@ class OWGSASIIPhases(OWGenericWidget):
     intensity_scale_factor_max            = Setting([0.0])
     intensity_scale_factor_function       = Setting([0])
     intensity_scale_factor_function_value = Setting([""])
+    phase_name                                  = Setting([""])
 
     inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
     outputs = [("Fit Global Parameters", FitGlobalParameters)]
@@ -54,7 +55,7 @@ class OWGSASIIPhases(OWGenericWidget):
 
         main_box = gui.widgetBox(self.controlArea,
                                  "Phases", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 5, height=350)
+                                 width=self.CONTROL_AREA_WIDTH - 5, height=380)
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
@@ -98,7 +99,8 @@ class OWGSASIIPhases(OWGenericWidget):
                                  intensity_scale_factor_has_max       = self.intensity_scale_factor_has_max[index],
                                  intensity_scale_factor_max           = self.intensity_scale_factor_max[index],
                                  intensity_scale_factor_function      = self.intensity_scale_factor_function[index],
-                                 intensity_scale_factor_function_value= self.intensity_scale_factor_function_value[index])
+                                 intensity_scale_factor_function_value= self.intensity_scale_factor_function_value[index],
+                                 phase_name                                 = self.phase_name[index])
 
             self.phases_box_array.append(phase_box)
 
@@ -109,7 +111,7 @@ class OWGSASIIPhases(OWGenericWidget):
         orangegui.rubber(self.controlArea)
 
     def get_max_height(self):
-        return 450
+        return 480
 
     def insert_before(self):
         current_index = self.phases_tabs.currentIndex()
@@ -261,7 +263,8 @@ class OWGSASIIPhases(OWGenericWidget):
                                                      intensity_scale_factor_has_max       = self.intensity_scale_factor_has_max[index],
                                                      intensity_scale_factor_max           = self.intensity_scale_factor_max[index],
                                                      intensity_scale_factor_function      = self.intensity_scale_factor_function[index],
-                                                     intensity_scale_factor_function_value= self.intensity_scale_factor_function_value[index])
+                                                     intensity_scale_factor_function_value= self.intensity_scale_factor_function_value[index],
+                                                     phase_name                                 = self.phase_name[index])
                             else:
                                 phase_box = PhaseBox(widget=self, parent=phase_tab, index = index)
 
@@ -292,6 +295,7 @@ class OWGSASIIPhases(OWGenericWidget):
         self.dump_cif_file()
         self.dump_formula()
         self.dump_intensity_scale_factor()
+        self.dump_phase_name()
 
     def dump_a(self):
         bkp_a = copy.deepcopy(self.a)
@@ -406,6 +410,16 @@ class OWGSASIIPhases(OWGenericWidget):
             self.intensity_scale_factor_function = copy.deepcopy(bkp_intensity_scale_factor_function)
             self.intensity_scale_factor_function_value = copy.deepcopy(bkp_intensity_scale_factor_function_value)
 
+    def dump_phase_name(self):
+        bkp_phase_name = copy.deepcopy(self.phase_name)
+
+        try:
+            self.phase_name = []
+
+            for index in range(len(self.phases_box_array)):
+                self.phase_name.append(self.phases_box_array[index].phase_name)
+        except:
+            self.phase_name = copy.deepcopy(bkp_phase_name)
 
 from PyQt5.QtWidgets import QVBoxLayout
 from orangecontrib.wonder.util.gui_utility import InnerBox
@@ -430,6 +444,7 @@ class PhaseBox(InnerBox):
     intensity_scale_factor_max = 0.0
     intensity_scale_factor_function = 0
     intensity_scale_factor_function_value = ""
+    phase_name = ""
 
     widget = None
     is_on_init = True
@@ -462,7 +477,8 @@ class PhaseBox(InnerBox):
                  intensity_scale_factor_has_max=0,
                  intensity_scale_factor_max=0.0,
                  intensity_scale_factor_function=0,
-                 intensity_scale_factor_function_value=""):
+                 intensity_scale_factor_function_value="",
+                 phase_name=""):
         super(PhaseBox, self).__init__()
 
         self.setLayout(QVBoxLayout())
@@ -492,11 +508,14 @@ class PhaseBox(InnerBox):
         self.intensity_scale_factor_max = intensity_scale_factor_max
         self.intensity_scale_factor_function = intensity_scale_factor_function
         self.intensity_scale_factor_function_value = intensity_scale_factor_function_value
+        self.phase_name=phase_name
 
         self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH - 45
 
         parent.layout().addWidget(self)
         container = self
+
+        gui.lineEdit(container, self, "phase_name", "Phase id", labelWidth=110, valueType=str, callback=widget.dump_phase_name)
 
         self.cb_symmetry = orangegui.comboBox(container, self, "symmetry", label="Symmetry", items=Symmetry.tuple(),
                                               callback=self.set_symmetry, orientation="horizontal")
@@ -581,6 +600,7 @@ class PhaseBox(InnerBox):
                                       cif_file=self.cif_file,
                                       formula=congruence.checkEmptyString(self.formula, "Chemical Formula"),
                                       intensity_scale_factor=OWGenericWidget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
+                                      name=self.phase_name,
                                       progressive=self.get_parameter_progressive())
 
         return phase

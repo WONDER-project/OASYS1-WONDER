@@ -1,10 +1,9 @@
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList, FitParameter
 from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
+from orangecontrib.wonder.util import congruence
+
 
 class Phase(ParametersList):
-
-    name = None
-
     a = None
     b = None
     c = None
@@ -18,12 +17,9 @@ class Phase(ParametersList):
     use_structure = False
     formula = None
     intensity_scale_factor = None
+    name = ""
 
-    @classmethod
-    def get_parameters_prefix(cls):
-        return "phase_"
-
-    def __init__(self, a, b, c, alpha, beta, gamma, symmetry=Symmetry.SIMPLE_CUBIC, use_structure=False, formula=None, intensity_scale_factor=None):
+    def __init__(self, a, b, c, alpha, beta, gamma, symmetry=Symmetry.SIMPLE_CUBIC, use_structure=False, formula=None, intensity_scale_factor=None, name=""):
         super(Phase, self).__init__()
 
         self.a = a
@@ -36,13 +32,22 @@ class Phase(ParametersList):
         self.use_structure = use_structure
         self.formula = None if formula is None else formula.strip()
         self.intensity_scale_factor = intensity_scale_factor
+        self.name = name
+
+    @classmethod
+    def get_parameters_prefix(cls):
+        return "phase_"
+
+    @classmethod
+    def get_default_name(cls, phase_index=0):
+        return "Phase nr " + str(phase_index + 1)
 
     @classmethod
     def is_cube(cls, symmetry):
         return symmetry in (Symmetry.BCC, Symmetry.FCC, Symmetry.SIMPLE_CUBIC)
 
     @classmethod
-    def init_cube(cls, a0, symmetry=Symmetry.FCC, use_structure=False, formula=None, intensity_scale_factor=None, progressive = ""):
+    def init_cube(cls, a0, symmetry=Symmetry.FCC, use_structure=False, formula=None, intensity_scale_factor=None, name="", progressive=""):
         if not cls.is_cube(symmetry): raise ValueError("Symmetry doesn't belong to a cubic crystal cell")
 
         if a0.fixed:
@@ -67,7 +72,8 @@ class Phase(ParametersList):
                      symmetry=symmetry,
                      use_structure=use_structure,
                      formula=formula,
-                     intensity_scale_factor=intensity_scale_factor)
+                     intensity_scale_factor=intensity_scale_factor,
+                     name=name)
 
     def get_s(self, h, k, l):
         if Phase.is_cube(self.symmetry):
@@ -86,3 +92,14 @@ class Phase(ParametersList):
                 return 1 / Utilities.s_hkl(self.a.value, h, k, l)
         else:
             NotImplementedError("Only Cubic supported: TODO!!!!!!")
+
+
+    def get_name(self, phase_index=0):
+        try:
+            congruence.checkEmptyString(self.name, "")
+
+            return self.name.strip()
+        except:
+            Phase.get_default_name(phase_index)
+
+

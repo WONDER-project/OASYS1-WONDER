@@ -7,9 +7,10 @@ from orangewidget import gui as orangegui
 from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
-from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
+from orangecontrib.wonder.util.gui_utility import gui
 from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
+from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.microstructure.size import SizeParameters
 from orangecontrib.wonder.fit.wppm_functions import Distribution, Normalization, Shape, WulffCubeFace
 
@@ -79,41 +80,39 @@ class OWSizeNew(OWGenericWidget):
         self.sizes_box_array = []
 
         for index in range(len(self.shape)):
-            size_tab = gui.createTabPage(self.sizes_tabs, "Phase nr " + str(index + 1))
-
             size_box = SizeBox(widget=self,
-                                parent=size_tab,
-                                index = index,
-                                active = self.active[index],
-                                shape=self.shape[index],
-                                distribution = self.distribution[index],
-                                mu = self.mu[index],
-                                mu_fixed = self.mu_fixed[index],
-                                mu_has_min = self.mu_has_min[index],
-                                mu_min = self.mu_min[index],
-                                mu_has_max = self.mu_has_max[index],
-                                mu_max = self.mu_max[index],
-                                mu_function = self.mu_function[index],
-                                mu_function_value = self.mu_function_value[index],
-                                sigma = self.sigma[index],
-                                sigma_fixed = self.sigma_fixed[index],
-                                sigma_has_min = self.sigma_has_min[index],
-                                sigma_min = self.sigma_min[index],
-                                sigma_has_max = self.sigma_has_max[index],
-                                sigma_max = self.sigma_max[index],
-                                sigma_function = self.sigma_function[index],
-                                sigma_function_value = self.sigma_function_value[index],
-                                truncation = self.truncation[index],
-                                truncation_fixed = self.truncation_fixed[index],
-                                truncation_has_min = self.truncation_has_min[index],
-                                truncation_min = self.truncation_min[index],
-                                truncation_has_max = self.truncation_has_max[index],
-                                truncation_max = self.truncation_max[index],
-                                truncation_function = self.truncation_function[index],
-                                truncation_function_value = self.truncation_function_value[index],
-                                cube_face = self.cube_face[index],
-                                add_saxs = self.add_saxs[index],
-                                normalize_to = self.normalize_to[index])
+                               parent=gui.createTabPage(self.sizes_tabs, Phase.get_default_name(index)),
+                               index = index,
+                               active = self.active[index],
+                               shape=self.shape[index],
+                               distribution = self.distribution[index],
+                               mu = self.mu[index],
+                               mu_fixed = self.mu_fixed[index],
+                               mu_has_min = self.mu_has_min[index],
+                               mu_min = self.mu_min[index],
+                               mu_has_max = self.mu_has_max[index],
+                               mu_max = self.mu_max[index],
+                               mu_function = self.mu_function[index],
+                               mu_function_value = self.mu_function_value[index],
+                               sigma = self.sigma[index],
+                               sigma_fixed = self.sigma_fixed[index],
+                               sigma_has_min = self.sigma_has_min[index],
+                               sigma_min = self.sigma_min[index],
+                               sigma_has_max = self.sigma_has_max[index],
+                               sigma_max = self.sigma_max[index],
+                               sigma_function = self.sigma_function[index],
+                               sigma_function_value = self.sigma_function_value[index],
+                               truncation = self.truncation[index],
+                               truncation_fixed = self.truncation_fixed[index],
+                               truncation_has_min = self.truncation_has_min[index],
+                               truncation_min = self.truncation_min[index],
+                               truncation_has_max = self.truncation_has_max[index],
+                               truncation_max = self.truncation_max[index],
+                               truncation_function = self.truncation_function[index],
+                               truncation_function_value = self.truncation_function_value[index],
+                               cube_face = self.cube_face[index],
+                               add_saxs = self.add_saxs[index],
+                               normalize_to = self.normalize_to[index])
 
             self.sizes_box_array.append(size_box)
 
@@ -140,31 +139,32 @@ class OWSizeNew(OWGenericWidget):
                 if tabs_to_remove > 0:
                     for index in range(tabs_to_remove):
                         self.sizes_tabs.removeTab(-1)
+                        self.sizes_box_array.pop()
 
-                if not self.fit_global_parameters.size_parameters is None:
-                    for phase_index in range(len(phases)):
+                for phase_index in range(len(phases)):
+                    if not self.fit_global_parameters.size_parameters is None:
                         size_parameters = self.fit_global_parameters.get_size_parameters(phase_index)
+                    else:
+                        size_parameters = None
 
-                        if phase_index < len(self.shape):
-                            size_box = self.sizes_box_array[phase_index]
+                    if phase_index < len(self.shape):
+                        self.sizes_tabs.setTabText(phase_index, phases[phase_index].get_name(phase_index))
+                        size_box = self.sizes_box_array[phase_index]
 
-                            if not size_parameters is None:
-                                size_box.set_data(size_parameters)
-                            else:
-                                size_box.active = 0
-                                size_box.set_active()
-                        else:
-                            size_box = SizeBox(widget=self,
-                                               parent=gui.createTabPage(self.sizes_tabs, "Phase nr. " + str(phase_index + 1)),
-                                               index=phase_index,
-                                               active=0)
+                        if not size_parameters is None:
+                            size_box.set_data(size_parameters)
+                    else:
+                        size_box = SizeBox(widget=self,
+                                           parent=gui.createTabPage(self.sizes_tabs, phases[phase_index].get_name(phase_index)),
+                                           index=phase_index,
+                                           active=0)
 
-                            if not size_parameters is None:
-                                size_box.set_data(size_parameters)
+                        if not size_parameters is None:
+                            size_box.set_data(size_parameters)
 
-                            self.sizes_box_array.append(size_box)
+                        self.sizes_box_array.append(size_box)
 
-                    self.dumpSettings()
+                self.dumpSettings()
 
                 if self.is_automatic_run:
                     self.send_sizes()
@@ -630,10 +630,10 @@ class SizeBox(InnerBox):
         if not self.is_on_init: self.widget.dump_mu()
 
     def callback_sigma(self):
-        if not self.is_on_init: self.widget.dump_mu()
+        if not self.is_on_init: self.widget.dump_sigma()
         
     def callback_truncation(self):
-        if not self.is_on_init: self.widget.dump_mu()
+        if not self.is_on_init: self.widget.dump_truncation()
 
     def callback_cube_face(self):
         if not self.is_on_init: self.widget.dump_cube_face()

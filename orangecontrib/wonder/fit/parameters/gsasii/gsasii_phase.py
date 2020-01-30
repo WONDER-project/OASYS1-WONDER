@@ -7,14 +7,14 @@ class GSASIIPhase(Phase):
 
     cif_file = None
 
-    def __init__(self, a, b, c, alpha, beta, gamma, symmetry=Symmetry.SIMPLE_CUBIC, cif_file=None, formula=None, intensity_scale_factor=None):
-        super(GSASIIPhase, self).__init__(a, b, c, alpha, beta, gamma, symmetry=symmetry, use_structure=True, formula=formula, intensity_scale_factor=intensity_scale_factor)
+    def __init__(self, a, b, c, alpha, beta, gamma, symmetry=Symmetry.SIMPLE_CUBIC, cif_file=None, formula=None, intensity_scale_factor=None, name=""):
+        super(GSASIIPhase, self).__init__(a, b, c, alpha, beta, gamma, symmetry=symmetry, use_structure=True, formula=formula, intensity_scale_factor=intensity_scale_factor, name=name)
 
         self.cif_file = cif_file
         self.gsasii_reflections_list = None
 
     @classmethod
-    def init_cube(cls, a0, symmetry=Symmetry.FCC, cif_file=None, formula=None, intensity_scale_factor=None, progressive = ""):
+    def init_cube(cls, a0, symmetry=Symmetry.FCC, cif_file=None, formula=None, intensity_scale_factor=None, name="", progressive=""):
         if not cls.is_cube(symmetry): raise ValueError("Symmetry doesn't belong to a cubic crystal cell")
 
         if a0.fixed:
@@ -39,7 +39,8 @@ class GSASIIPhase(Phase):
                            symmetry=symmetry,
                            cif_file=cif_file,
                            formula=formula,
-                           intensity_scale_factor=intensity_scale_factor)
+                           intensity_scale_factor=intensity_scale_factor,
+                           name=name)
 
     def set_gsasii_reflections_list(self, gsasii_reflections_list):
         self.gsasii_reflections_list = gsasii_reflections_list

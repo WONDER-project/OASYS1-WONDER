@@ -15,6 +15,7 @@ from orangecontrib.wonder.util.fit_utilities import Utilities, list_of_s_bragg
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, Boundary
 from orangecontrib.wonder.fit.parameters.measured_data.reflection import Reflection
+from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
 class OWLineProfile(OWGenericWidget):
 
@@ -259,11 +260,11 @@ class LineProfileBox(InnerBox):
         parent.layout().addWidget(self)
         container = self
 
-        reflections_of_phases_tabs = gui.tabWidget(container)
+        self.reflections_of_phases_tabs = gui.tabWidget(container)
         self.reflections_of_phases_box_array = []
 
         for phase_index in range(len(self.reflections_of_phases)):
-            reflections_of_phase_tab = gui.createTabPage(reflections_of_phases_tabs, "Phase nr " + str(phase_index + 1))
+            reflections_of_phase_tab = gui.createTabPage(self.reflections_of_phases_tabs, Phase.get_default_name(phase_index + 1))
 
             reflections_of_phase_box = ReflectionsOfPhaseBox(widget=widget,
                                                              widget_container=self,
@@ -278,8 +279,11 @@ class LineProfileBox(InnerBox):
 
     def set_data(self, line_profile):
         if not line_profile is None:
-            for reflections_of_phases_box in self.reflections_of_phases_box_array:
+            for phase_index in range(len(self.reflections_of_phases_box_array)):
+                reflections_of_phases_box = self.reflections_of_phases_box_array[phase_index]
                 reflections_of_phases_box.set_data(line_profile)
+
+                self.reflections_of_phases_tabs.setTabText(phase_index, line_profile.phases[phase_index].get_name(phase_index))
 
     def update_line_profile(self):
         for reflections_of_phases_box in self.reflections_of_phases_box_array:
