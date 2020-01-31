@@ -70,7 +70,7 @@ class OWCalibrationPeakShift(OWGenericWidget):
         super().__init__(show_automatic_box=True)
 
         main_box = gui.widgetBox(self.controlArea,
-                                 "Instrumental Profile", orientation="vertical",
+                                 "LaB6 Tan Correction", orientation="vertical",
                                  width=self.CONTROL_AREA_WIDTH - 10, height=600)
 
         button_box = gui.widgetBox(main_box,
@@ -460,55 +460,6 @@ from orangecontrib.wonder.util.gui_utility import InnerBox
 
 
 class CalibrationPeakShiftBox(InnerBox):
-    U = 0.0
-    V = 0.0
-    W = 0.0
-    a = 0.0
-    b = 0.0
-
-    ax_fixed = 0
-    bx_fixed = 0
-    cx_fixed = 0
-    dx_fixed = 0
-    ex_fixed = 0
-
-    ax_has_min = 0
-    bx_has_min = 0
-    cx_has_min = 0
-    dx_has_min = 0
-    ex_has_min = 0
-
-    ax_min = 0.0
-    bx_min = 0.0
-    cx_min = 0.0
-    dx_min = 0.0
-    ex_min = 0.0
-
-    ax_has_max = 0
-    bx_has_max = 0
-    cx_has_max = 0
-    dx_has_max = 0
-    ex_has_max = 0
-
-    ax_max = 0.0
-    bx_max = 0.0
-    cx_max = 0.0
-    dx_max = 0.0
-    ex_max = 0.0
-
-    ax_function = 0
-    bx_function = 0
-    cx_function = 0
-    dx_function = 0
-    ex_function = 0
-
-    ax_function_value = ""
-    bx_function_value = ""
-    cx_function_value = ""
-    dx_function_value = ""
-    ex_function_value = ""
-
-
     widget = None
     is_on_init = True
 
