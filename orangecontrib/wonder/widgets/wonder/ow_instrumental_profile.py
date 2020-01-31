@@ -189,7 +189,7 @@ class OWInstrumentalProfile(OWGenericWidget):
 
     def __check_data_congruence(self, instrumental_parameters):
         if (len(instrumental_parameters) == 1 and self.use_single_parameter_set == 0) or (len(instrumental_parameters) > 1 and self.use_single_parameter_set == 1):
-            raise ValueError("Previous Chebyshev parameters are incongruent with the current choice of using a single set")
+            raise ValueError("Previous Instrumental parameters are incongruent with the current choice of using a single set")
 
     def set_data(self, data):
         if not data is None:
