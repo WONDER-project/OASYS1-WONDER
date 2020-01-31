@@ -208,7 +208,7 @@ class OWInstrumentalProfile(OWGenericWidget):
                         else:
                             self.set_use_single_parameter_set(True)
                     else:
-                        self.__check_data_congruence(instrumental_parameters)
+                        #self.__check_data_congruence(instrumental_parameters)
 
                         tabs_to_remove = len(self.U) - len(instrumental_parameters)
 
@@ -228,7 +228,7 @@ class OWInstrumentalProfile(OWGenericWidget):
                                 if not instrumental_parameters_item is None: instrumental_box.set_data(instrumental_parameters_item)
                             else:
                                 instrumental_box = InstrumentalProfileBox(widget=self,
-                                                                          parent=gui.createTabPage(self.instrumental_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, index, False)),
+                                                                          parent=gui.createTabPage(self.instrumental_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False)),
                                                                           index=diffraction_pattern_index)
 
                                 if not instrumental_parameters_item is None: instrumental_box.set_data(instrumental_parameters_item)

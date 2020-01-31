@@ -128,7 +128,7 @@ class OWZeroErrorPeakShift(OWGenericWidget):
                         else:
                             self.set_use_single_parameter_set(True)
                     else:
-                        self.__check_data_congruence(shift_parameters)
+                        #self.__check_data_congruence(shift_parameters)
 
                         tabs_to_remove = len(self.shift) - len(shift_parameters)
 
@@ -148,7 +148,7 @@ class OWZeroErrorPeakShift(OWGenericWidget):
                                 if not shift_parameters_item is None: peak_shift_box.set_data(shift_parameters_item)
                             else:
                                 peak_shift_box = ZeroErrorPeakShiftBox(widget=self,
-                                                                          parent=gui.createTabPage(self.peak_shift_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, index, False)),
+                                                                          parent=gui.createTabPage(self.peak_shift_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False)),
                                                                           index=diffraction_pattern_index)
 
                                 if not shift_parameters_item is None: peak_shift_box.set_data(shift_parameters_item)

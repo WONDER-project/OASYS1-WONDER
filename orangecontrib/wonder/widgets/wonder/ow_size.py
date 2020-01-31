@@ -415,37 +415,6 @@ from PyQt5.QtCore import Qt
 from orangecontrib.wonder.util.gui_utility import InnerBox
 
 class SizeBox(InnerBox):
-    active = 1
-    shape = 1
-    distribution = 1
-    mu = 4.0
-    mu_fixed = 0
-    mu_has_min = 1
-    mu_min = 0.01
-    mu_has_max = 0
-    mu_max = 0.0
-    mu_function = 0
-    mu_function_value = ""
-    sigma = 0.5
-    sigma_fixed = 0
-    sigma_has_min = 1
-    sigma_min = 0.01
-    sigma_has_max = 1
-    sigma_max = 1.0
-    sigma_function = 0
-    sigma_function_value = ""
-    truncation = 0.5
-    truncation_fixed = 0
-    truncation_has_min = 1
-    truncation_min = 0.01
-    truncation_has_max = 1
-    truncation_max = 1.0
-    truncation_function = 0
-    truncation_function_value = ""
-    cube_face = 1
-    add_saxs = False
-    normalize_to = 0
-
     widget = None
     is_on_init = True
 

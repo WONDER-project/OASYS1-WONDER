@@ -275,7 +275,7 @@ class OWChebyshevBackground(OWGenericWidget):
                         else:
                             self.set_use_single_parameter_set(True)
                     else:
-                        self.__check_data_congruence(background_parameters)
+                        #self.__check_data_congruence(background_parameters)
 
                         tabs_to_remove = len(self.c0)-len(background_parameters)
 
@@ -295,7 +295,7 @@ class OWChebyshevBackground(OWGenericWidget):
                                 if not background_parameters_item is None: chebyshev_box.set_data(background_parameters_item)
                             else:
                                 chebyshev_box = ChebyshevBackgroundBox(widget=self,
-                                                                       parent=gui.createTabPage(self.chebyshev_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, index, False)),
+                                                                       parent=gui.createTabPage(self.chebyshev_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False)),
                                                                        index=diffraction_pattern_index)
 
                                 if not background_parameters_item is None: chebyshev_box.set_data(background_parameters_item)
