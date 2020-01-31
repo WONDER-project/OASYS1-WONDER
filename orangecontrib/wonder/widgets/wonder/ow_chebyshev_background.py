@@ -135,6 +135,8 @@ class OWChebyshevBackground(OWGenericWidget):
         runaction.triggered.connect(self.send_background)
         self.addAction(runaction)
 
+        orangegui.rubber(self.controlArea)
+
     def set_use_single_parameter_set(self, on_init=False, recycle=True):
         self.chebyshev_tabs.clear()
         self.chebyshev_box_array = []
@@ -724,9 +726,6 @@ class OWChebyshevBackground(OWGenericWidget):
             self.c9_function       = copy.deepcopy(bkp_c9_function      )
             self.c9_function_value = copy.deepcopy(bkp_c9_function_value)
 
-
-
-
 from PyQt5.QtCore import Qt
 
 from PyQt5.QtWidgets import QVBoxLayout
@@ -1002,16 +1001,16 @@ class ChebyshevBackgroundBox(InnerBox):
         parent.layout().addWidget(self)
         container = self
 
-        OWGenericWidget.create_box_in_widget(self, container, "c0", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c1", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c2", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c3", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c4", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c5", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c6", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c7", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c8", add_callback=True)
-        OWGenericWidget.create_box_in_widget(self, container, "c9", add_callback=True)
+        OWGenericWidget.create_box_in_widget(self, container, "c0", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c1", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c2", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c3", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c4", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c5", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c6", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c7", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c8", add_callback=True, trim=25)
+        OWGenericWidget.create_box_in_widget(self, container, "c9", add_callback=True, trim=25)
 
         self.is_on_init = False
 

@@ -172,8 +172,8 @@ AABtaXhfbWF4cTtHP/AAAAAAAABYBwAAAG1peF9taW5xPEcAAAAAAAAAAFgDAAAAcmhvcT1HPxo2
 dGlvbl92YWx1ZXFAaAVYCwAAAHJob19oYXNfbWF4cUFLAFgLAAAAcmhvX2hhc19taW5xQksBWAcA
 AAByaG9fbWF4cUNHAAAAAAAAAABYBwAAAHJob19taW5xREcAAAAAAAAAAFgTAAAAc2F2ZWRXaWRn
 ZXRHZW9tZXRyeXFFY3NpcApfdW5waWNrbGVfdHlwZQpxRlgMAAAAUHlRdDUuUXRDb3JlcUdYCgAA
-AFFCeXRlQXJyYXlxSENCAdnQywADAAAAAAAAAAAAFwAAAfwAAALoAAAAAAAAAC0AAAH8AAAC6AAA
-AAACAAAAD/AAAAAAAAAALQAAAfwAAALocUmFcUqHcUtScUx1Lg==
+AFFCeXRlQXJyYXlxSENCAdnQywADAAAAAAfVAAAALQAACdEAAAL+AAAH2AAAAEQAAAnUAAAC/wAA
+AAACAAAAD/AAAAfVAAAAQwAACdEAAAL+cUmFcUqHcUtScUx1Lg==
 </properties>
 		<properties format="literal" node_id="11">{'eta_autoscale': 1, 'eta_xmax': 150.0, 'eta_xmin': 0.0, 'eta_ymax': 1.0, 'eta_ymin': 0.0, 'fitter_name': 1, 'free_output_parameters_text': 'D_avg = exp(size_mu + 0.5*size_sigma**2)\nD_avg_s = exp(size_mu + 1.25*size_sigma**2)\nD_avg_v = exp(size_mu + 1.75*size_sigma**2)\nstd_dev = sqrt(exp(2*size_mu + size_sigma**2)*(exp(size_sigma**2)-1))\n', 'fwhm_autoscale': 1, 'fwhm_xmax': 150.0, 'fwhm_xmin': 0.0, 'fwhm_ymax': 1.0, 'fwhm_ymin': 0.0, 'is_automatic_run': False, 'is_incremental': 0, 'is_interactive': False, 'lab6_autoscale': 1, 'lab6_xmax': 150.0, 'lab6_xmin': 0.0, 'lab6_ymax': 1.0, 'lab6_ymin': -1.0, 'n_iterations': 10, 'save_file_name': 'fit_output.dat', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x05\x8f\x00\x00\x00\x17\x00\x00\n\xb6\x00\x00\x02\xe8\x00\x00\x05\x8f\x00\x00\x00-\x00\x00\n\xb6\x00\x00\x02\xe8\x00\x00\x00\x00\x02\x00\x00\x00\x0f\xf0\x00\x00\x05\x8f\x00\x00\x00-\x00\x00\n\xb6\x00\x00\x02\xe8', 'show_integral_breadth': 1, 'show_ipf': 0, 'show_shift': 0, 'show_size': 1, 'show_warren': 1, 'show_wss_gof': 1}</properties>
 		<properties format="pickle" node_id="12">gAN9cQAoWA0AAABldGFfYXV0b3NjYWxlcQFLAVgIAAAAZXRhX3htYXhxAkdAYsAAAAAAAFgIAAAA
