@@ -12,13 +12,6 @@ class Symmetry:
         return [cls.SIMPLE_CUBIC, cls.BCC, cls.FCC]
 
 class Utilities:
-
-    @classmethod
-    def H_invariant_square(cls, h, k, l):
-        numerator = (h * h * k * k + k * k * l * l + l * l * h * h)
-        denominator = (h**2 + k**2 + l**2)**2
-        return numerator / denominator
-
     @classmethod
     def s_hkl(cls, a, h, k, l):
         return numpy.sqrt(h**2 + k**2 + l**2) / a
@@ -34,29 +27,6 @@ class Utilities:
     @classmethod
     def theta_hkl (cls, a, h, k, l , wavelength):
         return cls.theta(cls.s_hkl(a, h, k, l), wavelength)
-
-    @classmethod
-    def isolate_peak(cls, s, I, smin, smax):
-        data = []
-        N = numpy.size(s)
-        for i in numpy.arange(0, N):
-            if s[i] > smin and s[i] < smax:
-                data.append([s[i], I[i]])
-        output = numpy.asarray(data)
-        return output[:, 0], output[:, 1]
-
-    @classmethod
-    def merge_functions(cls, list_of_pairs, s):
-        # x step must be the same for all functions
-        I = numpy.zeros(len(s))
-
-        for pairs in list_of_pairs:
-            I += numpy.interp(s, pairs[0], pairs[1])
-
-        return I
-
-
-
 
 def is_even(a):
     return a % 2 == 0

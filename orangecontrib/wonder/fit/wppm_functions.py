@@ -9,14 +9,8 @@ from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantP
 from orangecontrib.wonder.fit.parameters.gsasii.gsasii_phase import GSASIIPhase
 from orangecontrib.wonder.fit.parameters.gsasii.gsasii_functions import gsasii_intensity_factor
 
-from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
 from orangecontrib.wonder.util.general_functions import ChemicalFormulaParser
-
-#################################################
-#
-# FIT FUNCTION
-#
-#################################################
+from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
 
 class Distribution:
     DELTA = "delta"
@@ -57,13 +51,32 @@ class Normalization:
     def tuple(cls):
         return ["to N", "to N\u00b2"]
 
+def __H_invariant_square(h, k, l):
+    numerator = (h * h * k * k + k * k * l * l + l * l * h * h)
+    denominator = (h**2 + k**2 + l**2)**2
+    return numerator / denominator
+
+def __merge_functions(list_of_pairs, s):
+    # x step must be the same for all functions
+    intensity = numpy.zeros(len(s))
+
+    for pair_index in range(list_of_pairs.shape[0]):
+        intensity += numpy.interp(s, list_of_pairs[pair_index, 0], list_of_pairs[pair_index, 1])
+
+    return intensity
+
+#################################################
+#
+# FIT FUNCTION
+#
+#################################################
 
 def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_index = 0):
     incident_radiation = fit_global_parameters.measured_dataset.get_incident_radiations_item(diffraction_pattern_index)
 
     wavelength = incident_radiation.wavelength.value
 
-    I = fit_function_reciprocal(Utilities.s(0.5*numpy.radians(twotheta), wavelength),
+    I = fit_function_reciprocal(Utilities.__s(0.5*numpy.radians(twotheta), wavelength),
                                 fit_global_parameters,
                                 diffraction_pattern_index)
 
@@ -117,34 +130,44 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
     line_profile       = fit_global_parameters.measured_dataset.get_line_profile(diffraction_pattern_index)
     incident_radiation = fit_global_parameters.measured_dataset.get_incident_radiations_item(diffraction_pattern_index)
 
-    for phase in fit_global_parameters.measured_dataset.phases:
-        if not Phase.is_cube(phase.symmetry): raise NotImplementedError("Only Cubic structures are supported by fit")
-
     # CONSTRUCTION OF EACH SEPARATE PEAK ---------------------------------------------------------------------------
 
-    intensity = None
-    for phase_index in range(fit_global_parameters.measured_dataset.get_phases_number()):
-        phase = fit_global_parameters.measured_dataset.get_phase(phase_index)
-        separated_peaks_functions = []
+    phases_number = fit_global_parameters.measured_dataset.get_phases_number()
+    separated_phases_intensities = numpy.full((phases_number, 2), None)
 
-        for reflection_index in range(line_profile.get_reflections_number(phase_index)):
+    for phase_index in range(phases_number):
+        phase = fit_global_parameters.measured_dataset.get_phase(phase_index)
+
+        if not Phase.is_cube(phase.symmetry): raise ValueError("Only Cubic structures are supported by fit")
+
+        reflections_number = line_profile.get_reflections_number(phase_index)
+        separated_peaks_functions = numpy.full((reflections_number, 2), None)
+
+        for reflection_index in range(reflections_number):
             if isinstance(phase, GSASIIPhase):
-                s_analytical, intensity_analytical = create_one_peak(phase_index,
+                s_analytical, intensity_analytical = create_one_peak(diffraction_pattern_index,
+                                                                     phase_index,
                                                                      reflection_index,
+                                                                     incident_radiation,
+                                                                     phase,
+                                                                     line_profile,
                                                                      fit_global_parameters,
-                                                                     diffraction_pattern_index,
                                                                      gsas_reflections_list=line_profile.get_additional_parameters_of_phase(phase_index))
             else:
-                s_analytical, intensity_analytical = create_one_peak(phase_index,
+                s_analytical, intensity_analytical = create_one_peak(diffraction_pattern_index,
+                                                                     phase_index,
                                                                      reflection_index,
-                                                                     fit_global_parameters,
-                                                                     diffraction_pattern_index)
+                                                                     incident_radiation,
+                                                                     phase,
+                                                                     line_profile,
+                                                                     fit_global_parameters)
 
-            separated_peaks_functions.append([s_analytical, intensity_analytical])
+            separated_peaks_functions[reflection_index, 0] = s_analytical
+            separated_peaks_functions[reflection_index, 1] = intensity_analytical
 
         # INTERPOLATION ONTO ORIGINAL S VALUES -------------------------------------------------------------------------
 
-        intensity_phase = Utilities.merge_functions(separated_peaks_functions, s)
+        intensity_phase = __merge_functions(separated_peaks_functions, s)
 
         # ADD SAXS
 
@@ -170,19 +193,27 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
             if not debye_waller_factor is None:
                 intensity_phase *= debye_waller(s, debye_waller_factor.value)
 
-        if intensity is None: intensity = intensity_phase
-        else: intensity = Utilities.merge_functions([intensity, intensity_phase], s)
+        separated_phases_intensities[phase_index, 0] = s
+        separated_phases_intensities[phase_index, 1] = intensity_phase
+
+    intensity = __merge_functions(separated_phases_intensities, s)
 
     if not incident_radiation.is_single_wavelength:
         principal_wavelength = incident_radiation.wavelength
-        I_scaled = intensity*incident_radiation.get_principal_wavelenght_weight()
+        intensity_scaled = intensity*incident_radiation.get_principal_wavelenght_weight()
 
+        separated_secondary_intensities = numpy.full((len(incident_radiation.secondary_wavelengths), 2), None)
+        secondary_index = 0
         for secondary_wavelength, secondary_wavelength_weigth in zip(incident_radiation.secondary_wavelengths,
                                                                      incident_radiation.secondary_wavelengths_weights):
             s_secondary = s * secondary_wavelength.value/principal_wavelength.value
-            I_scaled += Utilities.merge_functions([[s_secondary, intensity*secondary_wavelength_weigth.value]], s)
 
-        intensity = I_scaled
+            separated_secondary_intensities[secondary_index, 0] = s_secondary
+            separated_secondary_intensities[secondary_index, 1] = intensity*secondary_wavelength_weigth.value
+
+            secondary_index += 1
+
+        intensity = intensity_scaled + __merge_functions(separated_secondary_intensities, s)
 
     return intensity
 
@@ -190,7 +221,6 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
 #################################################
 # FOURIER FUNCTIONS
 #################################################
-
 
 class FourierTranformFactory:
     @classmethod
@@ -276,13 +306,17 @@ class FourierTransformFull(FourierTransform):
 # CALCOLO DI UN SINGOLO PICCO
 #################################################
 
-def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffraction_pattern_index=0, gsas_reflections_list=None):
+def create_one_peak(diffraction_pattern_index, 
+                    phase_index, 
+                    reflection_index, 
+                    incident_radiation, 
+                    phase, 
+                    line_profile, 
+                    fit_global_parameters, 
+                    gsas_reflections_list=None):
     fft_type             = fit_global_parameters.fit_initialization.fft_parameters.fft_type
     fit_space_parameters = fit_global_parameters.space_parameters()
-    phase                = fit_global_parameters.measured_dataset.get_phase(phase_index)
-    line_profile         = fit_global_parameters.measured_dataset.get_line_profile(diffraction_pattern_index)
     reflection           = line_profile.get_reflection(phase_index, reflection_index)
-    incident_radiation   = fit_global_parameters.measured_dataset.get_incident_radiations_item(diffraction_pattern_index)
 
     wavelength = incident_radiation.wavelength.value
     lattice_parameter = phase.a.value
@@ -459,7 +493,7 @@ def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffra
         s, I = FourierTransform.get_empty_fft(n_steps=fit_global_parameters.fit_initialization.fft_parameters.n_step,
                                               dL=fit_space_parameters.dL)
 
-    s_hkl = Utilities.s_hkl(lattice_parameter, reflection.h, reflection.k, reflection.l)
+    s_hkl = Utilities.__s_hkl(lattice_parameter, reflection.h, reflection.k, reflection.l)
 
     s += s_hkl
 
@@ -488,10 +522,10 @@ def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffra
     # PEAK SHIFTS  -----------------------------------------------------------------------------------------------------
 
     if not fit_global_parameters.shift_parameters is None:
-        theta = Utilities.theta(s, wavelength)
+        theta = Utilities.__theta(s, wavelength)
 
         for key in fit_global_parameters.shift_parameters.keys():
-            shift_parameters = fit_global_parameters.get_shift_parameters(key)[0 if len(fit_global_parameters.get_shift_parameters(key)) == 1 else diffraction_pattern_index]
+            shift_parameters = fit_global_parameters.get_shift_parameters_item(key, diffraction_pattern_index)
 
             if not shift_parameters is None:
                 if key == Lab6TanCorrection.__name__:
@@ -502,22 +536,20 @@ def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffra
                                              shift_parameters.dx.value,
                                              shift_parameters.ex.value)
                 elif key == ZeroError.__name__:
-                    s += Utilities.s(shift_parameters.shift.value/2, wavelength)
+                    s += Utilities.__s(shift_parameters.shift.value/2, wavelength)
                 elif key == SpecimenDisplacement.__name__:
                     s += specimen_displacement(theta, wavelength, shift_parameters.goniometer_radius, shift_parameters.displacement.value)
 
     # LORENTZ FACTOR --------------------------------------------------------------------------------------
 
     if not fit_global_parameters.instrumental_parameters is None:
-        thermal_polarization_parameters_list = fit_global_parameters.get_instrumental_parameters(PolarizationParameters.__name__)
+        polarization_parameters = fit_global_parameters.get_instrumental_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
 
-        if not thermal_polarization_parameters_list is None:
-            thermal_polarization_parameters = thermal_polarization_parameters_list[0 if len(thermal_polarization_parameters_list) == 1 else diffraction_pattern_index]
-
-            if thermal_polarization_parameters.use_lorentz_factor:
-                if thermal_polarization_parameters.lorentz_formula == LorentzFormula.Shkl_Shkl:
+        if not polarization_parameters is None:
+            if polarization_parameters.use_lorentz_factor:
+                if polarization_parameters.lorentz_formula == LorentzFormula.Shkl_Shkl:
                     I *= lorentz_factor_simplified_normalized(s_hkl, wavelength)
-                elif thermal_polarization_parameters.lorentz_formula == LorentzFormula.S_Shkl:
+                elif polarization_parameters.lorentz_formula == LorentzFormula.S_Shkl:
                     I *= lorentz_factor_normalized(s, s_hkl, wavelength)
 
     return s, I
@@ -530,6 +562,9 @@ def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffra
 import numpy
 from scipy.special import erfc
 import os
+
+# performance improvement
+from numba import jit
 
 ######################################################################
 # THERMAL AND POLARIZATION
@@ -591,6 +626,7 @@ def size_function_gamma(L, g, mu):
            GU(g+3, Lgm)) / G(g+3)
 
     return size
+
 
 def lognormal_distribution(mu, sigma, x):
     return numpy.exp(-0.5*((numpy.log(x)-mu)/(sigma))**2)/(x*sigma*numpy.sqrt(2*numpy.pi))
@@ -711,7 +747,6 @@ class WulffSolidDataRow:
                str(self.xl          ) + " "  + \
                str(self.chi_square_2)
 
-
 def __load_wulff_solids_data(file_name):
     wulff_data_path = os.path.join(os.path.dirname(__file__), "data")
     wulff_data_path = os.path.join(wulff_data_path, "wulff_solids")
@@ -730,7 +765,7 @@ if not 'wulff_solids_data_hexagonal' in globals():
     wulff_solids_data_hexagonal = __load_wulff_solids_data("Cube_TruncatedCubeHexagonalFace_L_FIT.data")
     wulff_solids_data_triangular = __load_wulff_solids_data("Cube_TruncatedCubeTriangularFace_L_FIT.data")
 
-def get_wulff_solid_Hj_coefficients(h, k, l, truncation, face): # N.B. L, truncation >= 0!
+def __get_wulff_solid_Hj_coefficients(h, k, l, truncation, face): # N.B. L, truncation >= 0!
     # x - x1 / x2 - x1 = y - y1 / y2 - y1
     # x1 = 0, x2 = 1
     # -> y = y1 + x (y2 - y1)
@@ -782,7 +817,6 @@ def get_wulff_solid_Hj_coefficients(h, k, l, truncation, face): # N.B. L, trunca
 
         return wulff_solid_data_row
 
-
 def size_function_wulff_solids_lognormal(L, h, k, l, sigma, mu, truncation, face):
 
     def __lognormal_momentum(mu, sigma2, n):
@@ -814,7 +848,7 @@ def size_function_wulff_solids_lognormal(L, h, k, l, sigma, mu, truncation, face
     ssqrt2 = sigma*numpy.sqrt(2.0)
     M3     = __lognormal_momentum(mu, sigma2, 3)
 
-    coefficients = get_wulff_solid_Hj_coefficients(h, k, l, truncation, face)
+    coefficients = __get_wulff_solid_Hj_coefficients(h, k, l, truncation, face)
 
     Hn_do1 = numpy.array([coefficients.a0, coefficients.b0, coefficients.c0, coefficients.d0])
     Hn_do2 = numpy.array([coefficients.a1, coefficients.b1, coefficients.c1, coefficients.d1])
@@ -847,10 +881,12 @@ def size_function_wulff_solids_lognormal(L, h, k, l, sigma, mu, truncation, face
 
 # INVARIANT PAH --------------------------------
 
+
 def strain_invariant_function_pah(L, h, k, l, lattice_parameter, a, b, C_hkl):
-    s_hkl = Utilities.s_hkl(lattice_parameter, h, k, l)
+    s_hkl = Utilities.__s_hkl(lattice_parameter, h, k, l)
 
     return numpy.exp(-((2*numpy.pi**2)/((s_hkl**2)*(lattice_parameter**4))) * C_hkl * (a*L + b*(L**2)))
+
 
 def displacement_invariant_pah(L, h, k, l, a, b, C_hkl):
     return numpy.sqrt((C_hkl*(a*L + b*(L**2)))/((h**2+k**2+l**2)**2))
@@ -860,6 +896,7 @@ def displacement_invariant_pah(L, h, k, l, a, b, C_hkl):
 
 from scipy import integrate
 from numpy import pi, log, sqrt, arcsin, sin, cos # TO SHORTEN FORMULAS
+
 
 def clausen_integral_inner_function(t):
     return log(2*sin(t/2))
@@ -907,19 +944,22 @@ def f_star(eta, use_simplified_calculation=True):
         return result
 
 
+
 def C_hkl_krivoglaz_wilkens(h, k, l, Ae, Be, As, Bs, mix):
-    H_2 = Utilities.H_invariant_square(h, k, l)
+    H_2 = __H_invariant_square(h, k, l)
 
     C_hkl_edge  = Ae + Be*H_2
     C_hkl_screw = As + Bs*H_2
 
     return mix*C_hkl_edge + (1-mix)*C_hkl_screw
 
+
 def strain_krivoglaz_wilkens(L, h, k, l, lattice_parameter, rho, Re, Ae, Be, As, Bs, mix, b):
-    s_hkl = Utilities.s_hkl(lattice_parameter, h, k, l)
+    s_hkl = Utilities.__s_hkl(lattice_parameter, h, k, l)
     C_hkl = C_hkl_krivoglaz_wilkens(h, k, l, Ae, Be, As, Bs, mix)
 
     return numpy.exp(-(0.5*pi*(s_hkl**2)*(b**2)*rho*C_hkl*(L**2)*f_star(L/Re)))
+
 
 def displacement_krivoglaz_wilkens(L, h, k, l, rho, Re, Ae, Be, As, Bs, mix, b):
     C_hkl = C_hkl_krivoglaz_wilkens(h, k, l, Ae, Be, As, Bs, mix)
@@ -952,15 +992,19 @@ def load_warren_files():
 
 delta_l_dict, delta_l2_dict = load_warren_files()
 
+
 def modify_delta_l(l, delta_l, lattice_parameter, average_lattice_parameter):
     return delta_l - (average_lattice_parameter/lattice_parameter -1)*l
+
 
 def modify_delta_l2(l, delta_l, delta_l2, lattice_parameter, average_lattice_parameter):
     return delta_l2 - 2*delta_l*(average_lattice_parameter/lattice_parameter -1)*l \
                + ((average_lattice_parameter/lattice_parameter -1)*l)**2
 
+
 def re_warren_strain(s_hkl, delta_l2):
     return numpy.exp(-0.5*((s_hkl*2*numpy.pi)**2)*delta_l2)
+
 
 def im_warren_strain(s_hkl, delta_l):
     return (s_hkl*2*numpy.pi)*delta_l
@@ -984,7 +1028,7 @@ def strain_warren_function(L, h, k, l, lattice_parameter, average_lattice_parame
     new_delta_l  = numpy.interp(L, l_local, new_delta_l)
     new_delta_l2 = numpy.interp(L, l_local, new_delta_l2)
 
-    s_hkl = Utilities.s_hkl(average_lattice_parameter, h, k, l)
+    s_hkl = Utilities.__s_hkl(average_lattice_parameter, h, k, l)
 
     return re_warren_strain(s_hkl, new_delta_l2), im_warren_strain(s_hkl, new_delta_l)
 
@@ -992,7 +1036,7 @@ def strain_warren_function(L, h, k, l, lattice_parameter, average_lattice_parame
 # STRUCTURE
 ######################################################################
 
-def load_atomic_scattering_factor_coefficients():
+def __load_atomic_scattering_factor_coefficients():
     atomic_scattering_factor_coefficients = {}
 
     path = os.path.join(os.path.dirname(__file__), "data")
@@ -1019,7 +1063,8 @@ def load_atomic_scattering_factor_coefficients():
 
     return atomic_scattering_factor_coefficients
 
-atomic_scattering_factor_coefficients = load_atomic_scattering_factor_coefficients()
+atomic_scattering_factor_coefficients = __load_atomic_scattering_factor_coefficients()
+
 
 def multiplicity_cubic(h, k, l):
     p = [6, 12, 24, 8, 24, 48]
@@ -1039,6 +1084,7 @@ def multiplicity_cubic(h, k, l):
     elif (h != k and k != l and h!=l):
         return p[5]
 
+
 def atomic_scattering_factor(s, element):
     coefficients = atomic_scattering_factor_coefficients[str(element).upper()]
     ab = coefficients[0]
@@ -1056,7 +1102,7 @@ def atomic_scattering_factor(s, element):
 
     return f_s + c
 
-def structure_factor(s, formula, h, k, l, symmetry=Symmetry.FCC):
+def structure_factor(s, formula, h, k, l, symmetry):
     elements = ChemicalFormulaParser.parse_formula(formula)
 
     if len(elements) == 1: #TODO: this is valid for Cubic materials only
@@ -1142,14 +1188,15 @@ def delta_two_theta_lab6(ax, bx, cx, dx, ex, theta): # input: radians
 
     return delta_twotheta
 
+
 def delta_two_theta_specimen_displacement(goniometer_radius, displacement, theta):
     return -(2*displacement/goniometer_radius)*cos(theta)
-
 
 def lab6_tan_correction(theta, wavelength, ax, bx, cx, dx, ex):
     delta_twotheta = delta_two_theta_lab6(ax, bx, cx, dx, ex, theta)
 
     return delta_twotheta*numpy.cos(theta)/wavelength
+
 
 def specimen_displacement(theta, wavelength, goniometer_radius, displacement): # input radians
     delta_twotheta = delta_two_theta_specimen_displacement(goniometer_radius, displacement, theta)
@@ -1157,7 +1204,7 @@ def specimen_displacement(theta, wavelength, goniometer_radius, displacement): #
     return delta_twotheta*numpy.cos(theta)/wavelength
 
 def instrumental_function(L, h, k, l, lattice_parameter, wavelength, U, V, W, a, b, c):
-    theta = Utilities.theta_hkl(lattice_parameter, h, k, l, wavelength)
+    theta = Utilities.__theta_hkl(lattice_parameter, h, k, l, wavelength)
 
     eta = caglioti_eta(a, b, c, numpy.degrees(theta))
     sigma = numpy.radians(caglioti_fwhm(U, V, W, theta))*0.5*(numpy.cos(theta)/wavelength)
@@ -1190,13 +1237,15 @@ def add_chebyshev_background(x, I, parameters=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]):
 
     I += bkg
 
-def add_polynomial_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
+
+def add_polynomial_background(x, I, parameters):
     degree = len(parameters)
 
     for j in range(0, degree):
         I += parameters[j]*numpy.pow(x, j)
 
-def add_polynomial_N_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
+
+def add_polynomial_N_background(x, I, parameters):
     degree = len(parameters)
 
     for j in range(0, int(degree/2 - 1)):
@@ -1205,7 +1254,8 @@ def add_polynomial_N_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
 
         I += a_i*numpy.pow(x, b_i)
 
-def add_polynomial_0N_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
+
+def add_polynomial_0N_background(x, I, parameters):
     degree = len(parameters)
     x0 = parameters[0]
 
@@ -1216,7 +1266,7 @@ def add_polynomial_0N_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
         I += a_i*numpy.pow((x-x0), b_i)
 
 
-def add_expdecay_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
+def add_expdecay_background(x, I, parameters):
     degree = len(parameters)
 
     for j in range(0, int(degree/2 - 1)):
@@ -1225,7 +1275,8 @@ def add_expdecay_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
 
         I += a_i*numpy.exp(-numpy.abs(x)*b_i)
 
-def add_expdecay_0_background(x, I, parameters=[0, 0, 0, 0, 0, 0]):
+
+def add_expdecay_0_background(x, I, parameters):
     degree = len(parameters)
     x0 = parameters[0]
 
