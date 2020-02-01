@@ -1,9 +1,9 @@
 
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTTypes
-from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import Beampath, LorentzFormula
+from orangecontrib.wonder.fit.parameters.instrument.polarization_parameters import PolarizationParameters, Beampath, LorentzFormula
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
-from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters
+from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
 from orangecontrib.wonder.fit.parameters.gsasii.gsasii_phase import GSASIIPhase
@@ -70,16 +70,16 @@ def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_ind
 
     # POLARIZATION FACTOR --------------------------------------------------------------------------------------
 
-    thermal_polarization_parameters = fit_global_parameters.get_instrumental_parameters_item(ThermalPolarizationParameters.__name__, diffraction_pattern_index)
+    polarization_parameters = fit_global_parameters.get_instrumental_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
 
-    if not thermal_polarization_parameters is None:
-        if thermal_polarization_parameters.use_polarization_factor:
-            twotheta_mono = thermal_polarization_parameters.twotheta_mono
+    if not polarization_parameters is None:
+        if polarization_parameters.use_polarization_factor:
+            twotheta_mono = polarization_parameters.twotheta_mono
 
             I *= polarization_factor(numpy.radians(twotheta),
                                      None if twotheta_mono is None else numpy.radians(twotheta_mono),
-                                     thermal_polarization_parameters.degree_of_polarization,
-                                     thermal_polarization_parameters.beampath)
+                                     polarization_parameters.degree_of_polarization,
+                                     polarization_parameters.beampath)
 
     # ADD BACKGROUNDS  ---------------------------------------------------------------------------------------------
 
@@ -161,16 +161,17 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
                                         phase.symmetry,
                                         size_parameters.normalize_to)
 
+        # ADD DEBYE-WALLER FACTOR --------------------------------------------------------------------------------------
+
+        thermal_parameters = fit_global_parameters.get_instrumental_parameters_item(ThermalParameters.__name__, diffraction_pattern_index)
+
+        if not thermal_parameters is None:
+            debye_waller_factor = thermal_parameters.get_debye_waller_factor(phase_index)
+            if not debye_waller_factor is None:
+                intensity_phase *= debye_waller(s, debye_waller_factor.value)
+
         if intensity is None: intensity = intensity_phase
         else: intensity = Utilities.merge_functions([intensity, intensity_phase], s)
-
-    # ADD DEBYE-WALLER FACTOR --------------------------------------------------------------------------------------
-
-    thermal_polarization_parameters = fit_global_parameters.get_instrumental_parameters_item(ThermalPolarizationParameters.__name__, diffraction_pattern_index)
-
-    if not thermal_polarization_parameters is None:
-        if not thermal_polarization_parameters.debye_waller_factor is None:
-            intensity *= debye_waller(s, thermal_polarization_parameters.debye_waller_factor.value)
 
     if not incident_radiation.is_single_wavelength:
         principal_wavelength = incident_radiation.wavelength
@@ -508,7 +509,7 @@ def create_one_peak(phase_index, reflection_index, fit_global_parameters, diffra
     # LORENTZ FACTOR --------------------------------------------------------------------------------------
 
     if not fit_global_parameters.instrumental_parameters is None:
-        thermal_polarization_parameters_list = fit_global_parameters.get_instrumental_parameters(ThermalPolarizationParameters.__name__)
+        thermal_polarization_parameters_list = fit_global_parameters.get_instrumental_parameters(PolarizationParameters.__name__)
 
         if not thermal_polarization_parameters_list is None:
             thermal_polarization_parameters = thermal_polarization_parameters_list[0 if len(thermal_polarization_parameters_list) == 1 else diffraction_pattern_index]
@@ -758,26 +759,26 @@ def get_wulff_solid_Hj_coefficients(h, k, l, truncation, face): # N.B. L, trunca
             coefficients_top    = wulff_solids_data_hexagonal[WulffSolidDataRow.get_key(h/divisor, k/divisor, l/divisor, min(100, 1 + int(truncation_on_file)))]
 
         wulff_solid_data_row =  WulffSolidDataRow(h,
-                                  k,
-                                  l,
-                                  truncation_on_file,
-                                  __point_in_between(coefficients_top.limit_dist  , coefficients_bottom.limit_dist  , x),
-                                  __point_in_between(coefficients_top.aa          , coefficients_bottom.aa          , x),
-                                  __point_in_between(coefficients_top.bb          , coefficients_bottom.bb          , x),
-                                  __point_in_between(coefficients_top.cc          , coefficients_bottom.cc          , x),
-                                  __point_in_between(coefficients_top.dd          , coefficients_bottom.dd          , x),
-                                  __point_in_between(coefficients_top.chi_square_1, coefficients_bottom.chi_square_1, x),
-                                  __point_in_between(coefficients_top.a0          , coefficients_bottom.a0          , x),
-                                  __point_in_between(coefficients_top.b0          , coefficients_bottom.b0          , x),
-                                  __point_in_between(coefficients_top.c0          , coefficients_bottom.c0          , x),
-                                  __point_in_between(coefficients_top.d0          , coefficients_bottom.d0          , x),
-                                  __point_in_between(coefficients_top.xj          , coefficients_bottom.xj          , x),
-                                  __point_in_between(coefficients_top.a1          , coefficients_bottom.a1          , x),
-                                  __point_in_between(coefficients_top.b1          , coefficients_bottom.b1          , x),
-                                  __point_in_between(coefficients_top.c1          , coefficients_bottom.c1          , x),
-                                  __point_in_between(coefficients_top.d1          , coefficients_bottom.d1          , x),
-                                  __point_in_between(coefficients_top.xl          , coefficients_bottom.xl          , x),
-                                  __point_in_between(coefficients_top.chi_square_2, coefficients_bottom.chi_square_2, x))
+                                                  k,
+                                                  l,
+                                                  truncation_on_file,
+                                                  __point_in_between(coefficients_top.limit_dist  , coefficients_bottom.limit_dist  , x),
+                                                  __point_in_between(coefficients_top.aa          , coefficients_bottom.aa          , x),
+                                                  __point_in_between(coefficients_top.bb          , coefficients_bottom.bb          , x),
+                                                  __point_in_between(coefficients_top.cc          , coefficients_bottom.cc          , x),
+                                                  __point_in_between(coefficients_top.dd          , coefficients_bottom.dd          , x),
+                                                  __point_in_between(coefficients_top.chi_square_1, coefficients_bottom.chi_square_1, x),
+                                                  __point_in_between(coefficients_top.a0          , coefficients_bottom.a0          , x),
+                                                  __point_in_between(coefficients_top.b0          , coefficients_bottom.b0          , x),
+                                                  __point_in_between(coefficients_top.c0          , coefficients_bottom.c0          , x),
+                                                  __point_in_between(coefficients_top.d0          , coefficients_bottom.d0          , x),
+                                                  __point_in_between(coefficients_top.xj          , coefficients_bottom.xj          , x),
+                                                  __point_in_between(coefficients_top.a1          , coefficients_bottom.a1          , x),
+                                                  __point_in_between(coefficients_top.b1          , coefficients_bottom.b1          , x),
+                                                  __point_in_between(coefficients_top.c1          , coefficients_bottom.c1          , x),
+                                                  __point_in_between(coefficients_top.d1          , coefficients_bottom.d1          , x),
+                                                  __point_in_between(coefficients_top.xl          , coefficients_bottom.xl          , x),
+                                                  __point_in_between(coefficients_top.chi_square_2, coefficients_bottom.chi_square_2, x))
 
         return wulff_solid_data_row
 

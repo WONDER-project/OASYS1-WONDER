@@ -4,7 +4,7 @@ from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
 from orangecontrib.wonder.fit.parameters.fit_parameter import FreeInputParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
-from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters
+from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, KrivoglazWilkensModel, WarrenModel
 
 from orangecontrib.wonder.fit.wppm_functions import Distribution, Shape
@@ -13,8 +13,8 @@ class FitGlobalParameters(ParametersList):
 
     fit_initialization = None
     measured_dataset = None
-    background_parameters = None
     instrumental_parameters = None
+    background_parameters = None
     shift_parameters = None
     size_parameters = None
     strain_parameters = None
@@ -28,7 +28,7 @@ class FitGlobalParameters(ParametersList):
 
     def __init__(self,
                  fit_initialization = None,
-                 masured_dataset = None,
+                 masured_dataset=None,
                  instrumental_parameters = {},
                  background_parameters = {},
                  shift_parameters = {},
@@ -82,7 +82,6 @@ class FitGlobalParameters(ParametersList):
                 python_code += parameter.to_python_code() + "\n"
 
         return parameters_dictionary, python_code
-
 
     def set_n_max_iterations(self, value=10):
         self.n_max_iterations = value
@@ -240,10 +239,12 @@ class FitGlobalParameters(ParametersList):
                             parameters[last_index + 5] = instrumental_parameters.b
                             parameters[last_index + 6] = instrumental_parameters.c
                             last_index += 6
-                        elif key == ThermalPolarizationParameters.__name__:
-                            if not instrumental_parameters.debye_waller_factor is None:
-                                parameters[last_index + 1] = instrumental_parameters.debye_waller_factor
-                                last_index += 1
+                        elif key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    parameters[last_index + 1] = debye_waller_factor
+                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -394,10 +395,12 @@ class FitGlobalParameters(ParametersList):
                             instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
                             instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
                             last_index += 6
-                        elif key == ThermalPolarizationParameters.__name__:
-                            if not instrumental_parameters.debye_waller_factor is None:
-                                instrumental_parameters.debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
-                                last_index += 1
+                        elif key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
+                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -552,10 +555,12 @@ class FitGlobalParameters(ParametersList):
                             instrumental_parameters.b.error = errors[last_index + 5]
                             instrumental_parameters.c.error = errors[last_index + 6]
                             last_index += 6
-                        elif key == ThermalPolarizationParameters.__name__:
-                            if not instrumental_parameters.debye_waller_factor is None:
-                                instrumental_parameters.debye_waller_factor.error = errors[last_index + 1]
-                                last_index += 1
+                        elif key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    debye_waller_factor.error = errors[last_index + 1]
+                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -721,11 +726,13 @@ class FitGlobalParameters(ParametersList):
                             instrumental_parameters.b.error = errors[last_index + 5]
                             instrumental_parameters.c.error = errors[last_index + 6]
                             last_index += 6
-                        elif key == ThermalPolarizationParameters.__name__:
-                            if not instrumental_parameters.debye_waller_factor is None:
-                                instrumental_parameters.debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
-                                instrumental_parameters.debye_waller_factor.error = errors[last_index + 1]
-                                last_index += 1
+                        elif key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
+                                    debye_waller_factor.error = errors[last_index + 1]
+                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():

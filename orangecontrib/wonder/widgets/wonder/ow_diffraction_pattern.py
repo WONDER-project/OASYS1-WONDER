@@ -285,7 +285,7 @@ class OWDiffractionPattern(OWGenericWidget):
             self.tabs.setCurrentIndex(self.diffraction_pattern_tabs.currentIndex())
             self.tabs_data_plot[self.diffraction_pattern_tabs.currentIndex()].setCurrentIndex(1)
 
-            fit_global_parameters = FitGlobalParameters(masured_dataset=MeasuredDataset.initialize_with_diffraction_pattern(diffraction_patterns=self.diffraction_patterns),
+            fit_global_parameters = FitGlobalParameters(masured_dataset=MeasuredDataset.initialize_with_diffraction_patterns(diffraction_patterns=self.diffraction_patterns),
                                                         fit_initialization=FitInitialization())
             fit_global_parameters.regenerate_parameters()
 
@@ -557,7 +557,7 @@ class DiffractionPatternBox(InnerBox):
         self.diffraction_pattern = DiffractionPatternFactory.create_diffraction_pattern_from_file(self.filename, limits, self.diffraction_pattern_name)
 if __name__ == "__main__":
     a = QApplication(sys.argv)
-    ow = OWDiffractionPatternNew()
+    ow = OWDiffractionPattern()
     ow.show()
     a.exec_()
     ow.saveSettings()

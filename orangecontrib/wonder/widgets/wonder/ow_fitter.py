@@ -22,7 +22,7 @@ from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
-from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters
+from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
 from orangecontrib.wonder.fit.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
@@ -543,7 +543,7 @@ class OWFitter(OWGenericWidget):
             table_widget.setItem(row_index, column_index, table_item)
 
     def __analyze_parameter(self, parameter):
-        if parameter.parameter_name == ThermalPolarizationParameters.get_parameters_prefix() + "debye_waller_factor":
+        if parameter.parameter_name == ThermalParameters.get_parameters_prefix() + "debye_waller_factor":
             parameter = parameter.duplicate()
             parameter.rescale(100) # from nm-2 to A-2
         elif parameter.parameter_name == SpecimenDisplacement.get_parameters_prefix() + "displacement":

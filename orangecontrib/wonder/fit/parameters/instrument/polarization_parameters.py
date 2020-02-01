@@ -17,9 +17,7 @@ class LorentzFormula:
     def tuple(cls):
         return ["1/[s\u22c5s(hkl)]", "1/s(hkl)\u00b2"]
 
-class ThermalPolarizationParameters(ParametersList):
-
-    debye_waller_factor = None
+class PolarizationParameters(ParametersList):
     use_lorentz_factor = False
     lorentz_formula = LorentzFormula.Shkl_Shkl
     use_polarization_factor = False
@@ -28,14 +26,12 @@ class ThermalPolarizationParameters(ParametersList):
     twotheta_mono = None
 
     def __init__(self,
-                 debye_waller_factor = None,
                  use_lorentz_factor = False,
                  lorentz_formula = LorentzFormula.Shkl_Shkl,
                  use_polarization_factor=False,
                  beampath = Beampath.PRIMARY,
                  degree_of_polarization=0.0,
                  twotheta_mono=None):
-        self.debye_waller_factor = debye_waller_factor
         self.use_lorentz_factor = use_lorentz_factor
         self.lorentz_formula = lorentz_formula
         self.use_polarization_factor = use_polarization_factor
@@ -48,4 +44,4 @@ class ThermalPolarizationParameters(ParametersList):
 
     @classmethod
     def get_parameters_prefix(cls):
-        return "tp_"
+        return "lp_"

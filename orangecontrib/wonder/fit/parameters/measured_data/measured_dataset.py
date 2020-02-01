@@ -23,7 +23,7 @@ class MeasuredDataset(ParametersList):
         self.initialized = False
 
     @classmethod
-    def initialize_with_diffraction_pattern(cls, diffraction_patterns=[]):
+    def initialize_with_diffraction_patterns(cls, diffraction_patterns=[]):
         if diffraction_patterns is None: raise ValueError("Diffraction Patterns is None")
         if not isinstance(diffraction_patterns, list): raise ValueError("Diffraction Patterns is not a list")
         if len(diffraction_patterns) < 1: raise ValueError("Diffraction Patterns list is empty")
@@ -39,6 +39,7 @@ class MeasuredDataset(ParametersList):
         return dataset
 
     def set_phases(self, phases=None):
+        if not self.initialized: raise ValueError("MeasuredDataset not intialized")
         if phases is None: raise ValueError("Phases is None")
         if not isinstance(phases, list): raise ValueError("Phases is not a list")
         if len(phases) < 1: raise ValueError("Phases list is empty")

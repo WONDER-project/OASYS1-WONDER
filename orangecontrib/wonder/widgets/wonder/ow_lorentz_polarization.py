@@ -11,7 +11,7 @@ from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui
 from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
-from orangecontrib.wonder.fit.parameters.instrument.thermal_polarization_parameters import ThermalPolarizationParameters, Beampath, LorentzFormula
+from orangecontrib.wonder.fit.parameters.instrument.polarization_parameters import PolarizationParameters, Beampath, LorentzFormula
 
 class OWLorentzPolarization(OWGenericWidget):
 
@@ -109,17 +109,17 @@ class OWLorentzPolarization(OWGenericWidget):
                 if self.use_polarization_factor == 1 and self.use_twotheta_mono==1:
                     congruence.checkStrictlyPositiveAngle(self.twotheta_mono, "2\u03B8 Monochromator")
 
-                thermal_polarization_parameters = self.fit_global_parameters.get_instrumental_parameters(ThermalPolarizationParameters.__name__)
+                thermal_polarization_parameters = self.fit_global_parameters.get_instrumental_parameters(PolarizationParameters.__name__)
 
                 if thermal_polarization_parameters is None:
                     self.fit_global_parameters.set_instrumental_parameters(
-                        [ThermalPolarizationParameters(debye_waller_factor=None,
-                                                       use_lorentz_factor=self.use_lorentz_factor == 1,
-                                                       lorentz_formula=self.lorentz_formula,
-                                                       use_polarization_factor=self.use_polarization_factor,
-                                                       twotheta_mono=None if (self.use_polarization_factor == 0 or self.use_twotheta_mono == 0) else self.twotheta_mono,
-                                                       beampath=self.beampath,
-                                                       degree_of_polarization=self.degree_of_polarization)])
+                        [PolarizationParameters(debye_waller_factor=None,
+                                                use_lorentz_factor=self.use_lorentz_factor == 1,
+                                                lorentz_formula=self.lorentz_formula,
+                                                use_polarization_factor=self.use_polarization_factor,
+                                                twotheta_mono=None if (self.use_polarization_factor == 0 or self.use_twotheta_mono == 0) else self.twotheta_mono,
+                                                beampath=self.beampath,
+                                                degree_of_polarization=self.degree_of_polarization)])
                 else:
                     thermal_polarization_parameters[0].use_lorentz_factor = self.use_lorentz_factor == 1
                     thermal_polarization_parameters[0].lorentz_formula = self.lorentz_formula
@@ -152,7 +152,7 @@ class OWLorentzPolarization(OWGenericWidget):
                 if not phase.use_structure:
                     QMessageBox.warning(self, "Warning", "Lorentz-Polarization Factor should be used when a structural model is selected in the Phase")
 
-                thermal_polarization_parameters = self.fit_global_parameters.get_instrumental_parameters(ThermalPolarizationParameters.__name__)
+                thermal_polarization_parameters = self.fit_global_parameters.get_instrumental_parameters(PolarizationParameters.__name__)
 
                 if not thermal_polarization_parameters is None:
                     self.use_lorentz_factor = 1 if thermal_polarization_parameters[0].use_lorentz_factor else self.use_lorentz_factor

@@ -227,13 +227,7 @@ class LineProfileBox(InnerBox):
 
     parameter_functions = {}
 
-    line_profile = None
-
     diffraction_pattern_index = 0
-
-    reflections_of_phases = []
-    limits = []
-    limit_types = []
 
     def __init__(self,
                  widget=None,
@@ -266,7 +260,7 @@ class LineProfileBox(InnerBox):
         self.reflections_of_phases_box_array = []
 
         for phase_index in range(len(self.reflections_of_phases)):
-            reflections_of_phase_tab = gui.createTabPage(self.reflections_of_phases_tabs, Phase.get_default_name(phase_index + 1))
+            reflections_of_phase_tab = gui.createTabPage(self.reflections_of_phases_tabs, Phase.get_default_name(phase_index))
 
             reflections_of_phase_box = ReflectionsOfPhaseBox(widget=widget,
                                                              widget_container=self,
@@ -294,8 +288,6 @@ class LineProfileBox(InnerBox):
         self.dump_reflections_of_phases()
         self.dump_limits()
         self.dump_limit_types()
-
-        self.widget.dumpSettings()
 
     def dump_reflections_of_phases(self):
         bkp_reflections_of_phases = copy.deepcopy(self.reflections_of_phases)
@@ -340,11 +332,6 @@ class LineProfileBox(InnerBox):
         self.widget.dump_limit_types()
 
 class ReflectionsOfPhaseBox(InnerBox):
-
-    reflections_of_phase = ""
-    limit                = 0.0
-    limit_type           = 0
-
     widget = None
     is_on_init = True
 
@@ -457,8 +444,7 @@ class ReflectionsOfPhaseBox(InnerBox):
             if not self.widget.fit_global_parameters is None \
                and not self.widget.fit_global_parameters.measured_dataset is None \
                and not self.widget.fit_global_parameters.measured_dataset.incident_radiations is None:
-                incident_radiation = self.widget.fit_global_parameters.measured_dataset.incident_radiations[
-                    0 if len(self.widget.fit_global_parameters.measured_dataset.incident_radiations) == 1 else self.diffraction_pattern_index]
+                incident_radiation = self.widget.fit_global_parameters.measured_dataset.get_incident_radiations_item(self.diffraction_pattern_index)
 
                 if not incident_radiation.wavelength.function:
                     wavelength = incident_radiation.wavelength.value
@@ -518,8 +504,7 @@ class ReflectionsOfPhaseBox(InnerBox):
         if not self.widget.fit_global_parameters is None \
                 and not self.widget.fit_global_parameters.measured_dataset is None \
                 and not self.widget.fit_global_parameters.measured_dataset.incident_radiations is None:
-            incident_radiation = self.widget.fit_global_parameters.measured_dataset.incident_radiations[
-                0 if len(self.widget.fit_global_parameters.measured_dataset.incident_radiations) == 1 else self.diffraction_pattern_index]
+            incident_radiation = self.widget.fit_global_parameters.measured_dataset.get_incident_radiations_item(self.diffraction_pattern_index)
 
             if not incident_radiation.wavelength.function:
                 diffraction_pattern = self.widget.fit_global_parameters.measured_dataset.diffraction_patterns[self.diffraction_pattern_index]

@@ -242,7 +242,7 @@ class OWChebyshevBackground(OWGenericWidget):
             if not self.fit_global_parameters is None:
                 self.dumpSettings()
 
-                self.fit_global_parameters.set_background_parameters([self.chebyshev_box_array[index].send_background() for index in range(len(self.c0))])
+                self.fit_global_parameters.set_background_parameters([self.chebyshev_box_array[index].get_background() for index in range(len(self.c0))])
                 self.fit_global_parameters.regenerate_parameters()
 
                 self.send("Fit Global Parameters", self.fit_global_parameters)
@@ -992,7 +992,7 @@ class ChebyshevBackgroundBox(InnerBox):
         OWGenericWidget.populate_fields_in_widget(self, "c8", background_parameters.c8, value_only=True)
         OWGenericWidget.populate_fields_in_widget(self, "c9", background_parameters.c9, value_only=True)
 
-    def send_background(self):
+    def get_background(self):
         return ChebyshevBackground(c0=OWGenericWidget.populate_parameter_in_widget(self, "c0", self.get_parameters_prefix()),
                                    c1=OWGenericWidget.populate_parameter_in_widget(self, "c1", self.get_parameters_prefix()),
                                    c2=OWGenericWidget.populate_parameter_in_widget(self, "c2", self.get_parameters_prefix()),
