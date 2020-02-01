@@ -416,7 +416,7 @@ class DebyeWallerBox(InnerBox):
         except Exception as e:
             self.use_debye_waller_factors = copy.deepcopy(bkp_use_debye_waller_factors)
 
-            if self.IS_DEVELOP: raise e
+            if self.widget.IS_DEVELOP: raise e
 
         self.widget.dump_use_debye_waller_factors()
 
@@ -441,14 +441,14 @@ class DebyeWallerBox(InnerBox):
             self.debye_waller_factors_function_value = []
 
             for index in range(len(self.debye_waller_of_phases_box_array)):
-                self.debye_waller_factors.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors)
-                self.debye_waller_factors_fixed.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors_fixed)
-                self.debye_waller_factors_has_min.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors_has_min)
-                self.debye_waller_factors_min.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors_min)
-                self.debye_waller_factors_has_max.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors_has_max)
-                self.debye_waller_factors_max.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors_max)
-                self.debye_waller_factors_function.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors_function)
-                self.debye_waller_factors_function_value.append(self.debye_waller_of_phases_box_array[index].debye_waller_factors_function_value)
+                self.debye_waller_factors.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor)
+                self.debye_waller_factors_fixed.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_fixed)
+                self.debye_waller_factors_has_min.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_has_min)
+                self.debye_waller_factors_min.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_min)
+                self.debye_waller_factors_has_max.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_has_max)
+                self.debye_waller_factors_max.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_max)
+                self.debye_waller_factors_function.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_function)
+                self.debye_waller_factors_function_value.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_function_value)
         except Exception as e:
             self.debye_waller_factors = copy.deepcopy(bkp_debye_waller_factors)
             self.debye_waller_factors_fixed = copy.deepcopy(bkp_debye_waller_factors_fixed)
@@ -459,7 +459,7 @@ class DebyeWallerBox(InnerBox):
             self.debye_waller_factors_function = copy.deepcopy(bkp_debye_waller_factors_function)
             self.debye_waller_factors_function_value = copy.deepcopy(bkp_debye_waller_factors_function_value)
 
-            if self.IS_DEVELOP: raise e
+            if self.widget.IS_DEVELOP: raise e
 
         self.widget.dump_debye_waller_factors()
 
@@ -520,7 +520,7 @@ class DebyeWallerOfPhaseBox(InnerBox):
         self.box_dw = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, height=30)
         self.box_dw_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, height=30)
 
-        OWGenericWidget.create_box_in_widget(self, self.box_dw, "debye_waller_factor", label="B [Å-2]", add_callback=True)
+        OWGenericWidget.create_box_in_widget(self, self.box_dw, "debye_waller_factor", label="B [Å-2]", min_value=0.0, max_value=1.0, min_accepted=True, max_accepted=True, add_callback=True)
 
         self.is_on_init = False
 
