@@ -287,7 +287,6 @@ class OWLorentzPolarization(OWGenericWidget):
 from PyQt5.QtCore import Qt
 
 from PyQt5.QtWidgets import QVBoxLayout
-from PyQt5.QtGui import QDoubleValidator
 from orangecontrib.wonder.util.gui_utility import InnerBox
 
 
@@ -365,24 +364,26 @@ class PolarizationParametersBox(InnerBox):
 
         self.set_Polarization()
 
+        self.is_on_init = False
+
     def set_LorentzFactor(self):
         self.lorentz_box.setVisible(self.use_lorentz_factor==1)
         self.lorentz_box_empty.setVisible(self.use_lorentz_factor==0)
         
-        self.widget.dump_use_lorentz_factor()
+        if not self.is_on_init: self.widget.dump_use_lorentz_factor()
 
     def set_Monochromator(self):
         self.monochromator_box.setVisible(self.use_twotheta_mono==1)
         self.monochromator_box_empty.setVisible(self.use_twotheta_mono==0)
         
-        self.widget.dump_use_twotheta_mono()
+        if not self.is_on_init: self.widget.dump_use_twotheta_mono()
 
     def set_Polarization(self):
         self.polarization_box.setVisible(self.use_polarization_factor==1)
         self.polarization_box_empty.setVisible(self.use_polarization_factor==0)
         if self.use_polarization_factor==1: self.set_Monochromator()
         
-        self.widget.dump_use_polarization_factor()
+        if not self.is_on_init: self.widget.dump_use_polarization_factor()
         
     def get_lorentz_polarization(self):
         if self.use_polarization_factor == 1:

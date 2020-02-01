@@ -1,4 +1,4 @@
-import sys, numpy, os
+import sys, numpy, os, copy
 
 from PyQt5.QtWidgets import QMessageBox, QScrollArea, QApplication, QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QFileDialog
 from PyQt5.QtCore import Qt, QMutex
@@ -73,33 +73,46 @@ class OWFitter(OWGenericWidget):
 
     thread_exception = None
 
-    twotheta_ipf = numpy.arange(0.5, 120.0, 0.5)
-    theta_ipf_deg = 0.5*twotheta_ipf
-    theta_ipf_radians = numpy.radians(theta_ipf_deg)
+    fwhm_autoscale = Setting([1])
+    fwhm_xmin = Setting([0.0])
+    fwhm_xmax = Setting([150.0])
+    fwhm_ymin = Setting([0.0])
+    fwhm_ymax = Setting([1.0])
 
-    fwhm_autoscale = Setting(1)
-    fwhm_xmin = Setting(0.0)
-    fwhm_xmax = Setting(150.0)
-    fwhm_ymin = Setting(0.0)
-    fwhm_ymax = Setting(1.0)
+    eta_autoscale = Setting([1])
+    eta_xmin = Setting([0.0])
+    eta_xmax = Setting([150.0])
+    eta_ymin = Setting([0.0])
+    eta_ymax = Setting([1.0])
 
-    eta_autoscale = Setting(1)
-    eta_xmin = Setting(0.0)
-    eta_xmax = Setting(150.0)
-    eta_ymin = Setting(0.0)
-    eta_ymax = Setting(1.0)
-
-    lab6_autoscale = Setting(1)
-    lab6_xmin = Setting(0.0)
-    lab6_xmax = Setting(150.0)
-    lab6_ymin = Setting(-1.0)
-    lab6_ymax = Setting(1.0)
+    lab6_autoscale = Setting([1])
+    lab6_xmin = Setting([0.0])
+    lab6_xmax = Setting([150.0])
+    lab6_ymin = Setting([-1.0])
+    lab6_ymax = Setting([1.0])
 
     x_ib           = None
     labels_ib      = None
     annotations_ib = None
     distributions  = None
     text_size      = None
+    
+    def __fix_attrs(self):
+        if not isinstance(self.fwhm_autoscale, list) or len(self.fwhm_autoscale) == 0: self.fwhm_autoscale = [1]
+        if not isinstance(self.fwhm_xmin, list) or len(self.fwhm_xmin) == 0: self.fwhm_xmin = [0.0]
+        if not isinstance(self.fwhm_xmax, list) or len(self.fwhm_xmax) == 0: self.fwhm_xmax = [150.0]
+        if not isinstance(self.fwhm_ymin, list) or len(self.fwhm_ymin) == 0: self.fwhm_ymin = [0.0]
+        if not isinstance(self.fwhm_ymax, list) or len(self.fwhm_ymax) == 0: self.fwhm_ymax = [1.0]
+        if not isinstance(self.eta_autoscale, list) or len(self.eta_autoscale) == 0: self.eta_autoscale = [1]
+        if not isinstance(self.eta_xmin, list) or len(self.eta_xmin) == 0: self.eta_xmin = [0.0]
+        if not isinstance(self.eta_xmax, list) or len(self.eta_xmax) == 0: self.eta_xmax = [150.0]
+        if not isinstance(self.eta_ymin, list) or len(self.eta_ymin) == 0: self.eta_ymin = [0.0]
+        if not isinstance(self.eta_ymax, list) or len(self.eta_ymax) == 0: self.eta_ymax = [1.0]
+        if not isinstance(self.lab6_autoscale, list) or len(self.lab6_autoscale) == 0: self.lab6_autoscale = [1]
+        if not isinstance(self.lab6_xmin, list) or len(self.lab6_xmin) == 0: self.lab6_xmin = [0.0]
+        if not isinstance(self.lab6_xmax, list) or len(self.lab6_xmax) == 0: self.lab6_xmax = [150.0]
+        if not isinstance(self.lab6_ymin, list) or len(self.lab6_ymin) == 0: self.lab6_ymin = [0.0]
+        if not isinstance(self.lab6_ymax, list) or len(self.lab6_ymax) == 0: self.lab6_ymax = [1.0]
 
     def __fix_flags(self):
         self.is_incremental = OWGenericWidget.fix_flag(self.is_incremental)
@@ -110,13 +123,11 @@ class OWFitter(OWGenericWidget):
         self.show_size = OWGenericWidget.fix_flag(self.show_size)
         self.show_warren = OWGenericWidget.fix_flag(self.show_warren)
         self.show_integral_breadth = OWGenericWidget.fix_flag(self.show_integral_breadth)
-        self.fwhm_autoscale = OWGenericWidget.fix_flag(self.fwhm_autoscale)
-        self.eta_autoscale = OWGenericWidget.fix_flag(self.eta_autoscale)
-        self.lab6_autoscale = OWGenericWidget.fix_flag(self.lab6_autoscale)
 
     def __init__(self):
         super().__init__(show_automatic_box=True)
-
+        
+        self.__fix_attrs()
         self.__fix_flags()
 
         main_box = gui.widgetBox(self.controlArea, "Fitter Setting", orientation="vertical", width=self.CONTROL_AREA_WIDTH)
@@ -219,12 +230,12 @@ class OWFitter(OWGenericWidget):
 
         self.tabs_plot = gui.tabWidget(self.tab_plot)
 
-        self.tab_plot_fit_data = gui.createTabPage(self.tabs_plot, "Fit")
-        self.tab_plot_fit_wss  = gui.createTabPage(self.tabs_plot, "W.S.S.")
-        self.tab_plot_fit_gof  = gui.createTabPage(self.tabs_plot, "G.o.F.")
-        self.tab_plot_ipf   = gui.createTabPage(self.tabs_plot,  "Instrumental Profile")
-        self.tab_plot_size   = gui.createTabPage(self.tabs_plot, "Size Distribution")
-        self.tab_plot_strain = gui.createTabPage(self.tabs_plot, "Warren's Plot")
+        self.tab_plot_fit_data         = gui.createTabPage(self.tabs_plot, "Fit")
+        self.tab_plot_fit_wss          = gui.createTabPage(self.tabs_plot, "W.S.S.")
+        self.tab_plot_fit_gof          = gui.createTabPage(self.tabs_plot, "G.o.F.")
+        self.tab_plot_ipf              = gui.createTabPage(self.tabs_plot, "Instrumental Profile")
+        self.tab_plot_size             = gui.createTabPage(self.tabs_plot, "Size Distribution")
+        self.tab_plot_strain           = gui.createTabPage(self.tabs_plot, "Warren's Plot")
         self.tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot, "Integral Breadth")
 
         self.std_output = gui.textArea(height=100, width=800)
@@ -232,13 +243,13 @@ class OWFitter(OWGenericWidget):
         out_box = gui.widgetBox(self.mainArea, "System Output", addSpace=False, orientation="horizontal")
         out_box.layout().addWidget(self.std_output)
 
+        # ---------------------------------------------------------------\
+
         self.tabs_plot_fit_data = gui.tabWidget(self.tab_plot_fit_data)
-        self.tabs_plot_ipf = gui.tabWidget(self.tab_plot_ipf)
-        self.tab_plot_fwhm = gui.createTabPage(self.tabs_plot_ipf, "Caglioti's FWHM")
-        self.tab_plot_eta  = gui.createTabPage(self.tabs_plot_ipf, "Caglioti's \u03b7")
-        self.tab_plot_lab6 = gui.createTabPage(self.tabs_plot_ipf, "LaB6 Tan Correction")
 
         self.__build_plot_fit()
+
+        # ---------------------------------------------------------------\
 
         self.plot_fit_wss = PlotWindow()
         self.plot_fit_wss.setDefaultPlotLines(True)
@@ -256,125 +267,40 @@ class OWFitter(OWGenericWidget):
 
         self.tab_plot_fit_gof.layout().addWidget(self.plot_fit_gof)
 
+        # ---------------------------------------------------------------
+
+        self.tabs_plot_ipf      = gui.tabWidget(self.tab_plot_ipf)
+
+        self.__build_plot_ipf()
+
+        # ---------------------------------------------------------------
+
         self.tabs_plot_size = gui.tabWidget(self.tab_plot_size)
 
         self.__build_plot_size()
+
+        # ---------------------------------------------------------------
 
         self.tabs_plot_strain = gui.tabWidget(self.tab_plot_strain)
 
         self.__build_plot_strain()
 
+        # ---------------------------------------------------------------
+
         self.tabs_plot_integral_breadth = gui.tabWidget(self.tab_plot_integral_breadth)
 
         self.__build_plot_integral_breadth()
 
-        box = gui.widgetBox(self.tab_plot_fwhm, "", orientation="horizontal")
-
-        boxl = gui.widgetBox(box, "", orientation="vertical")
-        boxr = gui.widgetBox(box, "", orientation="vertical", width=150)
-
-        def set_fwhm_autoscale():
-            self.le_fwhm_xmin.setEnabled(self.fwhm_autoscale==0)
-            self.le_fwhm_xmax.setEnabled(self.fwhm_autoscale==0)
-            self.le_fwhm_ymin.setEnabled(self.fwhm_autoscale==0)
-            self.le_fwhm_ymax.setEnabled(self.fwhm_autoscale==0)
-
-        orangegui.checkBox(boxr, self, "fwhm_autoscale", "Autoscale", callback=set_fwhm_autoscale)
-
-        def refresh_caglioti_fwhm():
-            instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, 0)
-            if not instrumental_parameters is None: self.__refresh_caglioti_fwhm(instrumental_parameters)
-
-        self.le_fwhm_xmin = gui.lineEdit(boxr, self, "fwhm_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
-        self.le_fwhm_xmax = gui.lineEdit(boxr, self, "fwhm_xmax", "2\u03b8 max", labelWidth=70, valueType=float)
-        self.le_fwhm_ymin = gui.lineEdit(boxr, self, "fwhm_ymin", "FWHM min", labelWidth=70, valueType=float)
-        self.le_fwhm_ymax = gui.lineEdit(boxr, self, "fwhm_ymax", "FWHM max", labelWidth=70, valueType=float)
-        gui.button(boxr, self, "Refresh", height=40, callback=refresh_caglioti_fwhm)
-
-        set_fwhm_autoscale()
-
-        self.plot_ipf_fwhm = PlotWindow()
-        self.plot_ipf_fwhm.setDefaultPlotLines(True)
-        self.plot_ipf_fwhm.setActiveCurveColor(color="#00008B")
-        self.plot_ipf_fwhm.setGraphXLabel("2\u03b8 (deg)")
-        self.plot_ipf_fwhm.setGraphYLabel("FWHM (deg)")
-
-        boxl.layout().addWidget(self.plot_ipf_fwhm)
-
-        box = gui.widgetBox(self.tab_plot_eta, "", orientation="horizontal")
-
-        boxl = gui.widgetBox(box, "", orientation="vertical")
-        boxr = gui.widgetBox(box, "", orientation="vertical", width=150)
-
-        def set_eta_autoscale():
-            self.le_eta_xmin.setEnabled(self.eta_autoscale==0)
-            self.le_eta_xmax.setEnabled(self.eta_autoscale==0)
-            self.le_eta_ymin.setEnabled(self.eta_autoscale==0)
-            self.le_eta_ymax.setEnabled(self.eta_autoscale==0)
-
-        orangegui.checkBox(boxr, self, "eta_autoscale", "Autoscale", callback=set_eta_autoscale)
-
-        def refresh_caglioti_eta():
-            instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, 0)
-            if not instrumental_parameters is None: self.__refresh_caglioti_eta(instrumental_parameters)
-
-        self.le_eta_xmin = gui.lineEdit(boxr, self, "eta_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
-        self.le_eta_xmax = gui.lineEdit(boxr, self, "eta_xmax", "2\u03b8 max", labelWidth=70, valueType=float)
-        self.le_eta_ymin = gui.lineEdit(boxr, self, "eta_ymin", "\u03b7 min", labelWidth=70, valueType=float)
-        self.le_eta_ymax = gui.lineEdit(boxr, self, "eta_ymax", "\u03b7 max", labelWidth=70, valueType=float)
-        gui.button(boxr, self, "Refresh", height=40, callback=refresh_caglioti_eta)
-
-        set_eta_autoscale()
-
-        self.plot_ipf_eta = PlotWindow()
-        self.plot_ipf_eta.setDefaultPlotLines(True)
-        self.plot_ipf_eta.setActiveCurveColor(color="#00008B")
-        self.plot_ipf_eta.setGraphXLabel("2\u03b8 (deg)")
-        self.plot_ipf_eta.setGraphYLabel("\u03b7")
-
-        boxl.layout().addWidget(self.plot_ipf_eta)
-
-        box = gui.widgetBox(self.tab_plot_lab6, "", orientation="horizontal")
-
-        boxl = gui.widgetBox(box, "", orientation="vertical")
-        boxr = gui.widgetBox(box, "", orientation="vertical", width=150)
-
-        def set_lab6_autoscale():
-            self.le_lab6_xmin.setEnabled(self.lab6_autoscale==0)
-            self.le_lab6_xmax.setEnabled(self.lab6_autoscale==0)
-            self.le_lab6_ymin.setEnabled(self.lab6_autoscale==0)
-            self.le_lab6_ymax.setEnabled(self.lab6_autoscale==0)
-
-        orangegui.checkBox(boxr, self, "lab6_autoscale", "Autoscale", callback=set_lab6_autoscale)
-
-        def refresh_lab6():
-            shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, 0)
-            if not shift_parameters is None: self.__refresh_lab6(shift_parameters)
-
-        self.le_lab6_xmin = gui.lineEdit(boxr, self, "lab6_xmin", "2\u03b8 min", labelWidth=70, valueType=float)
-        self.le_lab6_xmax = gui.lineEdit(boxr, self, "lab6_xmax", "2\u03b8 max", labelWidth=70, valueType=float)
-        self.le_lab6_ymin = gui.lineEdit(boxr, self, "lab6_ymin", "\u0394(2\u03b8) min", labelWidth=70, valueType=float)
-        self.le_lab6_ymax = gui.lineEdit(boxr, self, "lab6_ymax", "\u0394(2\u03b8) max", labelWidth=70, valueType=float)
-        gui.button(boxr, self, "Refresh", height=40, callback=refresh_lab6)
-
-        set_lab6_autoscale()
-
-        self.plot_ipf_lab6 = PlotWindow()
-        self.plot_ipf_lab6.setDefaultPlotLines(True)
-        self.plot_ipf_lab6.setActiveCurveColor(color="#00008B")
-        self.plot_ipf_lab6.setGraphXLabel("2\u03b8 (deg)")
-        self.plot_ipf_lab6.setGraphYLabel("\u0394(2\u03b8) (deg)")
-
-        boxl.layout().addWidget(self.plot_ipf_lab6)
-
-        # -------------------
+        # ---------------------------------------------------------------
 
         self.table_fit_in = self.__create_table_widget(is_output=False)
+
         self.tab_fit_in.layout().addWidget(self.table_fit_in, alignment=Qt.AlignHCenter)
 
-        # -------------------
+        # ---------------------------------------------------------------
 
         self.table_fit_out = self.__create_table_widget()
+
         self.tab_fit_out.layout().addWidget(self.table_fit_out, alignment=Qt.AlignHCenter)
 
     def write_stdout(self, text):
@@ -461,18 +387,18 @@ class OWFitter(OWGenericWidget):
                 if self.fit_global_parameters.instrumental_parameters is None:
                     self.show_ipf = 0
                     self.cb_show_ipf.setEnabled(False)
-                    self.tab_plot_ipf.setEnabled(False)
+                    self.__set_enable_ipf_tabs(False)
                 else:
                     self.cb_show_ipf.setEnabled(True)
-                    self.tab_plot_ipf.setEnabled(True)
+                    self.__set_enable_ipf_tabs(True)
 
                 if self.fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__) is None:
                     self.show_shift = 0
                     self.cb_show_shift.setEnabled(False)
-                    self.tab_plot_lab6.setEnabled(False)
+                    self.__set_enabled_shift_tabs(False)
                 else:
                     self.cb_show_shift.setEnabled(True)
-                    self.tab_plot_lab6.setEnabled(True)
+                    self.__set_enabled_shift_tabs(True)
 
                 if self.fit_global_parameters.size_parameters is None:
                     self.show_size = 0
@@ -513,6 +439,15 @@ class OWFitter(OWGenericWidget):
                                  QMessageBox.Ok)
 
             if self.IS_DEVELOP: raise e
+
+    def __set_enable_ipf_tabs(self, enabled=True):
+        for index in range(len(self.tabs_plot_ipf)):
+            self.tab_plot_fwhm[index].setEnabled(enabled)
+            self.tab_plot_eta[index].setEnabled(enabled)
+
+    def __set_enabled_shift_tabs(self, enabled=True):
+        for index in range(len(self.tabs_plot_ipf)):
+            self.tab_plot_lab6[index].setEnabled(enabled)
 
     def __create_table_widget(self, is_output=True):
         from PyQt5.QtWidgets import QAbstractItemView
@@ -722,7 +657,6 @@ class OWFitter(OWGenericWidget):
         if ConfirmDialog.confirmed(self, "Confirm STOP?"):
             self.stop_fit = True
 
-
     def send_current_fit(self):
         if not self.fit_global_parameters is None:
             self.fit_global_parameters.regenerate_parameters()
@@ -780,7 +714,7 @@ class OWFitter(OWGenericWidget):
 
         self.__refresh_fit(diffraction_patterns_number, is_init)
         self.__refresh_fit_data()
-        self.__refresh_instrumental_function(diffraction_patterns_number)
+        self.__refresh_ipf(diffraction_patterns_number, is_init)
         self.__refresh_size(phases_number, is_init)
         self.__refresh_strain(phases_number, is_init)
         self.__refresh_integral_breadth(phases_number, diffraction_patterns_number, is_init)
@@ -841,73 +775,83 @@ class OWFitter(OWGenericWidget):
             self.plot_fit_wss.addCurve(x, self.current_wss, legend="wss", symbol='o', color="blue")
             self.plot_fit_gof.addCurve(x, self.current_gof, legend="gof", symbol='o', color="red")
 
+    # ------------------------------------------------------------------------
+
+    def __refresh_ipf(self, diffraction_patterns_number, is_init=False):
+        if is_init: self.__build_plot_ipf()
+
+        for diffraction_pattern_index in range(diffraction_patterns_number):
+            instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+            if not instrumental_parameters is None:
+                self.refresh_caglioti_fwhm(instrumental_parameters, diffraction_pattern_index)
+                self.refresh_caglioti_eta(instrumental_parameters, diffraction_pattern_index)
+
+            shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
+            if not shift_parameters is None: self.refresh_lab6(shift_parameters, diffraction_pattern_index)
 
     # ------------------------------------------------------------------------
 
-    def __refresh_instrumental_function(self, diffraction_pattern_index=0):
-        instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
-        if not instrumental_parameters is None:
-            self.__refresh_caglioti_fwhm(instrumental_parameters)
-            self.__refresh_caglioti_eta(instrumental_parameters)
-
-        shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
-        if not shift_parameters is None: self.__refresh_lab6(shift_parameters)
-
-    # ------------------------------------------------------------------------
-
-    def __refresh_caglioti_fwhm(self, instrumental_parameters):
+    def refresh_caglioti_fwhm(self, instrumental_parameters, diffraction_pattern_index):
         if self.show_ipf==1:
-            if self.fwhm_autoscale == 1: twotheta_fwhm = numpy.arange(0.0, 150.0, 0.5)
-            else:                        twotheta_fwhm = numpy.arange(self.fwhm_xmin, self.fwhm_xmax, 0.5)
-
-            theta_fwhm_radians = numpy.radians(0.5*twotheta_fwhm)
+            if self.fwhm_autoscale[diffraction_pattern_index] == 1:
+                twotheta_fwhm = numpy.arange(0.0, 150.0, 0.5)
+            else:
+                twotheta_fwhm = numpy.arange(self.fwhm_xmin[diffraction_pattern_index], self.fwhm_xmax[diffraction_pattern_index], 0.5)
 
             y = caglioti_fwhm(instrumental_parameters.U.value,
                               instrumental_parameters.V.value,
                               instrumental_parameters.W.value,
-                              theta_fwhm_radians)
+                              numpy.radians(0.5*twotheta_fwhm))
 
-            self.plot_ipf_fwhm.addCurve(twotheta_fwhm, y, legend="fwhm", color="blue")
+            self.plot_ipf_fwhm[diffraction_pattern_index].addCurve(twotheta_fwhm, y, legend="fwhm", color="blue")
 
-            if self.fwhm_autoscale == 0 and self.fwhm_ymin < self.fwhm_xmax: self.plot_ipf_fwhm.setGraphYLimits(ymin=self.fwhm_ymin, ymax=self.fwhm_ymax)
+            if self.fwhm_autoscale[diffraction_pattern_index] == 0 and \
+                    self.fwhm_ymin[diffraction_pattern_index] < self.fwhm_xmax[diffraction_pattern_index]:
+                self.plot_ipf_fwhm[diffraction_pattern_index].setGraphYLimits(ymin=self.fwhm_ymin[diffraction_pattern_index],
+                                                                              ymax=self.fwhm_ymax[diffraction_pattern_index])
 
     # ------------------------------------------------------------------------
 
-    def __refresh_caglioti_eta(self, instrumental_parameters):
+    def refresh_caglioti_eta(self, instrumental_parameters, diffraction_pattern_index):
         if self.show_ipf==1:
-            if self.eta_autoscale == 1: twotheta_eta = numpy.arange(0.0, 150.0, 0.5)
-            else:                       twotheta_eta = numpy.arange(self.eta_xmin, self.eta_xmax, 0.5)
-
-            theta_eta_radians = numpy.radians(0.5*twotheta_eta)
+            if self.eta_autoscale[diffraction_pattern_index] == 1:
+                twotheta_eta = numpy.arange(0.0, 150.0, 0.5)
+            else:
+                twotheta_eta = numpy.arange(self.eta_xmin, self.eta_xmax, 0.5)
 
             y = caglioti_eta(instrumental_parameters.a.value,
                              instrumental_parameters.b.value,
                              instrumental_parameters.c.value,
-                             theta_eta_radians)
+                             numpy.radians(0.5*twotheta_eta))
 
-            self.plot_ipf_eta.addCurve(twotheta_eta, y, legend="eta", color="blue")
+            self.plot_ipf_eta[diffraction_pattern_index].addCurve(twotheta_eta, y, legend="eta", color="blue")
 
-            if self.eta_autoscale == 0 and self.eta_ymin < self.eta_xmax: self.plot_ipf_eta.setGraphYLimits(ymin=self.eta_ymin, ymax=self.eta_ymax)
+            if self.eta_autoscale[diffraction_pattern_index] == 0 and \
+                    self.eta_ymin[diffraction_pattern_index] < self.eta_xmax[diffraction_pattern_index]:
+                self.plot_ipf_eta[diffraction_pattern_index].setGraphYLimits(ymin=self.eta_ymin[diffraction_pattern_index],
+                                                                             ymax=self.eta_ymax[diffraction_pattern_index])
 
     # ------------------------------------------------------------------------
 
-    def __refresh_lab6(self, shift_parameters):
+    def refresh_lab6(self, shift_parameters, diffraction_pattern_index):
         if self.show_shift==1:
-            if self.lab6_autoscale == 1: twotheta_lab6 = numpy.arange(0.0, 150.0, 0.5)
-            else:                        twotheta_lab6 = numpy.arange(self.lab6_xmin, self.lab6_xmax, 0.5)
-
-            theta_lab6_radians = numpy.radians(0.5*twotheta_lab6)
+            if self.lab6_autoscale[diffraction_pattern_index] == 1: 
+                twotheta_lab6 = numpy.arange(0.0, 150.0, 0.5)
+            else:                        
+                twotheta_lab6 = numpy.arange(self.lab6_xmin, self.lab6_xmax, 0.5)
 
             y = delta_two_theta_lab6(shift_parameters.ax.value,
                                      shift_parameters.bx.value,
                                      shift_parameters.cx.value,
                                      shift_parameters.dx.value,
                                      shift_parameters.ex.value,
-                                     theta_lab6_radians)
+                                     numpy.radians(0.5*twotheta_lab6))
 
-            self.plot_ipf_lab6.addCurve(twotheta_lab6, y, legend="lab6", color="blue")
+            self.plot_ipf_lab6[diffraction_pattern_index].addCurve(twotheta_lab6, y, legend="lab6", color="blue")
 
-            if self.lab6_autoscale == 0 and self.lab6_ymin < self.lab6_xmax: self.plot_ipf_lab6.setGraphYLimits(ymin=self.lab6_ymin, ymax=self.lab6_ymax)
+            if self.lab6_autoscale[diffraction_pattern_index] == 0 and \
+                    self.lab6_ymin[diffraction_pattern_index] < self.lab6_xmax[diffraction_pattern_index]: 
+                self.plot_ipf_lab6[diffraction_pattern_index].setGraphYLimits(ymin=self.lab6_ymin[diffraction_pattern_index], ymax=self.lab6_ymax[diffraction_pattern_index])
 
     # ------------------------------------------------------------------------
 
@@ -1098,6 +1042,66 @@ class OWFitter(OWGenericWidget):
             self.plot_fit.append(plot_fit)
             tab_plot_fit_data.layout().addWidget(plot_fit)
 
+    def __build_plot_ipf(self):
+        fit_global_parameters = self.__fit_global_parameters()
+
+        self.plot_ipf_fwhm = []
+        self.plot_ipf_eta = []
+        self.plot_ipf_lab6 =[]
+        self.tab_plot_fwhm = []
+        self.tab_plot_eta  = []
+        self.tab_plot_lab6 = []
+        self.fwhm_box_array = []
+        self.eta_box_array  = []
+        self.lab6_box_array = []
+
+        self.tabs_plot_ipf.clear()
+
+        for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameters)):
+            tab_plot_ipf = gui.tabWidget(gui.createTabPage(self.tabs_plot_ipf, OWGenericWidget.diffraction_pattern_name(fit_global_parameters, diffraction_pattern_index)))
+
+            tab_plot_fwhm = gui.createTabPage(tab_plot_ipf, "Caglioti's FWHM")
+            tab_plot_eta  = gui.createTabPage(tab_plot_ipf, "Caglioti's \u03b7")
+            tab_plot_lab6 = gui.createTabPage(tab_plot_ipf, "LaB6 Tan Correction")
+
+            ## FWHM ---------------------------------------------------------------
+            
+            self.fwhm_box_array.append(FWHMBox(widget=self, 
+                                               parent=tab_plot_fwhm, 
+                                               fit_global_parameters=fit_global_parameters, 
+                                               diffraction_pattern_index=diffraction_pattern_index,
+                                               fwhm_autoscale=self.fwhm_autoscale[diffraction_pattern_index],
+                                               fwhm_xmin=self.fwhm_xmin[diffraction_pattern_index],
+                                               fwhm_xmax=self.fwhm_xmax[diffraction_pattern_index],
+                                               fwhm_ymin=self.fwhm_ymin[diffraction_pattern_index],
+                                               fwhm_ymax=self.fwhm_ymax[diffraction_pattern_index]))
+            
+            self.eta_box_array.append(EtaBox(widget=self, 
+                                             parent=tab_plot_eta, 
+                                             fit_global_parameters=fit_global_parameters, 
+                                             diffraction_pattern_index=diffraction_pattern_index,
+                                             eta_autoscale=self.eta_autoscale[diffraction_pattern_index],
+                                             eta_xmin=self.eta_xmin[diffraction_pattern_index],
+                                             eta_xmax=self.eta_xmax[diffraction_pattern_index],
+                                             eta_ymin=self.eta_ymin[diffraction_pattern_index],
+                                             eta_ymax=self.eta_ymax[diffraction_pattern_index]))
+
+            self.lab6_box_array.append(Lab6Box(widget=self,
+                                               parent=tab_plot_lab6, 
+                                               fit_global_parameters=fit_global_parameters, 
+                                               diffraction_pattern_index=diffraction_pattern_index,
+                                               lab6_autoscale=self.lab6_autoscale[diffraction_pattern_index],
+                                               lab6_xmin=self.lab6_xmin[diffraction_pattern_index],
+                                               lab6_xmax=self.lab6_xmax[diffraction_pattern_index],
+                                               lab6_ymin=self.lab6_ymin[diffraction_pattern_index],
+                                               lab6_ymax=self.lab6_ymax[diffraction_pattern_index]))
+
+            self.tab_plot_fwhm.append(tab_plot_fwhm)
+            self.tab_plot_eta.append(tab_plot_eta)
+            self.tab_plot_lab6.append(tab_plot_lab6)
+
+        self.dumpSettings()
+
     # ------------------------------------------------------------------------
 
     def __build_plot_size(self):
@@ -1183,7 +1187,6 @@ class OWFitter(OWGenericWidget):
                 plot_integral_breadth_phases.append(plot_integral_breadth)
 
             self.plot_integral_breadth.append(plot_integral_breadth_phases)
-
 
     ##########################################
     # THREADING
@@ -1278,7 +1281,410 @@ class OWFitter(OWGenericWidget):
 
         if self.IS_DEVELOP: raise self.thread_exception
 
+    def dumpSettings(self):
+        self.dump_fwhm_autoscale()
+        self.dump_fwhm_xmin()
+        self.dump_fwhm_xmax()
+        self.dump_fwhm_ymin()
+        self.dump_fwhm_ymax()
 
+    def dump_fwhm_autoscale(self):
+        bkp_fwhm_autoscale = copy.deepcopy(self.fwhm_autoscale)
+
+        try:
+            self.fwhm_autoscale = []
+
+            for index in range(len(self.fwhm_box_array)):
+                self.fwhm_autoscale.append(self.fwhm_box_array[index].fwhm_autoscale)
+        except Exception as e:
+            self.fwhm_autoscale = copy.deepcopy(bkp_fwhm_autoscale)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_fwhm_xmin(self):
+        bkp_fwhm_xmin = copy.deepcopy(self.fwhm_xmin)
+
+        try:
+            self.fwhm_xmin = []
+
+            for index in range(len(self.fwhm_box_array)):
+                self.fwhm_xmin.append(self.fwhm_box_array[index].fwhm_xmin)
+        except Exception as e:
+            self.fwhm_xmin = copy.deepcopy(bkp_fwhm_xmin)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_fwhm_xmax(self):
+        bkp_fwhm_xmax = copy.deepcopy(self.fwhm_xmax)
+
+        try:
+            self.fwhm_xmax = []
+
+            for index in range(len(self.fwhm_box_array)):
+                self.fwhm_xmax.append(self.fwhm_box_array[index].fwhm_xmax)
+        except Exception as e:
+            self.fwhm_xmax = copy.deepcopy(bkp_fwhm_xmax)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_fwhm_ymin(self):
+        bkp_fwhm_ymin = copy.deepcopy(self.fwhm_ymin)
+
+        try:
+            self.fwhm_ymin = []
+
+            for index in range(len(self.fwhm_box_array)):
+                self.fwhm_ymin.append(self.fwhm_box_array[index].fwhm_ymin)
+        except Exception as e:
+            self.fwhm_ymin = copy.deepcopy(bkp_fwhm_ymin)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_fwhm_ymax(self):
+        bkp_fwhm_ymax = copy.deepcopy(self.fwhm_ymax)
+
+        try:
+            self.fwhm_ymax = []
+
+            for index in range(len(self.fwhm_box_array)):
+                self.fwhm_ymax.append(self.fwhm_box_array[index].fwhm_ymax)
+        except Exception as e:
+            self.fwhm_ymax = copy.deepcopy(bkp_fwhm_ymax)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_eta_autoscale(self):
+        bkp_eta_autoscale = copy.deepcopy(self.eta_autoscale)
+
+        try:
+            self.eta_autoscale = []
+
+            for index in range(len(self.eta_box_array)):
+                self.eta_autoscale.append(self.eta_box_array[index].eta_autoscale)
+        except Exception as e:
+            self.eta_autoscale = copy.deepcopy(bkp_eta_autoscale)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_eta_xmin(self):
+        bkp_eta_xmin = copy.deepcopy(self.eta_xmin)
+
+        try:
+            self.eta_xmin = []
+
+            for index in range(len(self.eta_box_array)):
+                self.eta_xmin.append(self.eta_box_array[index].eta_xmin)
+        except Exception as e:
+            self.eta_xmin = copy.deepcopy(bkp_eta_xmin)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_eta_xmax(self):
+        bkp_eta_xmax = copy.deepcopy(self.eta_xmax)
+
+        try:
+            self.eta_xmax = []
+
+            for index in range(len(self.eta_box_array)):
+                self.eta_xmax.append(self.eta_box_array[index].eta_xmax)
+        except Exception as e:
+            self.eta_xmax = copy.deepcopy(bkp_eta_xmax)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_eta_ymin(self):
+        bkp_eta_ymin = copy.deepcopy(self.eta_ymin)
+
+        try:
+            self.eta_ymin = []
+
+            for index in range(len(self.eta_box_array)):
+                self.eta_ymin.append(self.eta_box_array[index].eta_ymin)
+        except Exception as e:
+            self.eta_ymin = copy.deepcopy(bkp_eta_ymin)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_eta_ymax(self):
+        bkp_eta_ymax = copy.deepcopy(self.eta_ymax)
+
+        try:
+            self.eta_ymax = []
+
+            for index in range(len(self.eta_box_array)):
+                self.eta_ymax.append(self.eta_box_array[index].eta_ymax)
+        except Exception as e:
+            self.eta_ymax = copy.deepcopy(bkp_eta_ymax)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_lab6_autoscale(self):
+        bkp_lab6_autoscale = copy.deepcopy(self.lab6_autoscale)
+
+        try:
+            self.lab6_autoscale = []
+
+            for index in range(len(self.lab6_box_array)):
+                self.lab6_autoscale.append(self.lab6_box_array[index].lab6_autoscale)
+        except Exception as e:
+            self.lab6_autoscale = copy.deepcopy(bkp_lab6_autoscale)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_lab6_xmin(self):
+        bkp_lab6_xmin = copy.deepcopy(self.lab6_xmin)
+
+        try:
+            self.lab6_xmin = []
+
+            for index in range(len(self.lab6_box_array)):
+                self.lab6_xmin.append(self.lab6_box_array[index].lab6_xmin)
+        except Exception as e:
+            self.lab6_xmin = copy.deepcopy(bkp_lab6_xmin)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_lab6_xmax(self):
+        bkp_lab6_xmax = copy.deepcopy(self.lab6_xmax)
+
+        try:
+            self.lab6_xmax = []
+
+            for index in range(len(self.lab6_box_array)):
+                self.lab6_xmax.append(self.lab6_box_array[index].lab6_xmax)
+        except Exception as e:
+            self.lab6_xmax = copy.deepcopy(bkp_lab6_xmax)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_lab6_ymin(self):
+        bkp_lab6_ymin = copy.deepcopy(self.lab6_ymin)
+
+        try:
+            self.lab6_ymin = []
+
+            for index in range(len(self.lab6_box_array)):
+                self.lab6_ymin.append(self.lab6_box_array[index].lab6_ymin)
+        except Exception as e:
+            self.lab6_ymin = copy.deepcopy(bkp_lab6_ymin)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_lab6_ymax(self):
+        bkp_lab6_ymax = copy.deepcopy(self.lab6_ymax)
+
+        try:
+            self.lab6_ymax = []
+
+            for index in range(len(self.lab6_box_array)):
+                self.lab6_ymax.append(self.lab6_box_array[index].lab6_ymax)
+        except Exception as e:
+            self.lab6_ymax = copy.deepcopy(bkp_lab6_ymax)
+
+            if self.IS_DEVELOP: raise e
+            
+from PyQt5.QtCore import Qt
+
+from PyQt5.QtWidgets import QVBoxLayout
+from orangecontrib.wonder.util.gui_utility import InnerBox
+
+class FWHMBox(InnerBox):
+    is_on_init = True
+
+    def __init__(self,
+                 widget=None,
+                 parent=None,
+                 fit_global_parameters = None,
+                 diffraction_pattern_index=0,
+                 fwhm_autoscale=1,
+                 fwhm_xmin=0.0,
+                 fwhm_xmax=150.0,
+                 fwhm_ymin=0.0,
+                 fwhm_ymax=1.0):
+        super(FWHMBox, self).__init__()
+
+        self.setLayout(QVBoxLayout())
+        self.layout().setAlignment(Qt.AlignTop)
+
+        self.fwhm_autoscale = fwhm_autoscale
+        self.fwhm_xmin = fwhm_xmin
+        self.fwhm_xmax = fwhm_xmax
+        self.fwhm_ymin = fwhm_ymin
+        self.fwhm_ymax = fwhm_ymax
+
+        parent.layout().addWidget(self)
+        container = self
+
+        box = gui.widgetBox(container, "", orientation="horizontal")
+
+        boxl = gui.widgetBox(box, "", orientation="vertical")
+        boxr = gui.widgetBox(box, "", orientation="vertical", width=150)
+
+        def set_fwhm_autoscale():
+            self.le_fwhm_xmin.setEnabled(self.fwhm_autoscale==0)
+            self.le_fwhm_xmax.setEnabled(self.fwhm_autoscale==0)
+            self.le_fwhm_ymin.setEnabled(self.fwhm_autoscale==0)
+            self.le_fwhm_ymax.setEnabled(self.fwhm_autoscale==0)
+            
+            if not self.is_on_init: widget.dump_fwhm_autoscale()
+
+        orangegui.checkBox(boxr, self, "fwhm_autoscale", "Autoscale", callback=set_fwhm_autoscale)
+
+        def refresh_caglioti_fwhm():
+            if not fit_global_parameters is None:
+                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                if not instrumental_parameters is None: widget.refresh_caglioti_fwhm(instrumental_parameters, diffraction_pattern_index)
+
+        self.le_fwhm_xmin = gui.lineEdit(boxr, self, "fwhm_xmin", "2\u03b8 min", labelWidth=70, valueType=float, callback=widget.dump_fwhm_xmin)
+        self.le_fwhm_xmax = gui.lineEdit(boxr, self, "fwhm_xmax", "2\u03b8 max", labelWidth=70, valueType=float, callback=widget.dump_fwhm_xmax)
+        self.le_fwhm_ymin = gui.lineEdit(boxr, self, "fwhm_ymin", "FWHM min", labelWidth=70, valueType=float, callback=widget.dump_fwhm_ymin)
+        self.le_fwhm_ymax = gui.lineEdit(boxr, self, "fwhm_ymax", "FWHM max", labelWidth=70, valueType=float, callback=widget.dump_fwhm_ymax)
+        gui.button(boxr, self, "Refresh", height=40, callback=refresh_caglioti_fwhm)
+
+        set_fwhm_autoscale()
+
+        plot_ipf_fwhm = PlotWindow()
+        plot_ipf_fwhm.setDefaultPlotLines(True)
+        plot_ipf_fwhm.setActiveCurveColor(color="#00008B")
+        plot_ipf_fwhm.setGraphXLabel("2\u03b8 (deg)")
+        plot_ipf_fwhm.setGraphYLabel("FWHM (deg)")
+
+        boxl.layout().addWidget(plot_ipf_fwhm)
+        widget.plot_ipf_fwhm.append(plot_ipf_fwhm)
+
+        self.is_on_init = False
+
+class EtaBox(InnerBox):
+    is_on_init = True
+
+    def __init__(self,
+                 widget=None,
+                 parent=None,
+                 fit_global_parameters=None,
+                 diffraction_pattern_index=0,
+                 eta_autoscale=1,
+                 eta_xmin=0.0,
+                 eta_xmax=150.0,
+                 eta_ymin=0.0,
+                 eta_ymax=1.0):
+        super(EtaBox, self).__init__()
+
+        self.setLayout(QVBoxLayout())
+        self.layout().setAlignment(Qt.AlignTop)
+
+        self.eta_autoscale = eta_autoscale
+        self.eta_xmin = eta_xmin
+        self.eta_xmax = eta_xmax
+        self.eta_ymin = eta_ymin
+        self.eta_ymax = eta_ymax
+
+        parent.layout().addWidget(self)
+        container = self
+
+        box = gui.widgetBox(container, "", orientation="horizontal")
+
+        boxl = gui.widgetBox(box, "", orientation="vertical")
+        boxr = gui.widgetBox(box, "", orientation="vertical", width=150)
+
+        def set_eta_autoscale():
+            self.le_eta_xmin.setEnabled(self.eta_autoscale == 0)
+            self.le_eta_xmax.setEnabled(self.eta_autoscale == 0)
+            self.le_eta_ymin.setEnabled(self.eta_autoscale == 0)
+            self.le_eta_ymax.setEnabled(self.eta_autoscale == 0)
+
+            if not self.is_on_init: widget.dump_eta_autoscale()
+
+        orangegui.checkBox(boxr, self, "eta_autoscale", "Autoscale", callback=set_eta_autoscale)
+
+        def refresh_caglioti_eta():
+            if not fit_global_parameters is None:
+                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                if not instrumental_parameters is None: widget.refresh_caglioti_eta(instrumental_parameters, diffraction_pattern_index)
+
+        self.le_eta_xmin = gui.lineEdit(boxr, self, "eta_xmin", "2\u03b8 min", labelWidth=70, valueType=float, callback=widget.dump_eta_xmin)
+        self.le_eta_xmax = gui.lineEdit(boxr, self, "eta_xmax", "2\u03b8 max", labelWidth=70, valueType=float, callback=widget.dump_eta_xmax)
+        self.le_eta_ymin = gui.lineEdit(boxr, self, "eta_ymin", "FWHM min", labelWidth=70, valueType=float, callback=widget.dump_eta_ymin)
+        self.le_eta_ymax = gui.lineEdit(boxr, self, "eta_ymax", "FWHM max", labelWidth=70, valueType=float, callback=widget.dump_eta_ymax)
+        gui.button(boxr, self, "Refresh", height=40, callback=refresh_caglioti_eta)
+
+        set_eta_autoscale()
+
+        plot_ipf_eta = PlotWindow()
+        plot_ipf_eta.setDefaultPlotLines(True)
+        plot_ipf_eta.setActiveCurveColor(color="#00008B")
+        plot_ipf_eta.setGraphXLabel("2\u03b8 (deg)")
+        plot_ipf_eta.setGraphYLabel("FWHM (deg)")
+
+        boxl.layout().addWidget(plot_ipf_eta)
+        widget.plot_ipf_eta.append(plot_ipf_eta)
+
+        self.is_on_init = False
+
+class Lab6Box(InnerBox):
+    is_on_init = True
+
+    def __init__(self,
+                 widget=None,
+                 parent=None,
+                 fit_global_parameters=None,
+                 diffraction_pattern_index=0,
+                 lab6_autoscale=1,
+                 lab6_xmin=0.0,
+                 lab6_xmax=150.0,
+                 lab6_ymin=0.0,
+                 lab6_ymax=1.0):
+        super(Lab6Box, self).__init__()
+
+        self.setLayout(QVBoxLayout())
+        self.layout().setAlignment(Qt.AlignTop)
+
+        self.lab6_autoscale = lab6_autoscale
+        self.lab6_xmin = lab6_xmin
+        self.lab6_xmax = lab6_xmax
+        self.lab6_ymin = lab6_ymin
+        self.lab6_ymax = lab6_ymax
+
+        parent.layout().addWidget(self)
+        container = self
+
+        box = gui.widgetBox(container, "", orientation="horizontal")
+
+        boxl = gui.widgetBox(box, "", orientation="vertical")
+        boxr = gui.widgetBox(box, "", orientation="vertical", width=150)
+
+        def set_lab6_autoscale():
+            self.le_lab6_xmin.setEnabled(self.lab6_autoscale == 0)
+            self.le_lab6_xmax.setEnabled(self.lab6_autoscale == 0)
+            self.le_lab6_ymin.setEnabled(self.lab6_autoscale == 0)
+            self.le_lab6_ymax.setEnabled(self.lab6_autoscale == 0)
+
+            if not self.is_on_init: widget.dump_lab6_autoscale()
+
+        orangegui.checkBox(boxr, self, "lab6_autoscale", "Autoscale", callback=set_lab6_autoscale)
+
+        def refresh_lab6():
+            if not fit_global_parameters is None:
+                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                if not instrumental_parameters is None: widget.refresh_lab6(instrumental_parameters, diffraction_pattern_index)
+
+        self.le_lab6_xmin = gui.lineEdit(boxr, self, "lab6_xmin", "2\u03b8 min", labelWidth=70, valueType=float, callback=widget.dump_lab6_xmin)
+        self.le_lab6_xmax = gui.lineEdit(boxr, self, "lab6_xmax", "2\u03b8 max", labelWidth=70, valueType=float, callback=widget.dump_lab6_xmax)
+        self.le_lab6_ymin = gui.lineEdit(boxr, self, "lab6_ymin", "FWHM min", labelWidth=70, valueType=float, callback=widget.dump_lab6_ymin)
+        self.le_lab6_ymax = gui.lineEdit(boxr, self, "lab6_ymax", "FWHM max", labelWidth=70, valueType=float, callback=widget.dump_lab6_ymax)
+        gui.button(boxr, self, "Refresh", height=40, callback=refresh_lab6)
+
+        set_lab6_autoscale()
+
+        plot_ipf_lab6 = PlotWindow()
+        plot_ipf_lab6.setDefaultPlotLines(True)
+        plot_ipf_lab6.setActiveCurveColor(color="#00008B")
+        plot_ipf_lab6.setGraphXLabel("2\u03b8 (deg)")
+        plot_ipf_lab6.setGraphYLabel("FWHM (deg)")
+
+        boxl.layout().addWidget(plot_ipf_lab6)
+        widget.plot_ipf_lab6.append(plot_ipf_lab6)
+
+        self.is_on_init = False
 # ------------------------------------------------------------------------
 
 from PyQt5.QtCore import QThread, pyqtSignal

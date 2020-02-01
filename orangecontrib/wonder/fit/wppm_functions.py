@@ -76,7 +76,7 @@ def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_ind
 
     wavelength = incident_radiation.wavelength.value
 
-    I = fit_function_reciprocal(Utilities.__s(0.5*numpy.radians(twotheta), wavelength),
+    I = fit_function_reciprocal(Utilities.s(0.5*numpy.radians(twotheta), wavelength),
                                 fit_global_parameters,
                                 diffraction_pattern_index)
 
@@ -493,7 +493,7 @@ def create_one_peak(diffraction_pattern_index,
         s, I = FourierTransform.get_empty_fft(n_steps=fit_global_parameters.fit_initialization.fft_parameters.n_step,
                                               dL=fit_space_parameters.dL)
 
-    s_hkl = Utilities.__s_hkl(lattice_parameter, reflection.h, reflection.k, reflection.l)
+    s_hkl = Utilities.s_hkl(lattice_parameter, reflection.h, reflection.k, reflection.l)
 
     s += s_hkl
 
@@ -522,7 +522,7 @@ def create_one_peak(diffraction_pattern_index,
     # PEAK SHIFTS  -----------------------------------------------------------------------------------------------------
 
     if not fit_global_parameters.shift_parameters is None:
-        theta = Utilities.__theta(s, wavelength)
+        theta = Utilities.theta(s, wavelength)
 
         for key in fit_global_parameters.shift_parameters.keys():
             shift_parameters = fit_global_parameters.get_shift_parameters_item(key, diffraction_pattern_index)
@@ -536,7 +536,7 @@ def create_one_peak(diffraction_pattern_index,
                                              shift_parameters.dx.value,
                                              shift_parameters.ex.value)
                 elif key == ZeroError.__name__:
-                    s += Utilities.__s(shift_parameters.shift.value/2, wavelength)
+                    s += Utilities.s(shift_parameters.shift.value/2, wavelength)
                 elif key == SpecimenDisplacement.__name__:
                     s += specimen_displacement(theta, wavelength, shift_parameters.goniometer_radius, shift_parameters.displacement.value)
 
@@ -883,7 +883,7 @@ def size_function_wulff_solids_lognormal(L, h, k, l, sigma, mu, truncation, face
 
 
 def strain_invariant_function_pah(L, h, k, l, lattice_parameter, a, b, C_hkl):
-    s_hkl = Utilities.__s_hkl(lattice_parameter, h, k, l)
+    s_hkl = Utilities.s_hkl(lattice_parameter, h, k, l)
 
     return numpy.exp(-((2*numpy.pi**2)/((s_hkl**2)*(lattice_parameter**4))) * C_hkl * (a*L + b*(L**2)))
 
@@ -955,7 +955,7 @@ def C_hkl_krivoglaz_wilkens(h, k, l, Ae, Be, As, Bs, mix):
 
 
 def strain_krivoglaz_wilkens(L, h, k, l, lattice_parameter, rho, Re, Ae, Be, As, Bs, mix, b):
-    s_hkl = Utilities.__s_hkl(lattice_parameter, h, k, l)
+    s_hkl = Utilities.s_hkl(lattice_parameter, h, k, l)
     C_hkl = C_hkl_krivoglaz_wilkens(h, k, l, Ae, Be, As, Bs, mix)
 
     return numpy.exp(-(0.5*pi*(s_hkl**2)*(b**2)*rho*C_hkl*(L**2)*f_star(L/Re)))
@@ -1028,7 +1028,7 @@ def strain_warren_function(L, h, k, l, lattice_parameter, average_lattice_parame
     new_delta_l  = numpy.interp(L, l_local, new_delta_l)
     new_delta_l2 = numpy.interp(L, l_local, new_delta_l2)
 
-    s_hkl = Utilities.__s_hkl(average_lattice_parameter, h, k, l)
+    s_hkl = Utilities.s_hkl(average_lattice_parameter, h, k, l)
 
     return re_warren_strain(s_hkl, new_delta_l2), im_warren_strain(s_hkl, new_delta_l)
 
@@ -1204,7 +1204,7 @@ def specimen_displacement(theta, wavelength, goniometer_radius, displacement): #
     return delta_twotheta*numpy.cos(theta)/wavelength
 
 def instrumental_function(L, h, k, l, lattice_parameter, wavelength, U, V, W, a, b, c):
-    theta = Utilities.__theta_hkl(lattice_parameter, h, k, l, wavelength)
+    theta = Utilities.theta_hkl(lattice_parameter, h, k, l, wavelength)
 
     eta = caglioti_eta(a, b, c, numpy.degrees(theta))
     sigma = numpy.radians(caglioti_fwhm(U, V, W, theta))*0.5*(numpy.cos(theta)/wavelength)
