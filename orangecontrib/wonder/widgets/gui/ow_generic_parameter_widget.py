@@ -10,8 +10,7 @@ from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalP
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import SpecimenDisplacement
 
 
-class OWGenericParameterWidget(OWGenericWidget):
-
+class OWGenericDiffractionPatternParametersWidget(OWGenericWidget):
     want_main_area = False
 
     use_single_parameter_set = Setting(0)
@@ -24,7 +23,7 @@ class OWGenericParameterWidget(OWGenericWidget):
 
         main_box = gui.widgetBox(self.controlArea,
                                  self.get_parameter_name(), orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 10, height=600)
+                                 width=self.CONTROL_AREA_WIDTH - 10, height=self.get_height())
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
@@ -46,6 +45,9 @@ class OWGenericParameterWidget(OWGenericWidget):
         self.addAction(runaction)
 
         orangegui.rubber(self.controlArea)
+
+    def get_height(self):
+        return 600
 
     def set_use_single_parameter_set(self, on_init=False, recycle=True):
         self.parameter_tabs.clear()
@@ -174,6 +176,8 @@ class OWGenericParameterWidget(OWGenericWidget):
     def dumpSettings(self):
         raise NotImplementedError()
 
+class OWGenericPhaseParameterWidget(OWGenericWidget):
+    pass
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout
@@ -212,7 +216,7 @@ class ParameterBox(InnerBox):
     def get_width(self):
         return self.setFixedWidth(self.widget.CONTROL_AREA_WIDTH - 35)
 
-    def get_height(self, widget):
+    def get_height(self):
         return 500
 
     def init_fields(self, **kwargs):

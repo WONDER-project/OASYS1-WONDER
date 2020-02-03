@@ -1,3 +1,5 @@
+import copy
+
 from oasys.widgets import widget
 
 from orangewidget import gui as orangegui
@@ -294,9 +296,78 @@ class OWGenericWidget(widget.OWWidget):
     def show_available_parameters(self):
         ShowTextDialog.show_text("Available Parameters", "" if self.fit_global_parameters is None else self.fit_global_parameters.get_available_parameters(), parent=self)
 
+    ###################################################################
+    # Multi-Box parameters management
+
+    def get_parameter_box_array(self):
+        raise NotImplementedError()
+    
+    def get_parameter_box(self, index):
+        return NotImplementedError()
+    
+    def dump_parameter(self, parameter_name):
+        bkp_parameter                = copy.deepcopy(getattr(self, parameter_name))
+        bkp_parameter_fixed          = copy.deepcopy(getattr(self, parameter_name + "_fixed"))
+        bkp_parameter_has_min        = copy.deepcopy(getattr(self, parameter_name + "_has_min"))
+        bkp_parameter_min            = copy.deepcopy(getattr(self, parameter_name + "_min"))
+        bkp_parameter_has_max        = copy.deepcopy(getattr(self, parameter_name + "_has_max"))
+        bkp_parameter_max            = copy.deepcopy(getattr(self, parameter_name + "_max"))
+        bkp_parameter_function       = copy.deepcopy(getattr(self, parameter_name + "_function"))
+        bkp_parameter_function_value = copy.deepcopy(getattr(self, parameter_name + "_function_value"))
+
+        try:
+            parameter = []
+            parameter_fixed = []
+            parameter_has_min = []
+            parameter_min = []
+            parameter_has_max = []
+            parameter_max = []
+            parameter_function = []
+            parameter_function_value = []
+
+            for parameter_box in self.get_parameter_box_array():
+                parameter.append(getattr(parameter_box, parameter_name))
+                parameter_fixed.append(getattr(parameter_box, parameter_name + "_fixed"))
+                parameter_has_min.append(getattr(parameter_box, parameter_name + "_has_min"))
+                parameter_min.append(getattr(parameter_box, parameter_name + "_min"))
+                parameter_has_max.append(getattr(parameter_box, parameter_name + "_has_max"))
+                parameter_max.append(getattr(parameter_box, parameter_name + "_max"))
+                parameter_function.append(getattr(parameter_box, parameter_name + "_function"))
+                parameter_function_value.append(getattr(parameter_box, parameter_name + "_function_value"))
+
+            setattr(self, parameter_name,                     parameter)
+            setattr(self, parameter_name + "_fixed",          parameter_fixed)
+            setattr(self, parameter_name + "_has_min",        parameter_has_min)
+            setattr(self, parameter_name + "_min",            parameter_min)
+            setattr(self, parameter_name + "_has_max",        parameter_has_max)
+            setattr(self, parameter_name + "_max",            parameter_max)
+            setattr(self, parameter_name + "_function",       parameter_function)
+            setattr(self, parameter_name + "_function_value", parameter_function_value)
+
+        except Exception as e:
+            setattr(self, parameter_name,                     bkp_parameter)
+            setattr(self, parameter_name + "_fixed",          bkp_parameter_fixed)
+            setattr(self, parameter_name + "_has_min",        bkp_parameter_has_min)
+            setattr(self, parameter_name + "_min",            bkp_parameter_min)
+            setattr(self, parameter_name + "_has_max",        bkp_parameter_has_max)
+            setattr(self, parameter_name + "_max",            bkp_parameter_max)
+            setattr(self, parameter_name + "_function",       bkp_parameter_function)
+            setattr(self, parameter_name + "_function_value", bkp_parameter_function_value)
+
+            if self.IS_DEVELOP: raise e
+
+    def dump_variable(self, variable_name):
+        bkp_variable = copy.deepcopy(getattr(self, variable_name))
+
+        try:
+            setattr(self, variable_name, [getattr(parameter_box, variable_name) for parameter_box in self.get_parameter_box_array()])
+        except Exception as e:
+            setattr(self, variable_name, copy.deepcopy(bkp_variable))
+
+            if self.IS_DEVELOP: raise e
+
     ############################################################
-    ############################################################
-    ############################################################
+    # Phase and Diff. Patt. names
 
     @classmethod
     def diffraction_pattern_name(cls, fit_global_parameter, diffraction_pattern_index, use_single_set=False):

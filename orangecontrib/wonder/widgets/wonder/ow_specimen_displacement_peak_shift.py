@@ -1,18 +1,15 @@
 import sys, copy
 
-from PyQt5.QtWidgets import QApplication
-
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 
-from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericParameterWidget, ParameterBox
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
 from orangecontrib.wonder.util import congruence
-from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import SpecimenDisplacement
 
 
-class OWSpecimenDisplacementPeakShift(OWGenericParameterWidget):
+class OWSpecimenDisplacementPeakShift(OWGenericDiffractionPatternParametersWidget):
 
     name = "Specimen Displacement Peak Shift"
     description = "Specimen Displacement Peak Shift"
@@ -31,9 +28,6 @@ class OWSpecimenDisplacementPeakShift(OWGenericParameterWidget):
     displacement_max = Setting([0.0])
     displacement_function = Setting([0])
     displacement_function_value = Setting([""])
-
-    inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
-    outputs = [("Fit Global Parameters", FitGlobalParameters)]
 
     def __init__(self):
         super().__init__()
@@ -74,61 +68,12 @@ class OWSpecimenDisplacementPeakShift(OWGenericParameterWidget):
         self.dump_goniometer_radius()
         self.dump_displacement()
 
-    def dump_goniometer_radius(self):
-        bkp_goniometer_radius = copy.deepcopy(self.goniometer_radius)
+    def dump_goniometer_radius(self): self.dump_variable("goniometer_radius")
 
-        try:
-            self.goniometer_radius = []
-
-            for parameter_box in self.get_parameter_box_array():
-                self.goniometer_radius.append(parameter_box.goniometer_radius)
-        except Exception as e:
-            self.goniometer_radius = copy.deepcopy(bkp_goniometer_radius)
-
-            if self.IS_DEVELOP: raise  e
-
-    def dump_displacement(self):
-        bkp_displacement = copy.deepcopy(self.displacement)
-        bkp_displacement_fixed = copy.deepcopy(self.displacement_fixed)
-        bkp_displacement_has_min = copy.deepcopy(self.displacement_has_min)
-        bkp_displacement_min = copy.deepcopy(self.displacement_min)
-        bkp_displacement_has_max = copy.deepcopy(self.displacement_has_max)
-        bkp_displacement_max = copy.deepcopy(self.displacement_max)
-        bkp_displacement_function = copy.deepcopy(self.displacement_function)
-        bkp_displacement_function_value = copy.deepcopy(self.displacement_function_value)
-
-        try:
-            self.displacement = []
-            self.displacement_fixed = []
-            self.displacement_has_min = []
-            self.displacement_min = []
-            self.displacement_has_max = []
-            self.displacement_max = []
-            self.displacement_function = []
-            self.displacement_function_value = []
-
-            for parameter_box in self.get_parameter_box_array():
-                self.displacement.append(parameter_box.displacement)
-                self.displacement_fixed.append(parameter_box.displacement_fixed)
-                self.displacement_has_min.append(parameter_box.displacement_has_min)
-                self.displacement_min.append(parameter_box.displacement_min)
-                self.displacement_has_max.append(parameter_box.displacement_has_max)
-                self.displacement_max.append(parameter_box.displacement_max)
-                self.displacement_function.append(parameter_box.displacement_function)
-                self.displacement_function_value.append(parameter_box.displacement_function_value)
-        except Exception as e:
-            self.displacement = copy.deepcopy(bkp_displacement)
-            self.displacement_fixed = copy.deepcopy(bkp_displacement_fixed)
-            self.displacement_has_min = copy.deepcopy(bkp_displacement_has_min)
-            self.displacement_min = copy.deepcopy(bkp_displacement_min)
-            self.displacement_has_max = copy.deepcopy(bkp_displacement_has_max)
-            self.displacement_max = copy.deepcopy(bkp_displacement_max)
-            self.displacement_function = copy.deepcopy(bkp_displacement_function)
-            self.displacement_function_value = copy.deepcopy(bkp_displacement_function_value)
-
-            if self.IS_DEVELOP: raise e
+    def dump_displacement(self): self.dump_parameter("displacement")
 
 class SpecimenDisplacementPeakShiftBox(ParameterBox):
+
     def __init__(self,
                  widget=None,
                  parent=None,
@@ -193,6 +138,7 @@ class SpecimenDisplacementPeakShiftBox(ParameterBox):
 
         return SpecimenDisplacement(goniometer_radius=self.goniometer_radius, displacement=displacement)
 
+from PyQt5.QtWidgets import QApplication
 
 if __name__ == "__main__":
     a = QApplication(sys.argv)
