@@ -154,6 +154,7 @@ class OWLineProfile(OWGenericWidget):
 
                         self.line_profiles_box_array.append(line_profile_box)
 
+
                 elif not line_profiles is None:
                     for diffraction_pattern_index in range(len(diffraction_patterns)):
                         self.line_profiles_tabs.setTabText(diffraction_pattern_index, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index))
@@ -260,7 +261,7 @@ class LineProfileBox(InnerBox):
         self.reflections_of_phases_box_array = []
 
         for phase_index in range(len(self.reflections_of_phases)):
-            reflections_of_phase_tab = gui.createTabPage(self.reflections_of_phases_tabs, Phase.get_default_name(phase_index))
+            reflections_of_phase_tab = gui.createTabPage(self.reflections_of_phases_tabs, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
 
             reflections_of_phase_box = ReflectionsOfPhaseBox(widget=widget,
                                                              widget_container=self,
@@ -274,11 +275,10 @@ class LineProfileBox(InnerBox):
             self.reflections_of_phases_box_array.append(reflections_of_phase_box)
 
     def set_data(self, line_profile):
-        if not line_profile is None:
-            for phase_index in range(len(self.reflections_of_phases_box_array)):
-                reflections_of_phases_box = self.reflections_of_phases_box_array[phase_index]
-                reflections_of_phases_box.set_data(line_profile)
-                self.reflections_of_phases_tabs.setTabText(phase_index, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
+        for phase_index in range(len(self.reflections_of_phases_box_array)):
+            reflections_of_phases_box = self.reflections_of_phases_box_array[phase_index]
+            reflections_of_phases_box.set_data(line_profile)
+            self.reflections_of_phases_tabs.setTabText(phase_index, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
 
     def update_line_profile(self):
         for reflections_of_phases_box in self.reflections_of_phases_box_array:

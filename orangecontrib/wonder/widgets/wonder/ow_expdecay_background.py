@@ -226,15 +226,13 @@ class OWExpDecayBackground(OWGenericWidget):
                                                                OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False))
 
                                 expdecay_box = self.expdecay_box_array[diffraction_pattern_index]
-                                if not background_parameters_item is None: expdecay_box.set_data(background_parameters_item)
                             else:
                                 expdecay_box = ExpDecayBackgroundBox(widget=self,
                                                                        parent=gui.createTabPage(self.expdecay_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False)),
                                                                        index=diffraction_pattern_index)
-
-                                if not background_parameters_item is None: expdecay_box.set_data(background_parameters_item)
-
                                 self.expdecay_box_array.append(expdecay_box)
+
+                            if not background_parameters_item is None: expdecay_box.set_data(background_parameters_item)
                 else:
                     if background_parameters is None:
                         self.set_use_single_parameter_set(True)

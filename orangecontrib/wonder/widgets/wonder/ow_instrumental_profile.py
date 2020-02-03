@@ -225,15 +225,13 @@ class OWInstrumentalProfile(OWGenericWidget):
                                                                OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False))
 
                                 instrumental_box = self.instrumental_box_array[diffraction_pattern_index]
-                                if not instrumental_parameters_item is None: instrumental_box.set_data(instrumental_parameters_item)
                             else:
                                 instrumental_box = InstrumentalProfileBox(widget=self,
                                                                           parent=gui.createTabPage(self.instrumental_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False)),
                                                                           index=diffraction_pattern_index)
-
-                                if not instrumental_parameters_item is None: instrumental_box.set_data(instrumental_parameters_item)
-
                                 self.instrumental_box_array.append(instrumental_box)
+
+                            if not instrumental_parameters_item is None: instrumental_box.set_data(instrumental_parameters_item)
                 else:
                     if instrumental_parameters is None:
                         self.set_use_single_parameter_set(True)

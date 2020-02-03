@@ -133,8 +133,6 @@ class OWLorentzPolarization(OWGenericWidget):
                         else:
                             self.set_use_single_parameter_set(True)
                     else:
-                        #self.__check_data_congruence(lorenz_polarization_parameters)
-
                         tabs_to_remove = len(self.displacement) - len(lorenz_polarization_parameters)
 
                         if tabs_to_remove > 0:
@@ -150,15 +148,13 @@ class OWLorentzPolarization(OWGenericWidget):
                                                                           OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False))
 
                                 lorentz_polarization_box = self.lorentz_polarization_box_array[diffraction_pattern_index]
-                                if not lorenz_polarization_parameters_item is None: lorentz_polarization_box.set_data(lorenz_polarization_parameters_item)
                             else:
                                 lorentz_polarization_box = PolarizationParametersBox(widget=self,
                                                                                      parent=gui.createTabPage(self.lorentz_polarization_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False)),
                                                                                      index=diffraction_pattern_index)
-
-                                if not lorenz_polarization_parameters_item is None: lorentz_polarization_box.set_data(lorenz_polarization_parameters_item)
-
                                 self.lorentz_polarization_box_array.append(lorentz_polarization_box)
+
+                            if not lorenz_polarization_parameters_item is None: lorentz_polarization_box.set_data(lorenz_polarization_parameters_item)
                 else:
                     if lorenz_polarization_parameters is None:
                         self.set_use_single_parameter_set(True)

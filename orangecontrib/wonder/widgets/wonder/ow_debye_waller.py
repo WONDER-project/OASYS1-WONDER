@@ -207,7 +207,7 @@ class OWDebyeWaller(OWGenericWidget):
                     recycle_phases = ConfirmDialog.confirmed(message="Number of Phases changed:\ndo you want to use the existing parameters where possible?\n\nIf yes, check for possible incongruences",
                                                              title="Warning")
 
-                if len(diffraction_patterns) != len(self.use_debye_waller_factors):
+                if self.use_single_parameter_set==0 and (len(diffraction_patterns) != len(self.use_debye_waller_factors)):
                     different_patterns = True
                     recycle_patterns = ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
                                                                title="Warning")
@@ -371,7 +371,7 @@ class DebyeWallerBox(InnerBox):
         self.debye_waller_of_phases_box_array = []
 
         for phase_index in range(len(self.debye_waller_factors)):
-            debye_waller_of_phase_tab = gui.createTabPage(self.debye_waller_of_phases_tabs, Phase.get_default_name(phase_index))
+            debye_waller_of_phase_tab = gui.createTabPage(self.debye_waller_of_phases_tabs, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
 
             debye_waller_of_phase_box = DebyeWallerOfPhaseBox(widget=widget,
                                                               widget_container=self,
@@ -395,11 +395,10 @@ class DebyeWallerBox(InnerBox):
             self.debye_waller_of_phases_box_array[phase_index].update_debye_waller(thermal_parameters_of_phases)
 
     def set_data(self, thermal_parameters):
-        if not thermal_parameters is None:
-            for phase_index in range(len(self.debye_waller_of_phases_box_array)):
-                debye_waller_of_phases_box = self.debye_waller_of_phases_box_array[phase_index]
-                debye_waller_of_phases_box.set_data(thermal_parameters)
-                self.debye_waller_of_phases_tabs.setTabText(phase_index, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
+        for phase_index in range(len(self.debye_waller_of_phases_box_array)):
+            debye_waller_of_phases_box = self.debye_waller_of_phases_box_array[phase_index]
+            debye_waller_of_phases_box.set_data(thermal_parameters)
+            self.debye_waller_of_phases_tabs.setTabText(phase_index, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
 
     def dumpSettings(self):
         self.dump_use_debye_waller_factors()

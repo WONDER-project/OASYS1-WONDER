@@ -292,15 +292,13 @@ class OWChebyshevBackground(OWGenericWidget):
                                                                OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False))
 
                                 chebyshev_box = self.chebyshev_box_array[diffraction_pattern_index]
-                                if not background_parameters_item is None: chebyshev_box.set_data(background_parameters_item)
                             else:
                                 chebyshev_box = ChebyshevBackgroundBox(widget=self,
                                                                        parent=gui.createTabPage(self.chebyshev_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False)),
                                                                        index=diffraction_pattern_index)
-
-                                if not background_parameters_item is None: chebyshev_box.set_data(background_parameters_item)
-
                                 self.chebyshev_box_array.append(chebyshev_box)
+
+                            if not background_parameters_item is None: chebyshev_box.set_data(background_parameters_item)
                 else:
                     if background_parameters is None:
                         self.set_use_single_parameter_set(True)
