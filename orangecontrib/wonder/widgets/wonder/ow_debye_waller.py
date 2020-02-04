@@ -258,68 +258,18 @@ class OWDebyeWaller(OWGenericWidget):
     # SINGLE FIELDS SIGNALS
     ##############################
 
+    def get_parameter_box_array(self):
+        return self.debye_wallers_box_array
+
     def dumpSettings(self):
         self.dump_use_debye_waller_factors()
         self.dump_debye_waller_factors()
 
-    def dump_use_debye_waller_factors(self):
-        bkp_use_debye_waller_factors = copy.deepcopy(self.use_debye_waller_factors)
-
-        try:
-            self.use_debye_waller_factors = []
-
-            for index in range(len(self.debye_wallers_box_array)):
-                self.use_debye_waller_factors.append(self.debye_wallers_box_array[index].use_debye_waller_factors)
-        except Exception as e:
-            self.use_debye_waller_factors = copy.deepcopy(bkp_use_debye_waller_factors)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_debye_waller_factors(self):
-        bkp_debye_waller_factors = copy.deepcopy(self.debye_waller_factors)
-        bkp_debye_waller_factors_fixed = copy.deepcopy(self.debye_waller_factors_fixed)
-        bkp_debye_waller_factors_has_min = copy.deepcopy(self.debye_waller_factors_has_min)
-        bkp_debye_waller_factors_min = copy.deepcopy(self.debye_waller_factors_min)
-        bkp_debye_waller_factors_has_max = copy.deepcopy(self.debye_waller_factors_has_max)
-        bkp_debye_waller_factors_max = copy.deepcopy(self.debye_waller_factors_max)
-        bkp_debye_waller_factors_function = copy.deepcopy(self.debye_waller_factors_function)
-        bkp_debye_waller_factors_function_value = copy.deepcopy(self.debye_waller_factors_function_value)
-
-        try:
-            self.debye_waller_factors = []
-            self.debye_waller_factors_fixed = []
-            self.debye_waller_factors_has_min = []
-            self.debye_waller_factors_min = []
-            self.debye_waller_factors_has_max = []
-            self.debye_waller_factors_max = []
-            self.debye_waller_factors_function = []
-            self.debye_waller_factors_function_value = []
-
-            for index in range(len(self.debye_wallers_box_array)):
-                self.debye_waller_factors.append(self.debye_wallers_box_array[index].debye_waller_factors)
-                self.debye_waller_factors_fixed.append(self.debye_wallers_box_array[index].debye_waller_factors_fixed)
-                self.debye_waller_factors_has_min.append(self.debye_wallers_box_array[index].debye_waller_factors_has_min)
-                self.debye_waller_factors_min.append(self.debye_wallers_box_array[index].debye_waller_factors_min)
-                self.debye_waller_factors_has_max.append(self.debye_wallers_box_array[index].debye_waller_factors_has_max)
-                self.debye_waller_factors_max.append(self.debye_wallers_box_array[index].debye_waller_factors_max)
-                self.debye_waller_factors_function.append(self.debye_wallers_box_array[index].debye_waller_factors_function)
-                self.debye_waller_factors_function_value.append(self.debye_wallers_box_array[index].debye_waller_factors_function_value)
-        except Exception as e:
-            self.debye_waller_factors = copy.deepcopy(bkp_debye_waller_factors)
-            self.debye_waller_factors_fixed = copy.deepcopy(bkp_debye_waller_factors_fixed)
-            self.debye_waller_factors_has_min = copy.deepcopy(bkp_debye_waller_factors_has_min)
-            self.debye_waller_factors_min = copy.deepcopy(bkp_debye_waller_factors_min)
-            self.debye_waller_factors_has_max = copy.deepcopy(bkp_debye_waller_factors_has_max)
-            self.debye_waller_factors_max = copy.deepcopy(bkp_debye_waller_factors_max)
-            self.debye_waller_factors_function = copy.deepcopy(bkp_debye_waller_factors_function)
-            self.debye_waller_factors_function_value = copy.deepcopy(bkp_debye_waller_factors_function_value)
-
-            if self.IS_DEVELOP: raise e
-
+    def dump_use_debye_waller_factors(self): self.dump_variable("use_debye_waller_factors")
+    def dump_debye_waller_factors(self): self.dump_parameter("debye_waller_factors")
 
 from PyQt5.QtWidgets import QVBoxLayout
 from orangecontrib.wonder.util.gui_utility import InnerBox
-
 
 class DebyeWallerBox(InnerBox):
     widget = None
@@ -400,68 +350,20 @@ class DebyeWallerBox(InnerBox):
             debye_waller_of_phases_box.set_data(thermal_parameters)
             self.debye_waller_of_phases_tabs.setTabText(phase_index, OWGenericWidget.phase_name(self.widget.fit_global_parameters, phase_index))
 
+    def get_parameter_box_array(self):
+        return self.debye_waller_of_phases_box_array
+
     def dumpSettings(self):
         self.dump_use_debye_waller_factors()
         self.dump_debye_waller_factors()
 
     def dump_use_debye_waller_factors(self):
-        bkp_use_debye_waller_factors = copy.deepcopy(self.use_debye_waller_factors)
-
-        try:
-            self.use_debye_waller_factors = []
-
-            for index in range(len(self.debye_waller_of_phases_box_array)):
-                self.use_debye_waller_factors.append(self.debye_waller_of_phases_box_array[index].use_debye_waller_factor)
-        except Exception as e:
-            self.use_debye_waller_factors = copy.deepcopy(bkp_use_debye_waller_factors)
-
-            if self.widget.IS_DEVELOP: raise e
-
+        OWGenericWidget.dump_variable_in_widget(self, "use_debye_waller_factors", variable_name_in_box="use_debye_waller_factor")
         self.widget.dump_use_debye_waller_factors()
 
     def dump_debye_waller_factors(self):
-        bkp_debye_waller_factors = copy.deepcopy(self.debye_waller_factors)
-        bkp_debye_waller_factors_fixed = copy.deepcopy(self.debye_waller_factors_fixed)
-        bkp_debye_waller_factors_has_min = copy.deepcopy(self.debye_waller_factors_has_min)
-        bkp_debye_waller_factors_min = copy.deepcopy(self.debye_waller_factors_min)
-        bkp_debye_waller_factors_has_max = copy.deepcopy(self.debye_waller_factors_has_max)
-        bkp_debye_waller_factors_max = copy.deepcopy(self.debye_waller_factors_max)
-        bkp_debye_waller_factors_function = copy.deepcopy(self.debye_waller_factors_function)
-        bkp_debye_waller_factors_function_value = copy.deepcopy(self.debye_waller_factors_function_value)
-
-        try:
-            self.debye_waller_factors = []
-            self.debye_waller_factors_fixed = []
-            self.debye_waller_factors_has_min = []
-            self.debye_waller_factors_min = []
-            self.debye_waller_factors_has_max = []
-            self.debye_waller_factors_max = []
-            self.debye_waller_factors_function = []
-            self.debye_waller_factors_function_value = []
-
-            for index in range(len(self.debye_waller_of_phases_box_array)):
-                self.debye_waller_factors.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor)
-                self.debye_waller_factors_fixed.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_fixed)
-                self.debye_waller_factors_has_min.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_has_min)
-                self.debye_waller_factors_min.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_min)
-                self.debye_waller_factors_has_max.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_has_max)
-                self.debye_waller_factors_max.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_max)
-                self.debye_waller_factors_function.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_function)
-                self.debye_waller_factors_function_value.append(self.debye_waller_of_phases_box_array[index].debye_waller_factor_function_value)
-        except Exception as e:
-            self.debye_waller_factors = copy.deepcopy(bkp_debye_waller_factors)
-            self.debye_waller_factors_fixed = copy.deepcopy(bkp_debye_waller_factors_fixed)
-            self.debye_waller_factors_has_min = copy.deepcopy(bkp_debye_waller_factors_has_min)
-            self.debye_waller_factors_min = copy.deepcopy(bkp_debye_waller_factors_min)
-            self.debye_waller_factors_has_max = copy.deepcopy(bkp_debye_waller_factors_has_max)
-            self.debye_waller_factors_max = copy.deepcopy(bkp_debye_waller_factors_max)
-            self.debye_waller_factors_function = copy.deepcopy(bkp_debye_waller_factors_function)
-            self.debye_waller_factors_function_value = copy.deepcopy(bkp_debye_waller_factors_function_value)
-
-            if self.widget.IS_DEVELOP: raise e
-
+        OWGenericWidget.dump_parameter_in_widget(self, "debye_waller_factors", parameter_name_in_box="debye_waller_factor")
         self.widget.dump_debye_waller_factors()
-
 
 class DebyeWallerOfPhaseBox(InnerBox):
     widget = None
@@ -529,20 +431,8 @@ class DebyeWallerOfPhaseBox(InnerBox):
 
         self.widget_container.dump_use_debye_waller_factors()
 
-    def after_change_workspace_units(self):
-        pass
-
-    def set_phase_index(self, phase_index):
-        self.phase_index = phase_index
-
     def callback_debye_waller_factor(self):
         if not self.is_on_init: self.widget_container.dump_debye_waller_factors()
-
-    def after_change_workspace_units(self):
-        pass
-
-    def set_index(self, index):
-        self.index = index
 
     def get_parameters_prefix(self):
         return ThermalParameters.get_parameters_prefix() + self.get_parameter_progressive()

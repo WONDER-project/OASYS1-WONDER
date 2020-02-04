@@ -305,15 +305,16 @@ class OWGenericWidget(widget.OWWidget):
     def get_parameter_box(self, index):
         return NotImplementedError()
     
-    def dump_parameter(self, parameter_name):
-        bkp_parameter                = copy.deepcopy(getattr(self, parameter_name))
-        bkp_parameter_fixed          = copy.deepcopy(getattr(self, parameter_name + "_fixed"))
-        bkp_parameter_has_min        = copy.deepcopy(getattr(self, parameter_name + "_has_min"))
-        bkp_parameter_min            = copy.deepcopy(getattr(self, parameter_name + "_min"))
-        bkp_parameter_has_max        = copy.deepcopy(getattr(self, parameter_name + "_has_max"))
-        bkp_parameter_max            = copy.deepcopy(getattr(self, parameter_name + "_max"))
-        bkp_parameter_function       = copy.deepcopy(getattr(self, parameter_name + "_function"))
-        bkp_parameter_function_value = copy.deepcopy(getattr(self, parameter_name + "_function_value"))
+    @classmethod
+    def dump_parameter_in_widget(cls, widget, parameter_name, parameter_name_in_box=None):
+        bkp_parameter                = copy.deepcopy(getattr(widget, parameter_name))
+        bkp_parameter_fixed          = copy.deepcopy(getattr(widget, parameter_name + "_fixed"))
+        bkp_parameter_has_min        = copy.deepcopy(getattr(widget, parameter_name + "_has_min"))
+        bkp_parameter_min            = copy.deepcopy(getattr(widget, parameter_name + "_min"))
+        bkp_parameter_has_max        = copy.deepcopy(getattr(widget, parameter_name + "_has_max"))
+        bkp_parameter_max            = copy.deepcopy(getattr(widget, parameter_name + "_max"))
+        bkp_parameter_function       = copy.deepcopy(getattr(widget, parameter_name + "_function"))
+        bkp_parameter_function_value = copy.deepcopy(getattr(widget, parameter_name + "_function_value"))
 
         try:
             parameter = []
@@ -325,46 +326,57 @@ class OWGenericWidget(widget.OWWidget):
             parameter_function = []
             parameter_function_value = []
 
-            for parameter_box in self.get_parameter_box_array():
-                parameter.append(getattr(parameter_box, parameter_name))
-                parameter_fixed.append(getattr(parameter_box, parameter_name + "_fixed"))
-                parameter_has_min.append(getattr(parameter_box, parameter_name + "_has_min"))
-                parameter_min.append(getattr(parameter_box, parameter_name + "_min"))
-                parameter_has_max.append(getattr(parameter_box, parameter_name + "_has_max"))
-                parameter_max.append(getattr(parameter_box, parameter_name + "_max"))
-                parameter_function.append(getattr(parameter_box, parameter_name + "_function"))
-                parameter_function_value.append(getattr(parameter_box, parameter_name + "_function_value"))
+            parameter_name_in_box = parameter_name if parameter_name_in_box is None else parameter_name_in_box
+            
+            for parameter_box in widget.get_parameter_box_array():
+                parameter.append(getattr(parameter_box, parameter_name_in_box))
+                parameter_fixed.append(getattr(parameter_box, parameter_name_in_box + "_fixed"))
+                parameter_has_min.append(getattr(parameter_box, parameter_name_in_box + "_has_min"))
+                parameter_min.append(getattr(parameter_box, parameter_name_in_box + "_min"))
+                parameter_has_max.append(getattr(parameter_box, parameter_name_in_box + "_has_max"))
+                parameter_max.append(getattr(parameter_box, parameter_name_in_box + "_max"))
+                parameter_function.append(getattr(parameter_box, parameter_name_in_box + "_function"))
+                parameter_function_value.append(getattr(parameter_box, parameter_name_in_box + "_function_value"))
 
-            setattr(self, parameter_name,                     parameter)
-            setattr(self, parameter_name + "_fixed",          parameter_fixed)
-            setattr(self, parameter_name + "_has_min",        parameter_has_min)
-            setattr(self, parameter_name + "_min",            parameter_min)
-            setattr(self, parameter_name + "_has_max",        parameter_has_max)
-            setattr(self, parameter_name + "_max",            parameter_max)
-            setattr(self, parameter_name + "_function",       parameter_function)
-            setattr(self, parameter_name + "_function_value", parameter_function_value)
+            setattr(widget, parameter_name,                     parameter)
+            setattr(widget, parameter_name + "_fixed",          parameter_fixed)
+            setattr(widget, parameter_name + "_has_min",        parameter_has_min)
+            setattr(widget, parameter_name + "_min",            parameter_min)
+            setattr(widget, parameter_name + "_has_max",        parameter_has_max)
+            setattr(widget, parameter_name + "_max",            parameter_max)
+            setattr(widget, parameter_name + "_function",       parameter_function)
+            setattr(widget, parameter_name + "_function_value", parameter_function_value)
 
         except Exception as e:
-            setattr(self, parameter_name,                     bkp_parameter)
-            setattr(self, parameter_name + "_fixed",          bkp_parameter_fixed)
-            setattr(self, parameter_name + "_has_min",        bkp_parameter_has_min)
-            setattr(self, parameter_name + "_min",            bkp_parameter_min)
-            setattr(self, parameter_name + "_has_max",        bkp_parameter_has_max)
-            setattr(self, parameter_name + "_max",            bkp_parameter_max)
-            setattr(self, parameter_name + "_function",       bkp_parameter_function)
-            setattr(self, parameter_name + "_function_value", bkp_parameter_function_value)
+            setattr(widget, parameter_name,                     bkp_parameter)
+            setattr(widget, parameter_name + "_fixed",          bkp_parameter_fixed)
+            setattr(widget, parameter_name + "_has_min",        bkp_parameter_has_min)
+            setattr(widget, parameter_name + "_min",            bkp_parameter_min)
+            setattr(widget, parameter_name + "_has_max",        bkp_parameter_has_max)
+            setattr(widget, parameter_name + "_max",            bkp_parameter_max)
+            setattr(widget, parameter_name + "_function",       bkp_parameter_function)
+            setattr(widget, parameter_name + "_function_value", bkp_parameter_function_value)
 
-            if self.IS_DEVELOP: raise e
+            if widget.IS_DEVELOP: raise e
 
-    def dump_variable(self, variable_name):
-        bkp_variable = copy.deepcopy(getattr(self, variable_name))
+    def dump_parameter(self, parameter_name, parameter_name_in_box=None):
+        OWGenericWidget.dump_parameter_in_widget(self, parameter_name, parameter_name_in_box)
+        
+    @classmethod
+    def dump_variable_in_widget(cls, widget, variable_name, variable_name_in_box=None):
+        bkp_variable = copy.deepcopy(getattr(widget, variable_name))
 
         try:
-            setattr(self, variable_name, [getattr(parameter_box, variable_name) for parameter_box in self.get_parameter_box_array()])
+            variable_name_in_box = variable_name if variable_name_in_box is None else variable_name_in_box
+            
+            setattr(widget, variable_name, [getattr(parameter_box, variable_name_in_box) for parameter_box in widget.get_parameter_box_array()])
         except Exception as e:
-            setattr(self, variable_name, copy.deepcopy(bkp_variable))
+            setattr(widget, variable_name, copy.deepcopy(bkp_variable))
 
-            if self.IS_DEVELOP: raise e
+            if widget.IS_DEVELOP: raise e
+
+    def dump_variable(self, variable_name, variable_name_in_box=None):
+        OWGenericWidget.dump_variable_in_widget(self, variable_name, variable_name_in_box)
 
     ############################################################
     # Phase and Diff. Patt. names
