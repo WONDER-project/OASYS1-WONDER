@@ -1,4 +1,4 @@
-import sys, copy
+import sys
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
@@ -15,8 +15,6 @@ class OWSpecimenDisplacementPeakShift(OWGenericDiffractionPatternParametersWidge
     description = "Specimen Displacement Peak Shift"
     icon = "icons/specimen_displacement_peak_shift.png"
     priority = 15
-
-    want_main_area = False
 
     goniometer_radius = Setting([1.0])
 

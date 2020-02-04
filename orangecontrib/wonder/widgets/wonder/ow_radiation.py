@@ -1,13 +1,9 @@
-import os, sys, numpy, copy
-
-from PyQt5.QtWidgets import QMessageBox, QApplication
-from PyQt5.QtCore import Qt
+import os, sys
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
-from orangewidget.widget import OWAction
 
-from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.fit.parameters.measured_data.incident_radiation import IncidentRadiation
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
@@ -59,14 +55,12 @@ def load_data_files():
 
 load_data_files()
 
-class OWRadiation(OWGenericWidget):
+class OWRadiation(OWGenericDiffractionPatternParametersWidget):
 
     name = "Incident Radiation"
     description = "Incident Radiation"
     icon = "icons/lambda.png"
     priority = 1.1
-
-    want_main_area = False
 
     is_multiple_wavelength = Setting([0])
     
@@ -153,199 +147,120 @@ class OWRadiation(OWGenericWidget):
     weight_5_function = Setting([0])
     weight_5_function_value = Setting([""])
 
-    use_single_parameter_set = Setting(0)
-
-    inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
-    outputs = [("Fit Global Parameters", FitGlobalParameters)]
-
-    fit_global_parameters = None
-
     def __init__(self):
-        super().__init__(show_automatic_box=True)
+        super().__init__()
 
-        main_box = gui.widgetBox(self.controlArea,
-                                 "Radiation", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 5, height=500)
+    def get_parameter_name(self):
+        return "Radiation"
 
+    def get_current_dimension(self):
+        return len(self.is_multiple_wavelength)
 
-        button_box = gui.widgetBox(main_box,
-                                   "", orientation="horizontal",
-                                   width=self.CONTROL_AREA_WIDTH-25)
+    def get_parameter_box_instance(self, parameter_tab, index):
+        return RadiationBox(widget=self,
+                            parent=parameter_tab,
+                            index = index,
+                            is_multiple_wavelength      = self.is_multiple_wavelength[index],
+                            wavelength                  = self.wavelength[index],
+                            wavelength_fixed            = self.wavelength_fixed[index],
+                            wavelength_has_min          = self.wavelength_has_min[index],
+                            wavelength_min              = self.wavelength_min[index],
+                            wavelength_has_max          = self.wavelength_has_max[index],
+                            wavelength_max              = self.wavelength_max[index],
+                            wavelength_function         = self.wavelength_function[index],
+                            wavelength_function_value   = self.wavelength_function_value[index],
+                            xray_tube_key               = self.xray_tube_key[index],
+                            wavelength_2                = self.wavelength_2[index],
+                            wavelength_2_fixed          = self.wavelength_2_fixed[index],
+                            wavelength_2_has_min        = self.wavelength_2_has_min[index],
+                            wavelength_2_min            = self.wavelength_2_min[index],
+                            wavelength_2_has_max        = self.wavelength_2_has_max[index],
+                            wavelength_2_max            = self.wavelength_2_max[index],
+                            wavelength_2_function       = self.wavelength_2_function[index],
+                            wavelength_2_function_value = self.wavelength_2_function_value[index],
+                            wavelength_3                = self.wavelength_3[index],
+                            wavelength_3_fixed          = self.wavelength_3_fixed[index],
+                            wavelength_3_has_min        = self.wavelength_3_has_min[index],
+                            wavelength_3_min            = self.wavelength_3_min[index],
+                            wavelength_3_has_max        = self.wavelength_3_has_max[index],
+                            wavelength_3_max            = self.wavelength_3_max[index],
+                            wavelength_3_function       = self.wavelength_3_function[index],
+                            wavelength_3_function_value = self.wavelength_3_function_value[index],
+                            wavelength_4                = self.wavelength_4[index],
+                            wavelength_4_fixed          = self.wavelength_4_fixed[index],
+                            wavelength_4_has_min        = self.wavelength_4_has_min[index],
+                            wavelength_4_min            = self.wavelength_4_min[index],
+                            wavelength_4_has_max        = self.wavelength_4_has_max[index],
+                            wavelength_4_max            = self.wavelength_4_max[index],
+                            wavelength_4_function       = self.wavelength_4_function[index],
+                            wavelength_4_function_value = self.wavelength_4_function_value[index],
+                            wavelength_5                = self.wavelength_5[index],
+                            wavelength_5_fixed          = self.wavelength_5_fixed[index],
+                            wavelength_5_has_min        = self.wavelength_5_has_min[index],
+                            wavelength_5_min            = self.wavelength_5_min[index],
+                            wavelength_5_has_max        = self.wavelength_5_has_max[index],
+                            wavelength_5_max            = self.wavelength_5_max[index],
+                            wavelength_5_function       = self.wavelength_5_function[index],
+                            wavelength_5_function_value = self.wavelength_5_function_value[index],
+                            weight_2                    = self.weight_2[index],
+                            weight_2_fixed              = self.weight_2_fixed[index],
+                            weight_2_has_min            = self.weight_2_has_min[index],
+                            weight_2_min                = self.weight_2_min[index],
+                            weight_2_has_max            = self.weight_2_has_max[index],
+                            weight_2_max                = self.weight_2_max[index],
+                            weight_2_function           = self.weight_2_function[index],
+                            weight_2_function_value     = self.weight_2_function_value[index],
+                            weight_3                    = self.weight_3[index],
+                            weight_3_fixed              = self.weight_3_fixed[index],
+                            weight_3_has_min            = self.weight_3_has_min[index],
+                            weight_3_min                = self.weight_3_min[index],
+                            weight_3_has_max            = self.weight_3_has_max[index],
+                            weight_3_max                = self.weight_3_max[index],
+                            weight_3_function           = self.weight_3_function[index],
+                            weight_3_function_value     = self.weight_3_function_value[index],
+                            weight_4                    = self.weight_4[index],
+                            weight_4_fixed              = self.weight_4_fixed[index],
+                            weight_4_has_min            = self.weight_4_has_min[index],
+                            weight_4_min                = self.weight_4_min[index],
+                            weight_4_has_max            = self.weight_4_has_max[index],
+                            weight_4_max                = self.weight_4_max[index],
+                            weight_4_function           = self.weight_4_function[index],
+                            weight_4_function_value     = self.weight_4_function_value[index],
+                            weight_5                    = self.weight_5[index],
+                            weight_5_fixed              = self.weight_5_fixed[index],
+                            weight_5_has_min            = self.weight_5_has_min[index],
+                            weight_5_min                = self.weight_5_min[index],
+                            weight_5_has_max            = self.weight_5_has_max[index],
+                            weight_5_max                = self.weight_5_max[index],
+                            weight_5_function           = self.weight_5_function[index],
+                            weight_5_function_value     = self.weight_5_function_value[index])
 
-        gui.button(button_box, self, "Send Radiation", height=40, callback=self.send_radiation)
+    def get_empty_parameter_box_instance(self, parameter_tab, index):
+        return RadiationBox(widget=self, parent=parameter_tab, index=index)
 
-        orangegui.comboBox(main_box, self, "use_single_parameter_set", label="Use single set of Parameters", labelWidth=350, orientation="horizontal",
-                           items=["No", "Yes"], callback=self.set_use_single_parameter_set, sendSelectedValue=False)
+    def set_parameter(self):
+        incident_radiations = []
+    
+        if self.use_single_parameter_set == 1:
+            incident_radiation = self.parameter_box_array[0].get_incident_radiation()
+            incident_radiations.append(incident_radiation)
+    
+            for diffraction_pattern in self.fit_global_parameters.measured_dataset.diffraction_patterns:
+                diffraction_pattern.apply_wavelength(incident_radiation.wavelength)
+        else:
+            for index in range(self.get_current_dimension()):
+                incident_radiation = self.parameter_box_array[index].get_incident_radiation()
+                incident_radiations.append(incident_radiation)
+    
+                self.fit_global_parameters.measured_dataset.diffraction_patterns[index].apply_wavelength(incident_radiation.wavelength)
+    
+        self.fit_global_parameters.measured_dataset.incident_radiations = incident_radiations
 
-        self.radiation_tabs = gui.tabWidget(main_box)
+    def get_parameter_array(self):
+        return self.fit_global_parameters.measured_dataset.incident_radiations
 
-        self.set_use_single_parameter_set(on_init=True)
-
-        runaction = OWAction("Send Radiation", self)
-        runaction.triggered.connect(self.send_radiation)
-        self.addAction(runaction)
-
-        orangegui.rubber(self.controlArea)
-
-    def get_max_height(self):
-        return 600
-
-    def set_use_single_parameter_set(self, on_init=False):
-        self.radiation_tabs.clear()
-        self.radiation_box_array = []
-
-        dimension = len(self.is_multiple_wavelength) if self.fit_global_parameters is None else len(self.fit_global_parameters.measured_dataset.diffraction_patterns)
-
-        for index in range(1 if self.use_single_parameter_set == 1 else dimension):
-            radiation_tab = gui.createTabPage(self.radiation_tabs, "All Patterns" if self.use_single_parameter_set==1 else "Diff. Patt. " + str(index + 1))
-
-            if index < len(self.is_multiple_wavelength): #keep the existing
-                radiation_box = RadiationBox(widget=self,
-                                             parent=radiation_tab,
-                                             index = index,
-                                             is_multiple_wavelength      = self.is_multiple_wavelength[index],
-                                             wavelength                  = self.wavelength[index],
-                                             wavelength_fixed            = self.wavelength_fixed[index],
-                                             wavelength_has_min          = self.wavelength_has_min[index],
-                                             wavelength_min              = self.wavelength_min[index],
-                                             wavelength_has_max          = self.wavelength_has_max[index],
-                                             wavelength_max              = self.wavelength_max[index],
-                                             wavelength_function         = self.wavelength_function[index],
-                                             wavelength_function_value   = self.wavelength_function_value[index],
-                                             xray_tube_key               = self.xray_tube_key[index],
-                                             wavelength_2                = self.wavelength_2[index],
-                                             wavelength_2_fixed          = self.wavelength_2_fixed[index],
-                                             wavelength_2_has_min        = self.wavelength_2_has_min[index],
-                                             wavelength_2_min            = self.wavelength_2_min[index],
-                                             wavelength_2_has_max        = self.wavelength_2_has_max[index],
-                                             wavelength_2_max            = self.wavelength_2_max[index],
-                                             wavelength_2_function       = self.wavelength_2_function[index],
-                                             wavelength_2_function_value = self.wavelength_2_function_value[index],
-                                             wavelength_3                = self.wavelength_3[index],
-                                             wavelength_3_fixed          = self.wavelength_3_fixed[index],
-                                             wavelength_3_has_min        = self.wavelength_3_has_min[index],
-                                             wavelength_3_min            = self.wavelength_3_min[index],
-                                             wavelength_3_has_max        = self.wavelength_3_has_max[index],
-                                             wavelength_3_max            = self.wavelength_3_max[index],
-                                             wavelength_3_function       = self.wavelength_3_function[index],
-                                             wavelength_3_function_value = self.wavelength_3_function_value[index],
-                                             wavelength_4                = self.wavelength_4[index],
-                                             wavelength_4_fixed          = self.wavelength_4_fixed[index],
-                                             wavelength_4_has_min        = self.wavelength_4_has_min[index],
-                                             wavelength_4_min            = self.wavelength_4_min[index],
-                                             wavelength_4_has_max        = self.wavelength_4_has_max[index],
-                                             wavelength_4_max            = self.wavelength_4_max[index],
-                                             wavelength_4_function       = self.wavelength_4_function[index],
-                                             wavelength_4_function_value = self.wavelength_4_function_value[index],
-                                             wavelength_5                = self.wavelength_5[index],
-                                             wavelength_5_fixed          = self.wavelength_5_fixed[index],
-                                             wavelength_5_has_min        = self.wavelength_5_has_min[index],
-                                             wavelength_5_min            = self.wavelength_5_min[index],
-                                             wavelength_5_has_max        = self.wavelength_5_has_max[index],
-                                             wavelength_5_max            = self.wavelength_5_max[index],
-                                             wavelength_5_function       = self.wavelength_5_function[index],
-                                             wavelength_5_function_value = self.wavelength_5_function_value[index],
-                                             weight_2                    = self.weight_2[index],
-                                             weight_2_fixed              = self.weight_2_fixed[index],
-                                             weight_2_has_min            = self.weight_2_has_min[index],
-                                             weight_2_min                = self.weight_2_min[index],
-                                             weight_2_has_max            = self.weight_2_has_max[index],
-                                             weight_2_max                = self.weight_2_max[index],
-                                             weight_2_function           = self.weight_2_function[index],
-                                             weight_2_function_value     = self.weight_2_function_value[index],
-                                             weight_3                    = self.weight_3[index],
-                                             weight_3_fixed              = self.weight_3_fixed[index],
-                                             weight_3_has_min            = self.weight_3_has_min[index],
-                                             weight_3_min                = self.weight_3_min[index],
-                                             weight_3_has_max            = self.weight_3_has_max[index],
-                                             weight_3_max                = self.weight_3_max[index],
-                                             weight_3_function           = self.weight_3_function[index],
-                                             weight_3_function_value     = self.weight_3_function_value[index],
-                                             weight_4                    = self.weight_4[index],
-                                             weight_4_fixed              = self.weight_4_fixed[index],
-                                             weight_4_has_min            = self.weight_4_has_min[index],
-                                             weight_4_min                = self.weight_4_min[index],
-                                             weight_4_has_max            = self.weight_4_has_max[index],
-                                             weight_4_max                = self.weight_4_max[index],
-                                             weight_4_function           = self.weight_4_function[index],
-                                             weight_4_function_value     = self.weight_4_function_value[index],
-                                             weight_5                    = self.weight_5[index],
-                                             weight_5_fixed              = self.weight_5_fixed[index],
-                                             weight_5_has_min            = self.weight_5_has_min[index],
-                                             weight_5_min                = self.weight_5_min[index],
-                                             weight_5_has_max            = self.weight_5_has_max[index],
-                                             weight_5_max                = self.weight_5_max[index],
-                                             weight_5_function           = self.weight_5_function[index],
-                                             weight_5_function_value     = self.weight_5_function_value[index],
-                                             )
-            else:
-                radiation_box = RadiationBox(widget=self, parent=radiation_tab, index=index)
-
-            self.radiation_box_array.append(radiation_box)
-
-        if not on_init: self.dumpSettings()
-
-    def set_data(self, data):
-        try:
-            if not data is None:
-                self.fit_global_parameters = data.duplicate()
-
-                diffraction_patterns = self.fit_global_parameters.measured_dataset.diffraction_patterns
-
-                if diffraction_patterns is None: raise ValueError("No Diffraction Pattern in input data!")
-
-                incident_radiations = self.fit_global_parameters.measured_dataset.incident_radiations
-
-                if self.use_single_parameter_set == 0 and len(diffraction_patterns) != len(self.radiation_box_array):
-                    if ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences", title="Warning"):
-                        self.set_use_single_parameter_set()
-                elif not incident_radiations is None:
-                        for index in range(1 if self.use_single_parameter_set == 0 else len(incident_radiations)):
-                            if not incident_radiations[index] is None:
-                                self.radiation_box_array[index].set_data(incident_radiations[index])
-
-                self.dumpSettings()
-
-                if self.is_automatic_run:
-                    self.send_radiation()
-
-        except Exception as e:
-            QMessageBox.critical(self, "Error during load",
-                                 str(e),
-                                 QMessageBox.Ok)
-
-            if self.IS_DEVELOP: raise e
-
-    def send_radiation(self):
-        try:
-            if not self.fit_global_parameters is None:
-                self.dumpSettings()
-
-                incident_radiations = []
-
-                if self.use_single_parameter_set == 1:
-                    incident_radiation = self.radiation_box_array[0].get_incident_radiation()
-                    incident_radiations.append(incident_radiation)
-
-                    for index in range(self.fit_global_parameters.measured_dataset.get_diffraction_patterns_number()):
-                        self.fit_global_parameters.measured_dataset.diffraction_patterns[index].apply_wavelength(incident_radiation.wavelength)
-                else:
-                    for index in range(len(self.is_multiple_wavelength)):
-                        incident_radiation = self.radiation_box_array[index].get_incident_radiation()
-                        incident_radiations.append(incident_radiation)
-
-                        self.fit_global_parameters.measured_dataset.diffraction_patterns[index].apply_wavelength(incident_radiation.wavelength)
-
-                self.fit_global_parameters.measured_dataset.incident_radiations = incident_radiations
-                self.fit_global_parameters.regenerate_parameters()
-
-                self.send("Fit Global Parameters", self.fit_global_parameters)
-        except Exception as e:
-            QMessageBox.critical(self, "Error",
-                                 str(e),
-                                 QMessageBox.Ok)
-
-            if self.IS_DEVELOP: raise e
+    def get_parameter_item(self, diffraction_pattern_index):
+        return self.fit_global_parameters.measured_dataset.incident_radiations[diffraction_pattern_index]
 
     ##############################
     # SINGLE FIELDS SIGNALS
@@ -364,465 +279,19 @@ class OWRadiation(OWGenericWidget):
         self.dump_weight_4()
         self.dump_weight_5()
 
-    def dump_is_multiple_wavelength(self):
-        bkp_is_multiple_wavelength = copy.deepcopy(self.is_multiple_wavelength)
+    def dump_is_multiple_wavelength(self): self.dump_variable("is_multiple_wavelength")
+    def dump_xray_tube_key(self): self.dump_variable("xray_tube_key")
+    def dump_wavelength(self): self.dump_parameter("wavelength")
+    def dump_wavelength_2(self): self.dump_parameter("wavelength_2")
+    def dump_wavelength_3(self): self.dump_parameter("wavelength_3")
+    def dump_wavelength_4(self): self.dump_parameter("wavelength_4")
+    def dump_wavelength_5(self): self.dump_parameter("wavelength_5")
+    def dump_weight_2(self): self.dump_parameter("weight_2")
+    def dump_weight_3(self): self.dump_parameter("weight_3")
+    def dump_weight_4(self): self.dump_parameter("weight_4")
+    def dump_weight_5(self): self.dump_parameter("weight_5")
 
-        try:
-            self.is_multiple_wavelength = []
-
-            for index in range(len(self.radiation_box_array)):
-                self.is_multiple_wavelength.append(self.radiation_box_array[index].is_multiple_wavelength)
-        except:
-            self.is_multiple_wavelength = copy.deepcopy(bkp_is_multiple_wavelength)
-
-    def dump_xray_tube_key(self):
-        bkp_xray_tube_key = copy.deepcopy(self.xray_tube_key)
-
-        try:
-            self.xray_tube_key = []
-
-            for index in range(len(self.radiation_box_array)):
-                self.xray_tube_key.append(self.radiation_box_array[index].xray_tube_key)
-        except:
-            self.xray_tube_key = copy.deepcopy(bkp_xray_tube_key)
-
-    def dump_wavelength(self):
-        bkp_wavelength                = copy.deepcopy(self.wavelength               )
-        bkp_wavelength_fixed          = copy.deepcopy(self.wavelength_fixed         )
-        bkp_wavelength_has_min        = copy.deepcopy(self.wavelength_has_min       )
-        bkp_wavelength_min            = copy.deepcopy(self.wavelength_min           )
-        bkp_wavelength_has_max        = copy.deepcopy(self.wavelength_has_max       )
-        bkp_wavelength_max            = copy.deepcopy(self.wavelength_max           )
-        bkp_wavelength_function       = copy.deepcopy(self.wavelength_function      )
-        bkp_wavelength_function_value = copy.deepcopy(self.wavelength_function_value)
-        
-        try:
-            self.wavelength                = []
-            self.wavelength_fixed          = []
-            self.wavelength_has_min        = []
-            self.wavelength_min            = []
-            self.wavelength_has_max        = []
-            self.wavelength_max            = []
-            self.wavelength_function       = []
-            self.wavelength_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.wavelength.append(self.radiation_box_array[index].wavelength)
-                self.wavelength_fixed.append(self.radiation_box_array[index].wavelength_fixed)
-                self.wavelength_has_min.append(self.radiation_box_array[index].wavelength_has_min)
-                self.wavelength_min.append(self.radiation_box_array[index].wavelength_min)
-                self.wavelength_has_max.append(self.radiation_box_array[index].wavelength_has_max)
-                self.wavelength_max.append(self.radiation_box_array[index].wavelength_max)
-                self.wavelength_function.append(self.radiation_box_array[index].wavelength_function)
-                self.wavelength_function_value.append(self.radiation_box_array[index].wavelength_function_value)
-        except:
-            self.wavelength                = copy.deepcopy(bkp_wavelength               )
-            self.wavelength_fixed          = copy.deepcopy(bkp_wavelength_fixed         )
-            self.wavelength_has_min        = copy.deepcopy(bkp_wavelength_has_min       )
-            self.wavelength_min            = copy.deepcopy(bkp_wavelength_min           )
-            self.wavelength_has_max        = copy.deepcopy(bkp_wavelength_has_max       )
-            self.wavelength_max            = copy.deepcopy(bkp_wavelength_max           )
-            self.wavelength_function       = copy.deepcopy(bkp_wavelength_function      )
-            self.wavelength_function_value = copy.deepcopy(bkp_wavelength_function_value)
-    
-    def dump_wavelength_2(self):
-        bkp_wavelength_2                = copy.deepcopy(self.wavelength_2               )
-        bkp_wavelength_2_fixed          = copy.deepcopy(self.wavelength_2_fixed         )
-        bkp_wavelength_2_has_min        = copy.deepcopy(self.wavelength_2_has_min       )
-        bkp_wavelength_2_min            = copy.deepcopy(self.wavelength_2_min           )
-        bkp_wavelength_2_has_max        = copy.deepcopy(self.wavelength_2_has_max       )
-        bkp_wavelength_2_max            = copy.deepcopy(self.wavelength_2_max           )
-        bkp_wavelength_2_function       = copy.deepcopy(self.wavelength_2_function      )
-        bkp_wavelength_2_function_value = copy.deepcopy(self.wavelength_2_function_value)
-        
-        try:
-            self.wavelength_2                = []
-            self.wavelength_2_fixed          = []
-            self.wavelength_2_has_min        = []
-            self.wavelength_2_min            = []
-            self.wavelength_2_has_max        = []
-            self.wavelength_2_max            = []
-            self.wavelength_2_function       = []
-            self.wavelength_2_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.wavelength_2.append(self.radiation_box_array[index].wavelength_2)
-                self.wavelength_2_fixed.append(self.radiation_box_array[index].wavelength_2_fixed)
-                self.wavelength_2_has_min.append(self.radiation_box_array[index].wavelength_2_has_min)
-                self.wavelength_2_min.append(self.radiation_box_array[index].wavelength_2_min)
-                self.wavelength_2_has_max.append(self.radiation_box_array[index].wavelength_2_has_max)
-                self.wavelength_2_max.append(self.radiation_box_array[index].wavelength_2_max)
-                self.wavelength_2_function.append(self.radiation_box_array[index].wavelength_2_function)
-                self.wavelength_2_function_value.append(self.radiation_box_array[index].wavelength_2_function_value)
-        except:
-            self.wavelength_2                = copy.deepcopy(bkp_wavelength_2               )
-            self.wavelength_2_fixed          = copy.deepcopy(bkp_wavelength_2_fixed         )
-            self.wavelength_2_has_min        = copy.deepcopy(bkp_wavelength_2_has_min       )
-            self.wavelength_2_min            = copy.deepcopy(bkp_wavelength_2_min           )
-            self.wavelength_2_has_max        = copy.deepcopy(bkp_wavelength_2_has_max       )
-            self.wavelength_2_max            = copy.deepcopy(bkp_wavelength_2_max           )
-            self.wavelength_2_function       = copy.deepcopy(bkp_wavelength_2_function      )
-            self.wavelength_2_function_value = copy.deepcopy(bkp_wavelength_2_function_value)
-
-    def dump_wavelength_3(self):
-        bkp_wavelength_3                = copy.deepcopy(self.wavelength_3               )
-        bkp_wavelength_3_fixed          = copy.deepcopy(self.wavelength_3_fixed         )
-        bkp_wavelength_3_has_min        = copy.deepcopy(self.wavelength_3_has_min       )
-        bkp_wavelength_3_min            = copy.deepcopy(self.wavelength_3_min           )
-        bkp_wavelength_3_has_max        = copy.deepcopy(self.wavelength_3_has_max       )
-        bkp_wavelength_3_max            = copy.deepcopy(self.wavelength_3_max           )
-        bkp_wavelength_3_function       = copy.deepcopy(self.wavelength_3_function      )
-        bkp_wavelength_3_function_value = copy.deepcopy(self.wavelength_3_function_value)
-        
-        try:
-            self.wavelength_3                = []
-            self.wavelength_3_fixed          = []
-            self.wavelength_3_has_min        = []
-            self.wavelength_3_min            = []
-            self.wavelength_3_has_max        = []
-            self.wavelength_3_max            = []
-            self.wavelength_3_function       = []
-            self.wavelength_3_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.wavelength_3.append(self.radiation_box_array[index].wavelength_3)
-                self.wavelength_3_fixed.append(self.radiation_box_array[index].wavelength_3_fixed)
-                self.wavelength_3_has_min.append(self.radiation_box_array[index].wavelength_3_has_min)
-                self.wavelength_3_min.append(self.radiation_box_array[index].wavelength_3_min)
-                self.wavelength_3_has_max.append(self.radiation_box_array[index].wavelength_3_has_max)
-                self.wavelength_3_max.append(self.radiation_box_array[index].wavelength_3_max)
-                self.wavelength_3_function.append(self.radiation_box_array[index].wavelength_3_function)
-                self.wavelength_3_function_value.append(self.radiation_box_array[index].wavelength_3_function_value)
-        except:
-            self.wavelength_3                = copy.deepcopy(bkp_wavelength_3               )
-            self.wavelength_3_fixed          = copy.deepcopy(bkp_wavelength_3_fixed         )
-            self.wavelength_3_has_min        = copy.deepcopy(bkp_wavelength_3_has_min       )
-            self.wavelength_3_min            = copy.deepcopy(bkp_wavelength_3_min           )
-            self.wavelength_3_has_max        = copy.deepcopy(bkp_wavelength_3_has_max       )
-            self.wavelength_3_max            = copy.deepcopy(bkp_wavelength_3_max           )
-            self.wavelength_3_function       = copy.deepcopy(bkp_wavelength_3_function      )
-            self.wavelength_3_function_value = copy.deepcopy(bkp_wavelength_3_function_value)
-
-    def dump_wavelength_4(self):
-        bkp_wavelength_4                = copy.deepcopy(self.wavelength_4               )
-        bkp_wavelength_4_fixed          = copy.deepcopy(self.wavelength_4_fixed         )
-        bkp_wavelength_4_has_min        = copy.deepcopy(self.wavelength_4_has_min       )
-        bkp_wavelength_4_min            = copy.deepcopy(self.wavelength_4_min           )
-        bkp_wavelength_4_has_max        = copy.deepcopy(self.wavelength_4_has_max       )
-        bkp_wavelength_4_max            = copy.deepcopy(self.wavelength_4_max           )
-        bkp_wavelength_4_function       = copy.deepcopy(self.wavelength_4_function      )
-        bkp_wavelength_4_function_value = copy.deepcopy(self.wavelength_4_function_value)
-        
-        try:
-            self.wavelength_4                = []
-            self.wavelength_4_fixed          = []
-            self.wavelength_4_has_min        = []
-            self.wavelength_4_min            = []
-            self.wavelength_4_has_max        = []
-            self.wavelength_4_max            = []
-            self.wavelength_4_function       = []
-            self.wavelength_4_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.wavelength_4.append(self.radiation_box_array[index].wavelength_4)
-                self.wavelength_4_fixed.append(self.radiation_box_array[index].wavelength_4_fixed)
-                self.wavelength_4_has_min.append(self.radiation_box_array[index].wavelength_4_has_min)
-                self.wavelength_4_min.append(self.radiation_box_array[index].wavelength_4_min)
-                self.wavelength_4_has_max.append(self.radiation_box_array[index].wavelength_4_has_max)
-                self.wavelength_4_max.append(self.radiation_box_array[index].wavelength_4_max)
-                self.wavelength_4_function.append(self.radiation_box_array[index].wavelength_4_function)
-                self.wavelength_4_function_value.append(self.radiation_box_array[index].wavelength_4_function_value)
-        except:
-            self.wavelength_4                = copy.deepcopy(bkp_wavelength_4               )
-            self.wavelength_4_fixed          = copy.deepcopy(bkp_wavelength_4_fixed         )
-            self.wavelength_4_has_min        = copy.deepcopy(bkp_wavelength_4_has_min       )
-            self.wavelength_4_min            = copy.deepcopy(bkp_wavelength_4_min           )
-            self.wavelength_4_has_max        = copy.deepcopy(bkp_wavelength_4_has_max       )
-            self.wavelength_4_max            = copy.deepcopy(bkp_wavelength_4_max           )
-            self.wavelength_4_function       = copy.deepcopy(bkp_wavelength_4_function      )
-            self.wavelength_4_function_value = copy.deepcopy(bkp_wavelength_4_function_value)
-
-    def dump_wavelength_5(self):
-        bkp_wavelength_5                = copy.deepcopy(self.wavelength_5               )
-        bkp_wavelength_5_fixed          = copy.deepcopy(self.wavelength_5_fixed         )
-        bkp_wavelength_5_has_min        = copy.deepcopy(self.wavelength_5_has_min       )
-        bkp_wavelength_5_min            = copy.deepcopy(self.wavelength_5_min           )
-        bkp_wavelength_5_has_max        = copy.deepcopy(self.wavelength_5_has_max       )
-        bkp_wavelength_5_max            = copy.deepcopy(self.wavelength_5_max           )
-        bkp_wavelength_5_function       = copy.deepcopy(self.wavelength_5_function      )
-        bkp_wavelength_5_function_value = copy.deepcopy(self.wavelength_5_function_value)
-        
-        try:
-            self.wavelength_5                = []
-            self.wavelength_5_fixed          = []
-            self.wavelength_5_has_min        = []
-            self.wavelength_5_min            = []
-            self.wavelength_5_has_max        = []
-            self.wavelength_5_max            = []
-            self.wavelength_5_function       = []
-            self.wavelength_5_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.wavelength_5.append(self.radiation_box_array[index].wavelength_5)
-                self.wavelength_5_fixed.append(self.radiation_box_array[index].wavelength_5_fixed)
-                self.wavelength_5_has_min.append(self.radiation_box_array[index].wavelength_5_has_min)
-                self.wavelength_5_min.append(self.radiation_box_array[index].wavelength_5_min)
-                self.wavelength_5_has_max.append(self.radiation_box_array[index].wavelength_5_has_max)
-                self.wavelength_5_max.append(self.radiation_box_array[index].wavelength_5_max)
-                self.wavelength_5_function.append(self.radiation_box_array[index].wavelength_5_function)
-                self.wavelength_5_function_value.append(self.radiation_box_array[index].wavelength_5_function_value)
-        except:
-            self.wavelength_5                = copy.deepcopy(bkp_wavelength_5               )
-            self.wavelength_5_fixed          = copy.deepcopy(bkp_wavelength_5_fixed         )
-            self.wavelength_5_has_min        = copy.deepcopy(bkp_wavelength_5_has_min       )
-            self.wavelength_5_min            = copy.deepcopy(bkp_wavelength_5_min           )
-            self.wavelength_5_has_max        = copy.deepcopy(bkp_wavelength_5_has_max       )
-            self.wavelength_5_max            = copy.deepcopy(bkp_wavelength_5_max           )
-            self.wavelength_5_function       = copy.deepcopy(bkp_wavelength_5_function      )
-            self.wavelength_5_function_value = copy.deepcopy(bkp_wavelength_5_function_value)
-
-    def dump_weight_2(self):
-        bkp_weight_2                = copy.deepcopy(self.weight_2               )
-        bkp_weight_2_fixed          = copy.deepcopy(self.weight_2_fixed         )
-        bkp_weight_2_has_min        = copy.deepcopy(self.weight_2_has_min       )
-        bkp_weight_2_min            = copy.deepcopy(self.weight_2_min           )
-        bkp_weight_2_has_max        = copy.deepcopy(self.weight_2_has_max       )
-        bkp_weight_2_max            = copy.deepcopy(self.weight_2_max           )
-        bkp_weight_2_function       = copy.deepcopy(self.weight_2_function      )
-        bkp_weight_2_function_value = copy.deepcopy(self.weight_2_function_value)
-        
-        try:
-            self.weight_2                = []
-            self.weight_2_fixed          = []
-            self.weight_2_has_min        = []
-            self.weight_2_min            = []
-            self.weight_2_has_max        = []
-            self.weight_2_max            = []
-            self.weight_2_function       = []
-            self.weight_2_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.weight_2.append(self.radiation_box_array[index].weight_2)
-                self.weight_2_fixed.append(self.radiation_box_array[index].weight_2_fixed)
-                self.weight_2_has_min.append(self.radiation_box_array[index].weight_2_has_min)
-                self.weight_2_min.append(self.radiation_box_array[index].weight_2_min)
-                self.weight_2_has_max.append(self.radiation_box_array[index].weight_2_has_max)
-                self.weight_2_max.append(self.radiation_box_array[index].weight_2_max)
-                self.weight_2_function.append(self.radiation_box_array[index].weight_2_function)
-                self.weight_2_function_value.append(self.radiation_box_array[index].weight_2_function_value)
-        except:
-            self.weight_2                = copy.deepcopy(bkp_weight_2               )
-            self.weight_2_fixed          = copy.deepcopy(bkp_weight_2_fixed         )
-            self.weight_2_has_min        = copy.deepcopy(bkp_weight_2_has_min       )
-            self.weight_2_min            = copy.deepcopy(bkp_weight_2_min           )
-            self.weight_2_has_max        = copy.deepcopy(bkp_weight_2_has_max       )
-            self.weight_2_max            = copy.deepcopy(bkp_weight_2_max           )
-            self.weight_2_function       = copy.deepcopy(bkp_weight_2_function      )
-            self.weight_2_function_value = copy.deepcopy(bkp_weight_2_function_value)
-
-    def dump_weight_3(self):
-        bkp_weight_3                = copy.deepcopy(self.weight_3               )
-        bkp_weight_3_fixed          = copy.deepcopy(self.weight_3_fixed         )
-        bkp_weight_3_has_min        = copy.deepcopy(self.weight_3_has_min       )
-        bkp_weight_3_min            = copy.deepcopy(self.weight_3_min           )
-        bkp_weight_3_has_max        = copy.deepcopy(self.weight_3_has_max       )
-        bkp_weight_3_max            = copy.deepcopy(self.weight_3_max           )
-        bkp_weight_3_function       = copy.deepcopy(self.weight_3_function      )
-        bkp_weight_3_function_value = copy.deepcopy(self.weight_3_function_value)
-        
-        try:
-            self.weight_3                = []
-            self.weight_3_fixed          = []
-            self.weight_3_has_min        = []
-            self.weight_3_min            = []
-            self.weight_3_has_max        = []
-            self.weight_3_max            = []
-            self.weight_3_function       = []
-            self.weight_3_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.weight_3.append(self.radiation_box_array[index].weight_3)
-                self.weight_3_fixed.append(self.radiation_box_array[index].weight_3_fixed)
-                self.weight_3_has_min.append(self.radiation_box_array[index].weight_3_has_min)
-                self.weight_3_min.append(self.radiation_box_array[index].weight_3_min)
-                self.weight_3_has_max.append(self.radiation_box_array[index].weight_3_has_max)
-                self.weight_3_max.append(self.radiation_box_array[index].weight_3_max)
-                self.weight_3_function.append(self.radiation_box_array[index].weight_3_function)
-                self.weight_3_function_value.append(self.radiation_box_array[index].weight_3_function_value)
-        except:
-            self.weight_3                = copy.deepcopy(bkp_weight_3               )
-            self.weight_3_fixed          = copy.deepcopy(bkp_weight_3_fixed         )
-            self.weight_3_has_min        = copy.deepcopy(bkp_weight_3_has_min       )
-            self.weight_3_min            = copy.deepcopy(bkp_weight_3_min           )
-            self.weight_3_has_max        = copy.deepcopy(bkp_weight_3_has_max       )
-            self.weight_3_max            = copy.deepcopy(bkp_weight_3_max           )
-            self.weight_3_function       = copy.deepcopy(bkp_weight_3_function      )
-            self.weight_3_function_value = copy.deepcopy(bkp_weight_3_function_value)
-
-    def dump_weight_4(self):
-        bkp_weight_4                = copy.deepcopy(self.weight_4               )
-        bkp_weight_4_fixed          = copy.deepcopy(self.weight_4_fixed         )
-        bkp_weight_4_has_min        = copy.deepcopy(self.weight_4_has_min       )
-        bkp_weight_4_min            = copy.deepcopy(self.weight_4_min           )
-        bkp_weight_4_has_max        = copy.deepcopy(self.weight_4_has_max       )
-        bkp_weight_4_max            = copy.deepcopy(self.weight_4_max           )
-        bkp_weight_4_function       = copy.deepcopy(self.weight_4_function      )
-        bkp_weight_4_function_value = copy.deepcopy(self.weight_4_function_value)
-        
-        try:
-            self.weight_4                = []
-            self.weight_4_fixed          = []
-            self.weight_4_has_min        = []
-            self.weight_4_min            = []
-            self.weight_4_has_max        = []
-            self.weight_4_max            = []
-            self.weight_4_function       = []
-            self.weight_4_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.weight_4.append(self.radiation_box_array[index].weight_4)
-                self.weight_4_fixed.append(self.radiation_box_array[index].weight_4_fixed)
-                self.weight_4_has_min.append(self.radiation_box_array[index].weight_4_has_min)
-                self.weight_4_min.append(self.radiation_box_array[index].weight_4_min)
-                self.weight_4_has_max.append(self.radiation_box_array[index].weight_4_has_max)
-                self.weight_4_max.append(self.radiation_box_array[index].weight_4_max)
-                self.weight_4_function.append(self.radiation_box_array[index].weight_4_function)
-                self.weight_4_function_value.append(self.radiation_box_array[index].weight_4_function_value)
-        except:
-            self.weight_4                = copy.deepcopy(bkp_weight_4               )
-            self.weight_4_fixed          = copy.deepcopy(bkp_weight_4_fixed         )
-            self.weight_4_has_min        = copy.deepcopy(bkp_weight_4_has_min       )
-            self.weight_4_min            = copy.deepcopy(bkp_weight_4_min           )
-            self.weight_4_has_max        = copy.deepcopy(bkp_weight_4_has_max       )
-            self.weight_4_max            = copy.deepcopy(bkp_weight_4_max           )
-            self.weight_4_function       = copy.deepcopy(bkp_weight_4_function      )
-            self.weight_4_function_value = copy.deepcopy(bkp_weight_4_function_value)
-
-    def dump_weight_5(self):
-        bkp_weight_5                = copy.deepcopy(self.weight_5               )
-        bkp_weight_5_fixed          = copy.deepcopy(self.weight_5_fixed         )
-        bkp_weight_5_has_min        = copy.deepcopy(self.weight_5_has_min       )
-        bkp_weight_5_min            = copy.deepcopy(self.weight_5_min           )
-        bkp_weight_5_has_max        = copy.deepcopy(self.weight_5_has_max       )
-        bkp_weight_5_max            = copy.deepcopy(self.weight_5_max           )
-        bkp_weight_5_function       = copy.deepcopy(self.weight_5_function      )
-        bkp_weight_5_function_value = copy.deepcopy(self.weight_5_function_value)
-        
-        try:
-            self.weight_5                = []
-            self.weight_5_fixed          = []
-            self.weight_5_has_min        = []
-            self.weight_5_min            = []
-            self.weight_5_has_max        = []
-            self.weight_5_max            = []
-            self.weight_5_function       = []
-            self.weight_5_function_value = []    
-        
-            for index in range(len(self.radiation_box_array)):
-                self.weight_5.append(self.radiation_box_array[index].weight_5)
-                self.weight_5_fixed.append(self.radiation_box_array[index].weight_5_fixed)
-                self.weight_5_has_min.append(self.radiation_box_array[index].weight_5_has_min)
-                self.weight_5_min.append(self.radiation_box_array[index].weight_5_min)
-                self.weight_5_has_max.append(self.radiation_box_array[index].weight_5_has_max)
-                self.weight_5_max.append(self.radiation_box_array[index].weight_5_max)
-                self.weight_5_function.append(self.radiation_box_array[index].weight_5_function)
-                self.weight_5_function_value.append(self.radiation_box_array[index].weight_5_function_value)
-        except:
-            self.weight_5                = copy.deepcopy(bkp_weight_5               )
-            self.weight_5_fixed          = copy.deepcopy(bkp_weight_5_fixed         )
-            self.weight_5_has_min        = copy.deepcopy(bkp_weight_5_has_min       )
-            self.weight_5_min            = copy.deepcopy(bkp_weight_5_min           )
-            self.weight_5_has_max        = copy.deepcopy(bkp_weight_5_has_max       )
-            self.weight_5_max            = copy.deepcopy(bkp_weight_5_max           )
-            self.weight_5_function       = copy.deepcopy(bkp_weight_5_function      )
-            self.weight_5_function_value = copy.deepcopy(bkp_weight_5_function_value)
-
-from PyQt5.QtWidgets import QVBoxLayout
-from orangecontrib.wonder.util.gui_utility import InnerBox
-
-class RadiationBox(InnerBox):
-
-    is_multiple_wavelength = 0
-    wavelength = 0.0826
-    wavelength_fixed = 0
-    wavelength_has_min = 0
-    wavelength_min = 0.0
-    wavelength_has_max = 0
-    wavelength_max = 0.0
-    wavelength_function = 0
-    wavelength_function_value = ""
-    xray_tube_key = "CuKa2"
-    wavelength_2 = 0
-    wavelength_2_fixed = 1
-    wavelength_2_has_min = 0
-    wavelength_2_min = 0.0
-    wavelength_2_has_max = 0
-    wavelength_2_max = 0.0
-    wavelength_2_function = 0
-    wavelength_2_function_value = ""
-    wavelength_3 = 0
-    wavelength_3_fixed = 1
-    wavelength_3_has_min = 0
-    wavelength_3_min = 0.0
-    wavelength_3_has_max = 0
-    wavelength_3_max = 0.0
-    wavelength_3_function = 0
-    wavelength_3_function_value = ""
-    wavelength_4 = 0
-    wavelength_4_fixed = 1
-    wavelength_4_has_min = 0
-    wavelength_4_min = 0.0
-    wavelength_4_has_max = 0
-    wavelength_4_max = 0.0
-    wavelength_4_function = 0
-    wavelength_4_function_value = ""
-    wavelength_5 = 0
-    wavelength_5_fixed = 1
-    wavelength_5_has_min = 0
-    wavelength_5_min = 0.0
-    wavelength_5_has_max = 0
-    wavelength_5_max = 0.0
-    wavelength_5_function = 0
-    wavelength_5_function_value = ""
-    weight_2 = 0
-    weight_2_fixed = 1
-    weight_2_has_min = 0
-    weight_2_min = 0.0
-    weight_2_has_max = 0
-    weight_2_max = 0.0
-    weight_2_function = 0
-    weight_2_function_value = ""
-    weight_3 = 0
-    weight_3_fixed = 1
-    weight_3_has_min = 0
-    weight_3_min = 0.0
-    weight_3_has_max = 0
-    weight_3_max = 0.0
-    weight_3_function = 0
-    weight_3_function_value = ""
-    weight_4 = 0
-    weight_4_fixed = 1
-    weight_4_has_min = 0
-    weight_4_min = 0.0
-    weight_4_has_max = 0
-    weight_4_max = 0.0
-    weight_4_function = 0
-    weight_4_function_value = ""
-    weight_5 = 0
-    weight_5_fixed = 1
-    weight_5_has_min = 0
-    weight_5_min = 0.0
-    weight_5_has_max = 0
-    weight_5_max = 0.0
-    weight_5_function = 0
-    weight_5_function_value = ""
-
-    widget = None
-    is_on_init = True
-
-    parameter_functions = {}
-
-    index = 0
+class RadiationBox(ParameterBox):
 
     def __init__(self,
                  widget=None,
@@ -902,97 +371,161 @@ class RadiationBox(InnerBox):
                  weight_5_max = 0.0,
                  weight_5_function = 0,
                  weight_5_function_value = ""):
-        super(RadiationBox, self).__init__()
+        super(RadiationBox, self).__init__(widget=widget,
+                                           parent=parent,
+                                           index=index,
+                                           is_multiple_wavelength=is_multiple_wavelength,
+                                           wavelength = wavelength,
+                                           wavelength_fixed = wavelength_fixed,
+                                           wavelength_has_min = wavelength_has_min,
+                                           wavelength_min = wavelength_min,
+                                           wavelength_has_max = wavelength_has_max,
+                                           wavelength_max = wavelength_max,
+                                           wavelength_function = wavelength_function,
+                                           wavelength_function_value = wavelength_function_value,
+                                           xray_tube_key = xray_tube_key,
+                                           wavelength_2 = wavelength_2,
+                                           wavelength_2_fixed = wavelength_2_fixed,
+                                           wavelength_2_has_min = wavelength_2_has_min,
+                                           wavelength_2_min = wavelength_2_min,
+                                           wavelength_2_has_max = wavelength_2_has_max,
+                                           wavelength_2_max = wavelength_2_max,
+                                           wavelength_2_function = wavelength_2_function,
+                                           wavelength_2_function_value = wavelength_2_function_value,
+                                           wavelength_3 = wavelength_3,
+                                           wavelength_3_fixed = wavelength_3_fixed,
+                                           wavelength_3_has_min = wavelength_3_has_min,
+                                           wavelength_3_min = wavelength_3_min,
+                                           wavelength_3_has_max = wavelength_3_has_max,
+                                           wavelength_3_max = wavelength_3_max,
+                                           wavelength_3_function = wavelength_3_function,
+                                           wavelength_3_function_value = wavelength_3_function_value,
+                                           wavelength_4 = wavelength_4,
+                                           wavelength_4_fixed = wavelength_4_fixed,
+                                           wavelength_4_has_min = wavelength_4_has_min,
+                                           wavelength_4_min = wavelength_4_min,
+                                           wavelength_4_has_max = wavelength_4_has_max,
+                                           wavelength_4_max = wavelength_4_max,
+                                           wavelength_4_function = wavelength_4_function,
+                                           wavelength_4_function_value = wavelength_4_function_value,
+                                           wavelength_5 = wavelength_5,
+                                           wavelength_5_fixed = wavelength_5_fixed,
+                                           wavelength_5_has_min = wavelength_5_has_min,
+                                           wavelength_5_min = wavelength_5_min,
+                                           wavelength_5_has_max = wavelength_5_has_max,
+                                           wavelength_5_max = wavelength_5_max,
+                                           wavelength_5_function = wavelength_5_function,
+                                           wavelength_5_function_value = wavelength_5_function_value,
+                                           weight_2 = weight_2,
+                                           weight_2_fixed = weight_2_fixed,
+                                           weight_2_has_min = weight_2_has_min,
+                                           weight_2_min = weight_2_min,
+                                           weight_2_has_max = weight_2_has_max,
+                                           weight_2_max = weight_2_max,
+                                           weight_2_function = weight_2_function,
+                                           weight_2_function_value = weight_2_function_value,
+                                           weight_3 = weight_3,
+                                           weight_3_fixed = weight_3_fixed,
+                                           weight_3_has_min = weight_3_has_min,
+                                           weight_3_min = weight_3_min,
+                                           weight_3_has_max = weight_3_has_max,
+                                           weight_3_max = weight_3_max,
+                                           weight_3_function = weight_3_function,
+                                           weight_3_function_value = weight_3_function_value,
+                                           weight_4 = weight_4,
+                                           weight_4_fixed = weight_4_fixed,
+                                           weight_4_has_min = weight_4_has_min,
+                                           weight_4_min = weight_4_min,
+                                           weight_4_has_max = weight_4_has_max,
+                                           weight_4_max = weight_4_max,
+                                           weight_4_function = weight_4_function,
+                                           weight_4_function_value = weight_4_function_value,
+                                           weight_5 = weight_5,
+                                           weight_5_fixed = weight_5_fixed,
+                                           weight_5_has_min = weight_5_has_min,
+                                           weight_5_min = weight_5_min,
+                                           weight_5_has_max = weight_5_has_max,
+                                           weight_5_max = weight_5_max,
+                                           weight_5_function = weight_5_function,
+                                           weight_5_function_value = weight_5_function_value)
 
-        self.widget = widget
+    def init_fields(self, **kwargs):
+        self.is_multiple_wavelength      = kwargs["is_multiple_wavelength"]
+        self.wavelength                  = kwargs["wavelength"]
+        self.wavelength_fixed            = kwargs["wavelength_fixed"]
+        self.wavelength_has_min          = kwargs["wavelength_has_min"]
+        self.wavelength_min              = kwargs["wavelength_min"]
+        self.wavelength_has_max          = kwargs["wavelength_has_max"]
+        self.wavelength_max              = kwargs["wavelength_max"]
+        self.wavelength_function         = kwargs["wavelength_function"]
+        self.wavelength_function_value   = kwargs["wavelength_function_value"]
+        self.xray_tube_key               = kwargs["xray_tube_key"]
+        self.wavelength_2                = kwargs["wavelength_2"]
+        self.wavelength_2_fixed          = kwargs["wavelength_2_fixed"]
+        self.wavelength_2_has_min        = kwargs["wavelength_2_has_min"]
+        self.wavelength_2_min            = kwargs["wavelength_2_min"]
+        self.wavelength_2_has_max        = kwargs["wavelength_2_has_max"]
+        self.wavelength_2_max            = kwargs["wavelength_2_max"]
+        self.wavelength_2_function       = kwargs["wavelength_2_function"]
+        self.wavelength_2_function_value = kwargs["wavelength_2_function_value"]
+        self.wavelength_3                = kwargs["wavelength_3"]
+        self.wavelength_3_fixed          = kwargs["wavelength_3_fixed"]
+        self.wavelength_3_has_min        = kwargs["wavelength_3_has_min"]
+        self.wavelength_3_min            = kwargs["wavelength_3_min"]
+        self.wavelength_3_has_max        = kwargs["wavelength_3_has_max"]
+        self.wavelength_3_max            = kwargs["wavelength_3_max"]
+        self.wavelength_3_function       = kwargs["wavelength_3_function"]
+        self.wavelength_3_function_value = kwargs["wavelength_3_function_value"]
+        self.wavelength_4                = kwargs["wavelength_4"]
+        self.wavelength_4_fixed          = kwargs["wavelength_4_fixed"]
+        self.wavelength_4_has_min        = kwargs["wavelength_4_has_min"]
+        self.wavelength_4_min            = kwargs["wavelength_4_min"]
+        self.wavelength_4_has_max        = kwargs["wavelength_4_has_max"]
+        self.wavelength_4_max            = kwargs["wavelength_4_max"]
+        self.wavelength_4_function       = kwargs["wavelength_4_function"]
+        self.wavelength_4_function_value = kwargs["wavelength_4_function_value"]
+        self.wavelength_5                = kwargs["wavelength_5"]
+        self.wavelength_5_fixed          = kwargs["wavelength_5_fixed"]
+        self.wavelength_5_has_min        = kwargs["wavelength_5_has_min"]
+        self.wavelength_5_min            = kwargs["wavelength_5_min"]
+        self.wavelength_5_has_max        = kwargs["wavelength_5_has_max"]
+        self.wavelength_5_max            = kwargs["wavelength_5_max"]
+        self.wavelength_5_function       = kwargs["wavelength_5_function"]
+        self.wavelength_5_function_value = kwargs["wavelength_5_function_value"]
+        self.weight_2                    = kwargs["weight_2"]
+        self.weight_2_fixed              = kwargs["weight_2_fixed"]
+        self.weight_2_has_min            = kwargs["weight_2_has_min"]
+        self.weight_2_min                = kwargs["weight_2_min"]
+        self.weight_2_has_max            = kwargs["weight_2_has_max"]
+        self.weight_2_max                = kwargs["weight_2_max"]
+        self.weight_2_function           = kwargs["weight_2_function"]
+        self.weight_2_function_value     = kwargs["weight_2_function_value"]
+        self.weight_3                    = kwargs["weight_3"]
+        self.weight_3_fixed              = kwargs["weight_3_fixed"]
+        self.weight_3_has_min            = kwargs["weight_3_has_min"]
+        self.weight_3_min                = kwargs["weight_3_min"]
+        self.weight_3_has_max            = kwargs["weight_3_has_max"]
+        self.weight_3_max                = kwargs["weight_3_max"]
+        self.weight_3_function           = kwargs["weight_3_function"]
+        self.weight_3_function_value     = kwargs["weight_3_function_value"]
+        self.weight_4                    = kwargs["weight_4"]
+        self.weight_4_fixed              = kwargs["weight_4_fixed"]
+        self.weight_4_has_min            = kwargs["weight_4_has_min"]
+        self.weight_4_min                = kwargs["weight_4_min"]
+        self.weight_4_has_max            = kwargs["weight_4_has_max"]
+        self.weight_4_max                = kwargs["weight_4_max"]
+        self.weight_4_function           = kwargs["weight_4_function"]
+        self.weight_4_function_value     = kwargs["weight_4_function_value"]
+        self.weight_5                    = kwargs["weight_5"]
+        self.weight_5_fixed              = kwargs["weight_5_fixed"]
+        self.weight_5_has_min            = kwargs["weight_5_has_min"]
+        self.weight_5_min                = kwargs["weight_5_min"]
+        self.weight_5_has_max            = kwargs["weight_5_has_max"]
+        self.weight_5_max                = kwargs["weight_5_max"]
+        self.weight_5_function           = kwargs["weight_5_function"]
+        self.weight_5_function_value     = kwargs["weight_5_function_value"]
 
-        self.setLayout(QVBoxLayout())
-        self.layout().setAlignment(Qt.AlignTop)
-        self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
-        self.setFixedHeight(500)
-
-        self.index = index
-
-        self.is_multiple_wavelength      = is_multiple_wavelength
-        self.wavelength                  = wavelength
-        self.wavelength_fixed            = wavelength_fixed
-        self.wavelength_has_min          = wavelength_has_min
-        self.wavelength_min              = wavelength_min
-        self.wavelength_has_max          = wavelength_has_max
-        self.wavelength_max              = wavelength_max
-        self.wavelength_function         = wavelength_function
-        self.wavelength_function_value   = wavelength_function_value
-        self.xray_tube_key               = xray_tube_key
-        self.wavelength_2                = wavelength_2
-        self.wavelength_2_fixed          = wavelength_2_fixed
-        self.wavelength_2_has_min        = wavelength_2_has_min
-        self.wavelength_2_min            = wavelength_2_min
-        self.wavelength_2_has_max        = wavelength_2_has_max
-        self.wavelength_2_max            = wavelength_2_max
-        self.wavelength_2_function       = wavelength_2_function
-        self.wavelength_2_function_value = wavelength_2_function_value
-        self.wavelength_3                = wavelength_3
-        self.wavelength_3_fixed          = wavelength_3_fixed
-        self.wavelength_3_has_min        = wavelength_3_has_min
-        self.wavelength_3_min            = wavelength_3_min
-        self.wavelength_3_has_max        = wavelength_3_has_max
-        self.wavelength_3_max            = wavelength_3_max
-        self.wavelength_3_function       = wavelength_3_function
-        self.wavelength_3_function_value = wavelength_3_function_value
-        self.wavelength_4                = wavelength_4
-        self.wavelength_4_fixed          = wavelength_4_fixed
-        self.wavelength_4_has_min        = wavelength_4_has_min
-        self.wavelength_4_min            = wavelength_4_min
-        self.wavelength_4_has_max        = wavelength_4_has_max
-        self.wavelength_4_max            = wavelength_4_max
-        self.wavelength_4_function       = wavelength_4_function
-        self.wavelength_4_function_value = wavelength_4_function_value
-        self.wavelength_5                = wavelength_5
-        self.wavelength_5_fixed          = wavelength_5_fixed
-        self.wavelength_5_has_min        = wavelength_5_has_min
-        self.wavelength_5_min            = wavelength_5_min
-        self.wavelength_5_has_max        = wavelength_5_has_max
-        self.wavelength_5_max            = wavelength_5_max
-        self.wavelength_5_function       = wavelength_5_function
-        self.wavelength_5_function_value = wavelength_5_function_value
-        self.weight_2                    = weight_2
-        self.weight_2_fixed              = weight_2_fixed
-        self.weight_2_has_min            = weight_2_has_min
-        self.weight_2_min                = weight_2_min
-        self.weight_2_has_max            = weight_2_has_max
-        self.weight_2_max                = weight_2_max
-        self.weight_2_function           = weight_2_function
-        self.weight_2_function_value     = weight_2_function_value
-        self.weight_3                    = weight_3
-        self.weight_3_fixed              = weight_3_fixed
-        self.weight_3_has_min            = weight_3_has_min
-        self.weight_3_min                = weight_3_min
-        self.weight_3_has_max            = weight_3_has_max
-        self.weight_3_max                = weight_3_max
-        self.weight_3_function           = weight_3_function
-        self.weight_3_function_value     = weight_3_function_value
-        self.weight_4                    = weight_4
-        self.weight_4_fixed              = weight_4_fixed
-        self.weight_4_has_min            = weight_4_has_min
-        self.weight_4_min                = weight_4_min
-        self.weight_4_has_max            = weight_4_has_max
-        self.weight_4_max                = weight_4_max
-        self.weight_4_function           = weight_4_function
-        self.weight_4_function_value     = weight_4_function_value
-        self.weight_5                    = weight_5
-        self.weight_5_fixed              = weight_5_fixed
-        self.weight_5_has_min            = weight_5_has_min
-        self.weight_5_min                = weight_5_min
-        self.weight_5_has_max            = weight_5_has_max
-        self.weight_5_max                = weight_5_max
-        self.weight_5_function           = weight_5_function
-        self.weight_5_function_value     = weight_5_function_value
-
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH-45
-
-        parent.layout().addWidget(self)
-        container = self
-
+    def init_gui(self, container):
         box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
 
         orangegui.comboBox(box, self, "is_multiple_wavelength", label="Incident Radiation", items=["Single Wavelenght", "X-ray Tube"], orientation="horizontal", callback=self.set_is_multiple_wavelength)
@@ -1013,8 +546,6 @@ class RadiationBox(InnerBox):
 
         self.set_is_multiple_wavelength()
 
-        self.is_on_init = False
-
     def get_xray_tube_keys(self):
         items = []
 
@@ -1022,30 +553,6 @@ class RadiationBox(InnerBox):
             items.append(key)
 
         return items
-
-    def set_data(self, incident_radiation):
-        # analisi compatibilità
-        if (self.is_multiple_wavelength==0 and not incident_radiation.is_single_wavelength) or \
-           (self.is_multiple_wavelength==1 and incident_radiation.is_single_wavelength):
-            raise ValueError("Incident Radiation is incompatible with previous setup: multiple/single wavelength")
-
-        if not incident_radiation.is_single_wavelength:
-            if self.xray_tube_key != incident_radiation.xray_tube_key:
-                raise ValueError("Incident Radiation is incompatible with previous setup: different xray-tube")
-
-        # ---------------------------------------
-
-        OWGenericWidget.populate_fields_in_widget(self, "wavelength", incident_radiation.wavelength, value_only=True)
-        self.is_multiple_wavelength = 0 if incident_radiation.is_single_wavelength else 1
-
-        if not incident_radiation.is_single_wavelength:
-            self.xray_tube_key=incident_radiation.xray_tube_key
-
-            for index in range(0, len(incident_radiation.secondary_wavelengths)):
-                OWGenericWidget.populate_fields_in_widget(self, "wavelength_" + str(2 + index), incident_radiation.secondary_wavelengths[index]        , value_only=True)
-                OWGenericWidget.populate_fields_in_widget(self, "weight_" + str(2 + index)    , incident_radiation.secondary_wavelengths_weights[index], value_only=True)
-
-        self.set_is_multiple_wavelength(switch_tube=False)
 
     def create_wavelength_boxes(self):
         self.secondary_wavelengths_boxes = {}
@@ -1163,14 +670,31 @@ class RadiationBox(InnerBox):
     def callback_weight_5(self):
         if not self.is_on_init: self.widget.dump_weight_5()
 
-    def after_change_workspace_units(self):
-        pass
+    def set_data(self, incident_radiation):
+        if (self.is_multiple_wavelength==0 and not incident_radiation.is_single_wavelength) or \
+           (self.is_multiple_wavelength==1 and incident_radiation.is_single_wavelength):
+            raise ValueError("Incident Radiation is incompatible with previous setup: multiple/single wavelength")
 
-    def get_parameters_prefix(self):
-        return IncidentRadiation.get_parameters_prefix() + self.get_parameter_progressive()
+        if not incident_radiation.is_single_wavelength:
+            if self.xray_tube_key != incident_radiation.xray_tube_key:
+                raise ValueError("Incident Radiation is incompatible with previous setup: different xray-tube")
 
-    def get_parameter_progressive(self):
-        return str(self.index + 1) + "_"
+        # ---------------------------------------
+
+        OWGenericWidget.populate_fields_in_widget(self, "wavelength", incident_radiation.wavelength, value_only=True)
+        self.is_multiple_wavelength = 0 if incident_radiation.is_single_wavelength else 1
+
+        if not incident_radiation.is_single_wavelength:
+            self.xray_tube_key=incident_radiation.xray_tube_key
+
+            for index in range(0, len(incident_radiation.secondary_wavelengths)):
+                OWGenericWidget.populate_fields_in_widget(self, "wavelength_" + str(2 + index), incident_radiation.secondary_wavelengths[index]        , value_only=True)
+                OWGenericWidget.populate_fields_in_widget(self, "weight_" + str(2 + index)    , incident_radiation.secondary_wavelengths_weights[index], value_only=True)
+
+        self.set_is_multiple_wavelength(switch_tube=False)
+
+    def get_basic_parameter_prefix(self):
+        return IncidentRadiation.get_parameters_prefix()
 
     def get_incident_radiation(self):
         incident_radiation = IncidentRadiation(wavelength=OWGenericWidget.populate_parameter_in_widget(self, "wavelength", self.get_parameters_prefix()))
@@ -1194,9 +718,11 @@ class RadiationBox(InnerBox):
 
         return incident_radiation
 
+from PyQt5.QtWidgets import QApplication
+
 if __name__ == "__main__":
     a = QApplication(sys.argv)
-    ow = OWRadiationNew()
+    ow = OWRadiation()
     ow.show()
     a.exec_()
     ow.saveSettings()

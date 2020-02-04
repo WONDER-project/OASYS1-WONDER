@@ -16,7 +16,6 @@ from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM
 from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
-
 class QMinValueValidator(QDoubleValidator):
 
     def __init__(self, min_value, max_value=None, min_accepted=True, parent=None):
@@ -83,6 +82,7 @@ class OWGenericWidget(widget.OWWidget):
     TABS_AREA_HEIGHT = 560
 
     fit_global_parameters = None
+
     parameter_functions = {}
 
     IS_DEVELOP = OW_IS_DEVELOP

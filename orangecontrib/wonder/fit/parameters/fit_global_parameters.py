@@ -14,7 +14,7 @@ class FitGlobalParameters(ParametersList):
     fit_initialization = None
     measured_dataset = None
     instrumental_parameters = None
-    background_parameters = None
+    background_parameters   = None
     shift_parameters = None
     size_parameters = None
     strain_parameters = None

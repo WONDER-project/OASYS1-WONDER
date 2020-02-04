@@ -107,7 +107,7 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericWidget):
                         for diffraction_pattern_index in range(len(parameters)):
                             parameters_item = self.get_parameter_item(diffraction_pattern_index)
 
-                            if diffraction_pattern_index < len(self.displacement):
+                            if diffraction_pattern_index < self.get_current_dimension():
                                 parameter_box = self.parameter_box_array[diffraction_pattern_index]
                                 self.parameter_tabs.setTabText(diffraction_pattern_index, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False))
                             else:

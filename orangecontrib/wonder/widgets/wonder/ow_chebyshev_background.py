@@ -193,13 +193,13 @@ class OWChebyshevBackground(OWGenericDiffractionPatternParametersWidget):
         return ChebyshevBackground(widget=self, parent=parameter_tab, index=index)
 
     def set_parameter(self):
-        self.fit_global_parameters.set_instrumental_parameters([self.get_parameter_box(index).get_background() for index in range(self.get_current_dimension())])
+        self.fit_global_parameters.set_background_parameters([self.get_parameter_box(index).get_background() for index in range(self.get_current_dimension())])
 
     def get_parameter_array(self):
-        return self.fit_global_parameters.get_instrumental_parameters(ChebyshevBackground.__name__)
+        return self.fit_global_parameters.get_background_parameters(ChebyshevBackground.__name__)
 
     def get_parameter_item(self, diffraction_pattern_index):
-        return self.fit_global_parameters.get_instrumental_parameters_item(ChebyshevBackground.__name__, diffraction_pattern_index)
+        return self.fit_global_parameters.get_background_parameters_item(ChebyshevBackground.__name__, diffraction_pattern_index)
 
     def dumpSettings(self):
         self.dump_c0()
