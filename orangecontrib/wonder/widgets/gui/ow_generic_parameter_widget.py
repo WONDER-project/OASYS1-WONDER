@@ -15,9 +15,6 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericWidget):
 
     use_single_parameter_set = Setting(0)
 
-    inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
-    outputs = [("Fit Global Parameters", FitGlobalParameters)]
-
     def __init__(self):
         super().__init__(show_automatic_box=True)
 

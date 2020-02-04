@@ -11,10 +11,7 @@ from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.util import congruence
 
-from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
-from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
-
 
 class OWDebyeWaller(OWGenericWidget):
     name = "Debye-Waller Factor"
@@ -36,9 +33,6 @@ class OWDebyeWaller(OWGenericWidget):
     debye_waller_factors_max = Setting([[0.0]])
     debye_waller_factors_function = Setting([[0]])
     debye_waller_factors_function_value = Setting([[""]])
-
-    inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
-    outputs = [("Fit Global Parameters", FitGlobalParameters)]
 
     def __init__(self):
         super().__init__(show_automatic_box=True)

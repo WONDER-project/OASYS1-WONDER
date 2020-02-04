@@ -10,10 +10,12 @@ from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QDoubleValidator, QValidator
 
 from orangecontrib.wonder.util.gui_utility import ConfirmDialog, gui, ShowTextDialog, OW_IS_DEVELOP
+from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, Boundary
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
+
 
 class QMinValueValidator(QDoubleValidator):
 
@@ -84,6 +86,9 @@ class OWGenericWidget(widget.OWWidget):
     parameter_functions = {}
 
     IS_DEVELOP = OW_IS_DEVELOP
+
+    inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
+    outputs = [("Fit Global Parameters", FitGlobalParameters)]
 
     def __init__(self, show_automatic_box=True):
         super().__init__()

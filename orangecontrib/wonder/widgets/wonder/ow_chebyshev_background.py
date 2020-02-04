@@ -395,7 +395,6 @@ class ChebyshevBackgroundBox(ParameterBox):
                                                      c9_function_value = c9_function_value)
 
     def init_fields(self, **kwargs):
-
         self.c0                = kwargs["c0"]
         self.c1                = kwargs["c1"]
         self.c2                = kwargs["c2"]

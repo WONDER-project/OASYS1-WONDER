@@ -40,7 +40,7 @@ class OWDiffractionPattern(OWGenericWidget):
 
     horizontal_headers = ["2Theta [deg]", "s [nm^-1]", "Intensity", "Error"]
 
-    outputs = [("Fit Global Parameters", FitGlobalParameters)]
+    inputs = []
 
     diffraction_patterns = None
 
