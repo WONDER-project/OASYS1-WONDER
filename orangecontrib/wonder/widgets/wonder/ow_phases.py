@@ -1,18 +1,17 @@
-import sys, copy
+import sys
 
-from PyQt5.QtWidgets import QMessageBox, QApplication
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMessageBox
 
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 from orangewidget.widget import OWAction
 
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import ParameterBox
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.util.fit_utilities import Symmetry
 
-from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
 class OWPhases(OWGenericWidget):
@@ -43,11 +42,6 @@ class OWPhases(OWGenericWidget):
     intensity_scale_factor_function       = Setting([0])
     intensity_scale_factor_function_value = Setting([""])
     phase_name                            = Setting([""])
-
-    inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
-    outputs = [("Fit Global Parameters", FitGlobalParameters)]
-
-    fit_global_parameters = None
 
     def __init__(self):
         super().__init__(show_automatic_box=True)
@@ -284,163 +278,14 @@ class OWPhases(OWGenericWidget):
         self.dump_intensity_scale_factor()
         self.dump_phase_name()
         
-    def dump_a(self):
-        bkp_a = copy.deepcopy(self.a)
-        bkp_a_fixed = copy.deepcopy(self.a_fixed)
-        bkp_a_has_min = copy.deepcopy(self.a_has_min)
-        bkp_a_min = copy.deepcopy(self.a_min)
-        bkp_a_has_max = copy.deepcopy(self.a_has_max)
-        bkp_a_max = copy.deepcopy(self.a_max)
-        bkp_a_function = copy.deepcopy(self.a_function)
-        bkp_a_function_value = copy.deepcopy(self.a_function_value)
+    def dump_a(self): self.dump_parameter("a")
+    def dump_symmetry(self): self.dump_variable("symmetry")
+    def dump_use_structure(self): self.dump_variable("use_structure")
+    def dump_formula(self): self.dump_variable("formula")
+    def dump_intensity_scale_factor(self): self.dump_parameter("intensity_scale_factor")
+    def dump_phase_name(self): self.dump_variable("phase_name")
 
-        try:
-            self.a = []
-            self.a_fixed = []
-            self.a_has_min = []
-            self.a_min = []
-            self.a_has_max = []
-            self.a_max = []
-            self.a_function = []
-            self.a_function_value = []
-
-            for index in range(len(self.phases_box_array)):
-                self.a.append(self.phases_box_array[index].a)
-                self.a_fixed.append(self.phases_box_array[index].a_fixed)
-                self.a_has_min.append(self.phases_box_array[index].a_has_min)
-                self.a_min.append(self.phases_box_array[index].a_min)
-                self.a_has_max.append(self.phases_box_array[index].a_has_max)
-                self.a_max.append(self.phases_box_array[index].a_max)
-                self.a_function.append(self.phases_box_array[index].a_function)
-                self.a_function_value.append(self.phases_box_array[index].a_function_value)
-        except Exception as e:
-            self.a = copy.deepcopy(bkp_a)
-            self.a_fixed = copy.deepcopy(bkp_a_fixed)
-            self.a_has_min = copy.deepcopy(bkp_a_has_min)
-            self.a_min = copy.deepcopy(bkp_a_min)
-            self.a_has_max = copy.deepcopy(bkp_a_has_max)
-            self.a_max = copy.deepcopy(bkp_a_max)
-            self.a_function = copy.deepcopy(bkp_a_function)
-            self.a_function_value = copy.deepcopy(bkp_a_function_value)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_symmetry(self):
-        bkp_symmetry = copy.deepcopy(self.symmetry)
-
-        try:
-            self.symmetry = []
-
-            for index in range(len(self.phases_box_array)):
-                self.symmetry.append(self.phases_box_array[index].symmetry)
-        except:
-            self.symmetry = copy.deepcopy(bkp_symmetry)
-
-    def dump_use_structure(self):
-        bkp_use_structure = copy.deepcopy(self.use_structure)
-
-        try:
-            self.use_structure = []
-
-            for index in range(len(self.phases_box_array)):
-                self.use_structure.append(self.phases_box_array[index].use_structure)
-        except:
-            self.use_structure = copy.deepcopy(bkp_use_structure)
-
-    def dump_formula(self):
-        bkp_formula = copy.deepcopy(self.formula)
-
-        try:
-            self.formula = []
-
-            for index in range(len(self.phases_box_array)):
-                self.formula.append(self.phases_box_array[index].formula)
-        except:
-            self.formula = copy.deepcopy(bkp_formula)
-
-    def dump_intensity_scale_factor(self):
-        bkp_intensity_scale_factor = copy.deepcopy(self.intensity_scale_factor)
-        bkp_intensity_scale_factor_fixed = copy.deepcopy(self.intensity_scale_factor_fixed)
-        bkp_intensity_scale_factor_has_min = copy.deepcopy(self.intensity_scale_factor_has_min)
-        bkp_intensity_scale_factor_min = copy.deepcopy(self.intensity_scale_factor_min)
-        bkp_intensity_scale_factor_has_max = copy.deepcopy(self.intensity_scale_factor_has_max)
-        bkp_intensity_scale_factor_max = copy.deepcopy(self.intensity_scale_factor_max)
-        bkp_intensity_scale_factor_function = copy.deepcopy(self.intensity_scale_factor_function)
-        bkp_intensity_scale_factor_function_value = copy.deepcopy(self.intensity_scale_factor_function_value)
-
-        try:
-            self.intensity_scale_factor = []
-            self.intensity_scale_factor_fixed = []
-            self.intensity_scale_factor_has_min = []
-            self.intensity_scale_factor_min = []
-            self.intensity_scale_factor_has_max = []
-            self.intensity_scale_factor_max = []
-            self.intensity_scale_factor_function = []
-            self.intensity_scale_factor_function_value = []
-
-            for index in range(len(self.phases_box_array)):
-                self.intensity_scale_factor.append(self.phases_box_array[index].intensity_scale_factor)
-                self.intensity_scale_factor_fixed.append(self.phases_box_array[index].intensity_scale_factor_fixed)
-                self.intensity_scale_factor_has_min.append(self.phases_box_array[index].intensity_scale_factor_has_min)
-                self.intensity_scale_factor_min.append(self.phases_box_array[index].intensity_scale_factor_min)
-                self.intensity_scale_factor_has_max.append(self.phases_box_array[index].intensity_scale_factor_has_max)
-                self.intensity_scale_factor_max.append(self.phases_box_array[index].intensity_scale_factor_max)
-                self.intensity_scale_factor_function.append(self.phases_box_array[index].intensity_scale_factor_function)
-                self.intensity_scale_factor_function_value.append(self.phases_box_array[index].intensity_scale_factor_function_value)
-        except:
-            self.intensity_scale_factor = copy.deepcopy(bkp_intensity_scale_factor)
-            self.intensity_scale_factor_fixed = copy.deepcopy(bkp_intensity_scale_factor_fixed)
-            self.intensity_scale_factor_has_min = copy.deepcopy(bkp_intensity_scale_factor_has_min)
-            self.intensity_scale_factor_min = copy.deepcopy(bkp_intensity_scale_factor_min)
-            self.intensity_scale_factor_has_max = copy.deepcopy(bkp_intensity_scale_factor_has_max)
-            self.intensity_scale_factor_max = copy.deepcopy(bkp_intensity_scale_factor_max)
-            self.intensity_scale_factor_function = copy.deepcopy(bkp_intensity_scale_factor_function)
-            self.intensity_scale_factor_function_value = copy.deepcopy(bkp_intensity_scale_factor_function_value)
-
-    def dump_phase_name(self):
-        bkp_phase_name = copy.deepcopy(self.phase_name)
-
-        try:
-            self.phase_name = []
-
-            for index in range(len(self.phases_box_array)):
-                self.phase_name.append(self.phases_box_array[index].phase_name)
-        except:
-            self.phase_name = copy.deepcopy(bkp_phase_name)
-
-from PyQt5.QtWidgets import QVBoxLayout
-from orangecontrib.wonder.util.gui_utility import InnerBox
-
-class PhaseBox(InnerBox):
-    a = 0.0
-    a_fixed = 0
-    a_has_min = 0
-    a_min = 0.0
-    a_has_max = 0
-    a_max = 0.0
-    a_function = 0
-    a_function_value = ""
-    symmetry = 2
-    use_structure = 0
-    formula = ""
-    intensity_scale_factor = 1.0
-    intensity_scale_factor_fixed = 0
-    intensity_scale_factor_has_min = 0
-    intensity_scale_factor_min = 0.0
-    intensity_scale_factor_has_max = 0
-    intensity_scale_factor_max = 0.0
-    intensity_scale_factor_function = 0
-    intensity_scale_factor_function_value = ""
-    phase_name = ""
-
-    widget = None
-    is_on_init = True
-
-    parameter_functions = {}
-
-    phase = None
-
-    index = 0
+class PhaseBox(ParameterBox):
 
     def __init__(self,
                  widget=None,
@@ -466,43 +311,56 @@ class PhaseBox(InnerBox):
                  intensity_scale_factor_function=0,
                  intensity_scale_factor_function_value="",
                  phase_name=""):
-        super(PhaseBox, self).__init__()
+        super(PhaseBox, self).__init__(widget=widget,
+                                       parent=parent,
+                                       index=index,
+                                       a=a,
+                                       a_fixed = a_fixed,
+                                       a_has_min = a_has_min,
+                                       a_min = a_min,
+                                       a_has_max = a_has_max,
+                                       a_max = a_max,
+                                       a_function = a_function,
+                                       a_function_value = a_function_value,
+                                       symmetry = symmetry,
+                                       use_structure = use_structure,
+                                       formula = formula,
+                                       intensity_scale_factor = intensity_scale_factor,
+                                       intensity_scale_factor_fixed = intensity_scale_factor_fixed,
+                                       intensity_scale_factor_has_min = intensity_scale_factor_has_min,
+                                       intensity_scale_factor_min = intensity_scale_factor_min,
+                                       intensity_scale_factor_has_max = intensity_scale_factor_has_max,
+                                       intensity_scale_factor_max = intensity_scale_factor_max,
+                                       intensity_scale_factor_function = intensity_scale_factor_function,
+                                       intensity_scale_factor_function_value = intensity_scale_factor_function_value,
+                                       phase_name = phase_name)
+    def get_height(self):
+        return 300
 
-        self.setLayout(QVBoxLayout())
-        self.layout().setAlignment(Qt.AlignTop)
-        self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
-        self.setFixedHeight(300)
+    def init_fields(self, **kwargs):
+        self.a = kwargs["a"]
+        self.a_fixed = kwargs["a_fixed"]
+        self.a_has_min = kwargs["a_has_min"]
+        self.a_min = kwargs["a_min"]
+        self.a_has_max = kwargs["a_has_max"]
+        self.a_max = kwargs["a_max"]
+        self.a_function = kwargs["a_function"]
+        self.a_function_value = kwargs["a_function_value"]
+        self.symmetry = kwargs["symmetry"]
+        self.use_structure = kwargs["use_structure"]
+        self.formula = kwargs["formula"]
+        self.intensity_scale_factor = kwargs["intensity_scale_factor"]
+        self.intensity_scale_factor_fixed = kwargs["intensity_scale_factor_fixed"]
+        self.intensity_scale_factor_has_min = kwargs["intensity_scale_factor_has_min"]
+        self.intensity_scale_factor_min = kwargs["intensity_scale_factor_min"]
+        self.intensity_scale_factor_has_max = kwargs["intensity_scale_factor_has_max"]
+        self.intensity_scale_factor_max = kwargs["intensity_scale_factor_max"]
+        self.intensity_scale_factor_function = kwargs["intensity_scale_factor_function"]
+        self.intensity_scale_factor_function_value = kwargs["intensity_scale_factor_function_value"]
+        self.phase_name = kwargs["phase_name"]
 
-        self.widget = widget
-        self.index = index
-
-        self.a = a
-        self.a_fixed = a_fixed
-        self.a_has_min = a_has_min
-        self.a_min = a_min
-        self.a_has_max = a_has_max
-        self.a_max = a_max
-        self.a_function = a_function
-        self.a_function_value = a_function_value
-        self.symmetry = symmetry
-        self.use_structure = use_structure
-        self.formula = formula
-        self.intensity_scale_factor = intensity_scale_factor
-        self.intensity_scale_factor_fixed = intensity_scale_factor_fixed
-        self.intensity_scale_factor_has_min = intensity_scale_factor_has_min
-        self.intensity_scale_factor_min = intensity_scale_factor_min
-        self.intensity_scale_factor_has_max = intensity_scale_factor_has_max
-        self.intensity_scale_factor_max = intensity_scale_factor_max
-        self.intensity_scale_factor_function = intensity_scale_factor_function
-        self.intensity_scale_factor_function_value = intensity_scale_factor_function_value
-        self.phase_name=phase_name
-
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH - 45
-
-        parent.layout().addWidget(self)
-        container = self
-
-        gui.lineEdit(container, self, "phase_name", "Phase id", labelWidth=110, valueType=str, callback=widget.dump_phase_name)
+    def init_gui(self, container):
+        gui.lineEdit(container, self, "phase_name", "Phase id", labelWidth=110, valueType=str, callback=self.widget.dump_phase_name)
 
         self.cb_symmetry = orangegui.comboBox(container, self, "symmetry", label="Symmetry", items=Symmetry.tuple(),
                                               callback=self.set_symmetry, orientation="horizontal")
@@ -524,7 +382,7 @@ class PhaseBox(InnerBox):
                                              width=self.CONTROL_AREA_WIDTH - 5, height=60)
 
         gui.lineEdit(self.structure_box_1, self, "formula", "Chemical Formula", labelWidth=110, valueType=str,
-                     callback=widget.dump_formula)
+                     callback=self.widget.dump_formula)
 
         OWGenericWidget.create_box_in_widget(self, self.structure_box_1, "intensity_scale_factor", "I0",
                                              add_callback=True, min_value=0.0, min_accepted=False, trim=5)
@@ -535,14 +393,6 @@ class PhaseBox(InnerBox):
 
 
         self.set_structure()
-
-        self.is_on_init = False
-
-    def after_change_workspace_units(self):
-        pass
-
-    def set_index(self, index):
-        self.index = index
 
     def set_structure(self):
         self.structure_box_1.setVisible(self.use_structure == 1)
@@ -566,11 +416,8 @@ class PhaseBox(InnerBox):
     def callback_intensity_scale_factor(self):
         if not self.is_on_init: self.widget.dump_intensity_scale_factor()
 
-    def get_parameters_prefix(self):
-        return Phase.get_parameters_prefix() + self.get_parameter_progressive()
-
-    def get_parameter_progressive(self):
-        return str(self.index + 1) + "_"
+    def get_basic_parameter_prefix(self):
+        return Phase.get_parameters_prefix()
 
     def set_data(self, phase):
         OWGenericWidget.populate_fields_in_widget(self, "a", phase.a)
@@ -605,6 +452,7 @@ class PhaseBox(InnerBox):
 
         return phase
 
+from PyQt5.QtWidgets import QApplication
 
 if __name__ == "__main__":
     a = QApplication(sys.argv)

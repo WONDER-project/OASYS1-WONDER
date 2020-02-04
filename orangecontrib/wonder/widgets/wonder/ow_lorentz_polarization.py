@@ -65,17 +65,11 @@ class OWLorentzPolarization(OWGenericDiffractionPatternParametersWidget):
         self.dump_twotheta_mono()
 
     def dump_use_lorentz_factor(self): self.dump_variable("use_lorentz_factor")
-
     def dump_lorentz_formula(self): self.dump_variable("lorentz_formula")
-
     def dump_use_polarization_factor(self): self.dump_variable("use_polarization_factor")
-
     def dump_degree_of_polarization(self): self.dump_variable("degree_of_polarization")
-
     def dump_beampath(self): self.dump_variable("beampath")
-
     def dump_use_twotheta_mono(self): self.dump_variable("use_twotheta_mono")
-
     def dump_twotheta_mono(self): self.dump_variable("twotheta_mono")
 
 class PolarizationParametersBox(ParameterBox):
