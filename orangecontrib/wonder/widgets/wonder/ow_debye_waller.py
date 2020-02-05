@@ -65,7 +65,7 @@ class OWDebyeWaller(OWGenericWidget):
     def get_max_height(self):
         return 700
 
-    def set_use_single_parameter_set(self, on_init=False, recycle_patterns=True, recycle_phases=True):
+    def set_use_single_parameter_set(self, on_init=False):
         self.debye_wallers_tabs.clear()
         self.debye_wallers_box_array = []
 
@@ -76,7 +76,7 @@ class OWDebyeWaller(OWGenericWidget):
             debye_waller_tab = gui.createTabPage(self.debye_wallers_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, self.use_single_parameter_set == 1))
 
             # qui analisi delle fasi
-            if diffraction_pattern_index < len(self.debye_waller_factors) and (recycle_patterns or recycle_phases):  # keep the existing
+            if diffraction_pattern_index < len(self.debye_waller_factors):  # keep the existing
                 use_debye_waller_factors = []
                 debye_waller_factors = []
                 debye_waller_factors_fixed = []
@@ -88,7 +88,7 @@ class OWDebyeWaller(OWGenericWidget):
                 debye_waller_factors_function_value = []
 
                 for phase_index in range(phases_number):
-                    if recycle_phases and phase_index < len(self.debye_waller_factors[diffraction_pattern_index]):
+                    if phase_index < len(self.debye_waller_factors[diffraction_pattern_index]):
                         use_debye_waller_factors.append(self.use_debye_waller_factors[diffraction_pattern_index][phase_index])
                         debye_waller_factors.append(self.debye_waller_factors[diffraction_pattern_index][phase_index])
                         debye_waller_factors_fixed.append(self.debye_waller_factors_fixed[diffraction_pattern_index][phase_index])
@@ -194,24 +194,9 @@ class OWDebyeWaller(OWGenericWidget):
                 diffraction_patterns = self.fit_global_parameters.measured_dataset.diffraction_patterns
                 if diffraction_patterns is None: raise ValueError("Add Diffraction Pattern(s) before this widget!")
 
-                different_patterns = different_phases = recycle_phases = recycle_patterns = False
-
-                if len(phases) != len(self.use_debye_waller_factors[0]):
-                    different_phases = True
-                    recycle_phases = ConfirmDialog.confirmed(message="Number of Phases changed:\ndo you want to use the existing parameters where possible?\n\nIf yes, check for possible incongruences",
-                                                             title="Warning")
-
-                if self.use_single_parameter_set==0 and (len(diffraction_patterns) != len(self.use_debye_waller_factors)):
-                    different_patterns = True
-                    recycle_patterns = ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
-                                                               title="Warning")
-
                 thermal_parameters = self.fit_global_parameters.get_instrumental_parameters(ThermalParameters.__name__)
 
-                if different_patterns or different_phases:
-                    self.set_use_single_parameter_set(True, recycle_patterns=recycle_patterns, recycle_phases=recycle_phases)
-                else:
-                    self.set_use_single_parameter_set(True)
+                self.set_use_single_parameter_set(on_init=True)
 
                 if self.use_single_parameter_set == 0:  # NO
                     if not thermal_parameters is None:

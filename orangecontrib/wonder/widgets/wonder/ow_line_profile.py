@@ -103,17 +103,8 @@ class OWLineProfile(OWGenericWidget):
                 if diffraction_patterns is None: raise ValueError("No Diffraction Pattern in input data!")
                 if phases is None:               raise ValueError("No Phases in input data!")
 
-                different_patterns = different_phases = recycle_phases = recycle_patterns = False
-
-                if len(phases) != len(self.reflections_of_phases[0]):
-                    different_phases = True
-                    recycle_phases = ConfirmDialog.confirmed(message="Number of Phases changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
-                                                      title="Warning")
-
-                if len(line_profiles) != len(self.reflections_of_phases):
-                    different_patterns = True
-                    recycle_patterns = ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing structures where possible?\n\nIf yes, check for possible incongruences",
-                                                      title="Warning")
+                different_phases   = len(phases) != len(self.reflections_of_phases[0])
+                different_patterns = len(line_profiles) != len(self.reflections_of_phases)
 
                 if different_patterns or different_phases:
                     self.line_profiles_tabs.clear()
@@ -122,13 +113,13 @@ class OWLineProfile(OWGenericWidget):
                     for diffraction_pattern_index in range(len(diffraction_patterns)):
                         line_profile_tab = gui.createTabPage(self.line_profiles_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index))
 
-                        if (recycle_patterns or recycle_phases) and diffraction_pattern_index < len(self.reflections_of_phases): #keep the existing
+                        if diffraction_pattern_index < len(self.reflections_of_phases): #keep the existing
                             reflections_of_phases = []
                             limits                = []
                             limit_types           = []
 
                             for phase_index in range(len(phases)):
-                                if recycle_phases and phase_index < len(self.reflections_of_phases[diffraction_pattern_index]):
+                                if phase_index < len(self.reflections_of_phases[diffraction_pattern_index]):
                                     reflections_of_phases.append(self.reflections_of_phases[diffraction_pattern_index][phase_index])
                                     limits.append(self.limits[diffraction_pattern_index][phase_index])
                                     limit_types.append(self.limit_types[diffraction_pattern_index][phase_index])

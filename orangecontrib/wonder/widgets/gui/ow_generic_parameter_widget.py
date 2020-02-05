@@ -115,7 +115,7 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericParametersWidget):
     def build_parameter_box_array(self):
         self.set_use_single_parameter_set(on_init=True)
 
-    def set_use_single_parameter_set(self, on_init=False, recycle=True):
+    def set_use_single_parameter_set(self, on_init=False):
         self.parameter_tabs.clear()
         self.parameter_box_array.clear()
 
@@ -124,7 +124,7 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericParametersWidget):
         for index in range(1 if self.use_single_parameter_set == 1 else dimension):
             parameter_tab = gui.createTabPage(self.parameter_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, index, self.use_single_parameter_set == 1))
 
-            if index < self.get_current_dimension() and recycle:  # keep the existing
+            if index < self.get_current_dimension():  # keep the existing
                 parameter_box = self.get_parameter_box_instance(parameter_tab, index)
             else:
                 parameter_box = self.get_empty_parameter_box_instance(parameter_tab, index)
@@ -143,13 +143,10 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericParametersWidget):
 
                 parameters = self.get_parameter_array()
 
-                if self.use_single_parameter_set == 0:  # NO
-                    if parameters is None:
-                        if len(diffraction_patterns) != len(self.parameter_box_array):
-                            self.set_use_single_parameter_set(recycle=ConfirmDialog.confirmed(message="Number of Diffraction Patterns changed:\ndo you want to use the existing data where possible?\n\nIf yes, check for possible incongruences", title="Warning"))
-                        else:
-                            self.set_use_single_parameter_set(True)
-                    else:
+                if parameters is None:
+                    self.set_use_single_parameter_set(on_init=True)
+                else:
+                    if self.use_single_parameter_set == 0:  # NO
                         tabs_to_remove = self.get_current_dimension() - len(parameters)
 
                         if tabs_to_remove > 0:
@@ -169,9 +166,6 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericParametersWidget):
                                 self.parameter_box_array.append(parameter_box)
 
                             if not parameters_item is None: parameter_box.set_data(parameters_item)
-                else:
-                    if parameters is None:
-                        self.set_use_single_parameter_set(True)
                     else:
                         self.__check_data_congruence(parameters)
 

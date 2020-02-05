@@ -2,7 +2,7 @@ import os, sys, numpy, copy
 
 from PyQt5.QtWidgets import QMessageBox, QScrollArea, QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QApplication
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QDoubleValidator
+from PyQt5.QtGui import QDoubleValidator, QColor, QFont
 
 from silx.gui.plot.PlotWindow import PlotWindow
 
@@ -60,18 +60,24 @@ class OWDiffractionPattern(OWGenericWidget):
 
         tabs_button_box = gui.widgetBox(main_box, "", addSpace=False, orientation="horizontal")
 
-        btns = [gui.button(tabs_button_box, self, "Insert Pattern Before", callback=self.insert_before),
-                gui.button(tabs_button_box, self, "Insert Pattern After", callback=self.insert_after),
-                gui.button(tabs_button_box, self, "Remove Pattern", callback=self.remove)]
+        btns = [gui.button(tabs_button_box, self, "Insert Before", callback=self.insert_before),
+                gui.button(tabs_button_box, self, "Insert After", callback=self.insert_after),
+                gui.button(tabs_button_box, self, "Remove", callback=self.remove),
+                gui.button(tabs_button_box, self, "Remove All", callback=self.remove_all)]
 
         for btn in btns:
             btn.setFixedHeight(40)
+
+        btns[3].setStyleSheet("color: red")
+        font = QFont(btns[3].font())
+        font.setItalic(True)
+        btns[3].setFont(font)
 
         self.diffraction_pattern_tabs = gui.tabWidget(main_box)
         self.diffraction_pattern_box_array = []
 
         for index in range(len(self.filename)):
-            diffraction_pattern_tab = gui.createTabPage(self.diffraction_pattern_tabs, "Diff. Patt. " + str(index + 1))
+            diffraction_pattern_tab = gui.createTabPage(self.diffraction_pattern_tabs, DiffractionPattern.get_default_name(index))
 
             diffraction_pattern_box = DiffractionPatternBox(widget=self,
                                                             parent=diffraction_pattern_tab,
@@ -94,7 +100,7 @@ class OWDiffractionPattern(OWGenericWidget):
         self.table_data = []
 
         for index in range(len(self.filename)):
-            self.tab_diff.append(gui.createTabPage(self.tabs, "Diff. Patt. " + str(index+1)))
+            self.tab_diff.append(gui.createTabPage(self.tabs, DiffractionPattern.get_default_name(index)))
             self.tabs_data_plot.append(gui.tabWidget(self.tab_diff[index]))
             self.tab_data.append(gui.createTabPage(self.tabs_data_plot[index], "Data"))
             self.tab_plot.append(gui.createTabPage(self.tabs_data_plot[index], "Plot"))
@@ -156,9 +162,9 @@ class OWDiffractionPattern(OWGenericWidget):
             self.tab_data[current_index].layout().addWidget(scrollarea, alignment=Qt.AlignHCenter)
 
             for index in range(current_index, self.diffraction_pattern_tabs.count()):
-                self.diffraction_pattern_tabs.setTabText(index, "Diff. Patt." + str(index + 1))
+                self.diffraction_pattern_tabs.setTabText(index, DiffractionPattern.get_default_name(index))
                 self.diffraction_pattern_box_array[index].index = index
-                self.tabs.setTabText(index, "Diff. Patt." + str(index + 1))
+                self.tabs.setTabText(index, DiffractionPattern.get_default_name(index))
 
             self.dumpSettings()
             self.diffraction_pattern_tabs.setCurrentIndex(current_index)
@@ -270,6 +276,47 @@ class OWDiffractionPattern(OWGenericWidget):
                 self.dumpSettings()
                 self.diffraction_pattern_tabs.setCurrentIndex(current_index)
                 self.tabs.setCurrentIndex(current_index)
+
+    def remove_all(self):
+        if ConfirmDialog.confirmed(parent=self, message="Confirm Removal of ALL diffraction Pattern?"):
+            self.diffraction_pattern_tabs.clear()
+            self.diffraction_pattern_box_array = []
+
+            diffraction_pattern_box = DiffractionPatternBox(widget=self,
+                                                            parent=gui.createTabPage(self.diffraction_pattern_tabs, DiffractionPattern.get_default_name(0)),
+                                                            index = 0)
+
+            self.diffraction_pattern_box_array.append(diffraction_pattern_box)
+
+            self.tabs.clear()
+            self.tab_diff = []
+            self.tabs_data_plot = []
+            self.tab_data = []
+            self.tab_plot = []
+            self.plot = []
+            self.table_data = []
+
+            self.tab_diff.append(gui.createTabPage(self.tabs, DiffractionPattern.get_default_name(0)))
+            self.tabs_data_plot.append(gui.tabWidget(self.tab_diff[0]))
+            self.tab_data.append(gui.createTabPage(self.tabs_data_plot[0], "Data"))
+            self.tab_plot.append(gui.createTabPage(self.tabs_data_plot[0], "Plot"))
+
+            self.plot.append(PlotWindow())
+            self.plot[0].setDefaultPlotLines(True)
+            self.plot[0].setActiveCurveColor(color="#00008B")
+            self.plot[0].setGraphXLabel(r"2$\theta$")
+            self.plot[0].setGraphYLabel("Intensity")
+
+            self.tab_plot[0].layout().addWidget(self.plot[0])
+
+            table_widget = self.create_table_widget()
+
+            self.table_data.append(table_widget)
+
+            self.tab_data[0].layout().addWidget(table_widget, alignment=Qt.AlignHCenter)
+
+            self.dumpSettings()
+
 
     def load_diffraction_patterns(self):
         try:
