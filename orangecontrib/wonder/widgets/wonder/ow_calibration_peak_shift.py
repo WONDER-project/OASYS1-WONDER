@@ -115,6 +115,9 @@ class OWCalibrationPeakShift(OWGenericDiffractionPatternParametersWidget):
     def get_parameter_array(self):
         return self.fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__)
 
+    def get_parameter_item(self, diffraction_pattern_index):
+        return self.fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
+
     def dumpSettings(self):
         self.dump_ax()
         self.dump_bx()

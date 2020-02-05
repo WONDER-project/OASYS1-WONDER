@@ -26,7 +26,7 @@ class OWZeroErrorPeakShift(OWGenericDiffractionPatternParametersWidget):
         return "Peak Shift"
 
     def get_current_dimension(self):
-        return len(self.displacement)
+        return len(self.shift)
 
     def get_parameter_box_instance(self, parameter_tab, index):
         return ZeroErrorPeakShiftBox(widget=self,
