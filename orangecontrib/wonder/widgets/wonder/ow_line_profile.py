@@ -16,7 +16,6 @@ from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalP
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, Boundary
 from orangecontrib.wonder.fit.parameters.measured_data.reflection import Reflection
 from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
-from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
 class OWLineProfile(OWGenericWidget):
 
@@ -177,46 +176,17 @@ class OWLineProfile(OWGenericWidget):
     # SINGLE FIELDS SIGNALS
     ##############################
 
+    def get_parameter_box_array(self):
+        return self.line_profiles_box_array
 
     def dumpSettings(self):
         self.dump_reflections_of_phases()
         self.dump_limits()
         self.dump_limit_types()
 
-    def dump_reflections_of_phases(self):
-        bkp_reflections_of_phases = copy.deepcopy(self.reflections_of_phases)
-
-        try:
-            self.reflections_of_phases = []
-
-            for index in range(len(self.line_profiles_box_array)):
-                self.reflections_of_phases.append(self.line_profiles_box_array[index].reflections_of_phases)
-        except Exception as e:
-            self.reflections_of_phases = copy.deepcopy(bkp_reflections_of_phases)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_limits(self):
-        bkp_limits = copy.deepcopy(self.limits)
-
-        try:
-            self.limits = []
-
-            for index in range(len(self.line_profiles_box_array)):
-                self.limits.append(self.line_profiles_box_array[index].limits)
-        except:
-            self.limits = copy.deepcopy(bkp_limits)
-
-    def dump_limit_types(self):
-        bkp_limit_types = copy.deepcopy(self.limit_types)
-
-        try:
-            self.limit_types = []
-
-            for index in range(len(self.line_profiles_box_array)):
-                self.limit_types.append(self.line_profiles_box_array[index].limit_types)
-        except:
-            self.limit_types = copy.deepcopy(bkp_limit_types)
+    def dump_reflections_of_phases(self): self.dump_variable("reflections_of_phases")
+    def dump_limits(self): self.dump_variable("limits")
+    def dump_limit_types(self): self.dump_variable("limit_types")
 
 
 from PyQt5.QtWidgets import QVBoxLayout
@@ -284,51 +254,25 @@ class LineProfileBox(InnerBox):
         for reflections_of_phases_box in self.reflections_of_phases_box_array:
             reflections_of_phases_box.update_reflections_of_phase()
 
+
+    def get_parameter_box_array(self):
+        return self.reflections_of_phases_box_array
+
     def dumpSettings(self):
         self.dump_reflections_of_phases()
         self.dump_limits()
         self.dump_limit_types()
 
     def dump_reflections_of_phases(self):
-        bkp_reflections_of_phases = copy.deepcopy(self.reflections_of_phases)
-
-        try:
-            self.reflections_of_phases = []
-
-            for index in range(len(self.reflections_of_phases_box_array)):
-                self.reflections_of_phases.append(self.reflections_of_phases_box_array[index].reflections_of_phase)
-        except Exception as e:
-            self.reflections_of_phases = copy.deepcopy(bkp_reflections_of_phases)
-
-            if self.widget.IS_DEVELOP: raise e
-
+        OWGenericWidget.dump_variable_in_widget(self, "reflections_of_phases", variable_name_in_box="reflections_of_phase")
         self.widget.dump_reflections_of_phases()
 
     def dump_limits(self):
-        bkp_limits = copy.deepcopy(self.limits)
-
-        try:
-            self.limits = []
-
-            for index in range(len(self.reflections_of_phases_box_array)):
-                self.limits.append(self.reflections_of_phases_box_array[index].limit)
-        except:
-            self.limits = copy.deepcopy(bkp_limits)
-
+        OWGenericWidget.dump_variable_in_widget(self, "limits", variable_name_in_box="limit")
         self.widget.dump_limits()
 
-
     def dump_limit_types(self):
-        bkp_limit_types = copy.deepcopy(self.limit_types)
-
-        try:
-            self.limit_types = []
-
-            for index in range(len(self.line_profiles_box_array)):
-                self.limit_types.append(self.line_profiles_box_array[index].limit_type)
-        except:
-            self.limit_types = copy.deepcopy(bkp_limit_types)
-
+        OWGenericWidget.dump_variable_in_widget(self, "limit_types", variable_name_in_box="limit_type")
         self.widget.dump_limit_types()
 
 class ReflectionsOfPhaseBox(InnerBox):
