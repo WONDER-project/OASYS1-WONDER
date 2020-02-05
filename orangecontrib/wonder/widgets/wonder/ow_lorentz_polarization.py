@@ -25,6 +25,9 @@ class OWLorentzPolarization(OWGenericDiffractionPatternParametersWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 500
+
     def get_parameter_name(self):
         return "Lorentz-Polarization"
 

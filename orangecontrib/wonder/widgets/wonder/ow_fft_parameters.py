@@ -32,10 +32,11 @@ class OWFFTParameters(OWGenericWidget):
     def __init__(self):
         super().__init__(show_automatic_box=True)
 
+        self.setFixedHeight(310)
+
         main_box = gui.widgetBox(self.controlArea,
                                  "Fit Initialization", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 10, height=250)
-
+                                 width=self.CONTROL_AREA_WIDTH - 10, height=210)
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",

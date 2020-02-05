@@ -98,6 +98,9 @@ class OWChebyshevBackground(OWGenericDiffractionPatternParametersWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 600
+
     def get_parameter_name(self):
         return "Chebyshev Background"
 
@@ -393,6 +396,9 @@ class ChebyshevBackgroundBox(ParameterBox):
                                                      c7_function_value = c7_function_value,
                                                      c8_function_value = c8_function_value,
                                                      c9_function_value = c9_function_value)
+
+    def get_height(self):
+        return 400
 
     def init_fields(self, **kwargs):
         self.c0                = kwargs["c0"]

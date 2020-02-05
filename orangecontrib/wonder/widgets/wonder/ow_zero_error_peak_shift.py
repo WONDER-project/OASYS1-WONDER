@@ -22,6 +22,9 @@ class OWZeroErrorPeakShift(OWGenericDiffractionPatternParametersWidget):
     shift_function = Setting([0])
     shift_function_value = Setting([""])
 
+    def get_max_height(self):
+        return 310
+
     def get_parameter_name(self):
         return "Peak Shift"
 
@@ -83,7 +86,9 @@ class ZeroErrorPeakShiftBox(ParameterBox):
                                                     shift_max = shift_max,
                                                     shift_function = shift_function,
                                                     shift_function_value = shift_function_value)
-
+    def get_height(self):
+        return 100
+    
     def init_fields(self, **kwargs):
         self.shift = kwargs["shift"]
         self.shift_fixed = kwargs["shift_fixed"]
@@ -95,7 +100,7 @@ class ZeroErrorPeakShiftBox(ParameterBox):
         self.shift_function_value = kwargs["shift_function_value"]
 
     def init_gui(self, container):
-        OWGenericWidget.create_box_in_widget(self, container, "shift", add_callback=True)
+        OWGenericWidget.create_box_in_widget(self, container, "shift", add_callback=True, trim=25)
 
     def callback_shift(self):
         if not self.is_on_init: self.widget.dump_shift()

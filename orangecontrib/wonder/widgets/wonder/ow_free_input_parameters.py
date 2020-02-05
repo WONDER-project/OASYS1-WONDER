@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 
 from orangewidget.settings import Setting
 from orangewidget.widget import OWAction
+from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui
@@ -29,12 +30,12 @@ class OWFreeInputParameters(OWGenericWidget):
 
         main_box = gui.widgetBox(self.controlArea,
                                  "", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 10, height=600)
+                                 width=self.CONTROL_AREA_WIDTH - 10, height=500)
 
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
-                                   width=self.CONTROL_AREA_WIDTH-25)
+                                   width=self.CONTROL_AREA_WIDTH - 25)
 
 
         gui.button(button_box,  self, "Send Free Input Parameters", height=40, callback=self.send_free_input_parameters)
@@ -44,9 +45,9 @@ class OWFreeInputParameters(OWGenericWidget):
 
         self.scrollarea_free_in = QScrollArea(tab_free_in)
         self.scrollarea_free_in.setMinimumWidth(self.CONTROL_AREA_WIDTH-45)
-        self.scrollarea_free_in.setMinimumHeight(260)
+        self.scrollarea_free_in.setMinimumHeight(160)
 
-        self.text_area_free_in = gui.textArea(height=500, width=self.CONTROL_AREA_WIDTH-65, readOnly=False)
+        self.text_area_free_in = gui.textArea(height=400, width=self.CONTROL_AREA_WIDTH-65, readOnly=False)
         self.text_area_free_in.setText(self.free_input_parameters)
 
         self.scrollarea_free_in.setWidget(self.text_area_free_in)
@@ -57,6 +58,11 @@ class OWFreeInputParameters(OWGenericWidget):
         runaction = OWAction("Send Free Input Parameters", self)
         runaction.triggered.connect(self.send_free_input_parameters)
         self.addAction(runaction)
+
+        orangegui.rubber(self.controlArea)
+
+    def get_max_height(self):
+        return 600
 
     def send_free_input_parameters(self):
         try:

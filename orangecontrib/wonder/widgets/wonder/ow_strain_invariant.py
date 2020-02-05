@@ -54,6 +54,9 @@ class OWStrainInvariant(OWGenericPhaseParameterWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 500
+
     def get_parameter_name(self):
         return "Strain P-A-H"
 

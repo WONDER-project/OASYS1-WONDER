@@ -30,6 +30,9 @@ class OWSpecimenDisplacementPeakShift(OWGenericDiffractionPatternParametersWidge
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 350
+
     def get_parameter_name(self):
         return "Specimen Displacement"
 
@@ -98,6 +101,9 @@ class SpecimenDisplacementPeakShiftBox(ParameterBox):
                                                                displacement_function = displacement_function,
                                                                displacement_function_value = displacement_function_value)
 
+    def get_height(self):
+        return 100
+
     def init_fields(self, **kwargs):
         self.goniometer_radius           = kwargs["goniometer_radius"]
         self.displacement                = kwargs["displacement"]
@@ -112,7 +118,7 @@ class SpecimenDisplacementPeakShiftBox(ParameterBox):
     def init_gui(self, container):
         gui.lineEdit(container, self, "goniometer_radius", "Goniometer Radius [m]", labelWidth=300, valueType=float, callback=self.widget.dump_goniometer_radius)
         orangegui.separator(container)
-        OWGenericWidget.create_box_in_widget(self, container, "displacement", add_callback=True)
+        OWGenericWidget.create_box_in_widget(self, container, "displacement", add_callback=True, label_width=75, trim=15)
 
     def callback_displacement(self):
         if not self.is_on_init: self.widget.dump_displacement()

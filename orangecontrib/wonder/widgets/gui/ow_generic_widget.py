@@ -74,11 +74,13 @@ class OWGenericWidget(widget.OWWidget):
     warning_id = 0
     info_id = 0
 
-    MAX_WIDTH = 1320
-    MAX_WIDTH_NO_MAIN = 515
+    MAX_WIDTH_MAIN = 1320
+    MAX_WIDTH_NO_MAIN = 615
     MAX_HEIGHT = 700
 
-    CONTROL_AREA_WIDTH = 505
+    CONTROL_AREA_WIDTH_MAIN    = 505
+    CONTROL_AREA_WIDTH_NO_MAIN = 605
+
     TABS_AREA_HEIGHT = 560
 
     fit_global_parameters = None
@@ -96,9 +98,11 @@ class OWGenericWidget(widget.OWWidget):
         geom = QApplication.desktop().availableGeometry()
 
         if self.want_main_area:
-            max_width = self.MAX_WIDTH
+            max_width               = self.MAX_WIDTH_MAIN
+            self.CONTROL_AREA_WIDTH = self.CONTROL_AREA_WIDTH_MAIN
         else:
-            max_width = self.MAX_WIDTH_NO_MAIN
+            max_width               = self.MAX_WIDTH_NO_MAIN
+            self.CONTROL_AREA_WIDTH = self.CONTROL_AREA_WIDTH_NO_MAIN
 
         self.setGeometry(QRect(round(geom.width()*0.01),
                                round(geom.height()*0.01),

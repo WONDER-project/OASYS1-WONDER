@@ -63,6 +63,9 @@ class OWExpDecayBackground(OWGenericDiffractionPatternParametersWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 500
+
     def get_parameter_name(self):
         return "Exponential Background"
 
@@ -254,6 +257,9 @@ class ExpDecayBackgroundBox(ParameterBox):
                                                     b1_function_value = b1_function_value,
                                                     a2_function_value = a2_function_value,
                                                     b2_function_value = b2_function_value)
+
+    def get_height(self):
+        return 300
 
     def init_fields(self, **kwargs):
         self.a0 = kwargs["a0"]

@@ -25,6 +25,9 @@ class OWContrastFactor(OWGenericPhaseParameterWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 580
+
     def check_input_global_parameters(self, data):
         if not data.strain_parameters is None:
             raise Exception("This widget should be put BEFORE the strain model widget")
@@ -95,13 +98,13 @@ class StrainBox(ParameterActivableBox):
         self.c44 = kwargs["c44"]
 
     def init_main_box(self):
-        contrast_factor_box = gui.widgetBox(self.main_box, "Elastic Constants", orientation="vertical", height=300, width=self.CONTROL_AREA_WIDTH - 10)
+        contrast_factor_box = gui.widgetBox(self.main_box, "Elastic Constants", orientation="vertical", height=120, width=self.CONTROL_AREA_WIDTH - 10)
 
         gui.lineEdit(contrast_factor_box, self, "c11", "c11", labelWidth=90, valueType=float, callback=self.widget.dump_c11)
         gui.lineEdit(contrast_factor_box, self, "c12", "c12", labelWidth=90, valueType=float, callback=self.widget.dump_c12)
         gui.lineEdit(contrast_factor_box, self, "c44", "c44", labelWidth=90, valueType=float, callback=self.widget.dump_c44)
 
-        text_area_box = gui.widgetBox(contrast_factor_box, "Calculation Result", orientation="vertical", height=160, width=self.CONTROL_AREA_WIDTH - 20)
+        text_area_box = gui.widgetBox(self.main_box, "Calculation Result", orientation="vertical", height=160, width=self.CONTROL_AREA_WIDTH - 10)
 
         self.text_area = gui.textArea(height=120, width=self.CONTROL_AREA_WIDTH - 40, readOnly=True)
         self.text_area.setText("")

@@ -65,6 +65,9 @@ class OWInstrumentalProfile(OWGenericDiffractionPatternParametersWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 550
+
     def get_parameter_name(self):
         return "Instrumental Profile"
 
@@ -257,6 +260,9 @@ class InstrumentalProfileBox(ParameterBox):
                                                      b_function_value = b_function_value,
                                                      c_function_value = c_function_value)
 
+    def get_height(self):
+        return 350
+
     def init_fields(self, **kwargs):
         self.U = kwargs["U"]
         self.V = kwargs["V"]
@@ -308,15 +314,15 @@ class InstrumentalProfileBox(ParameterBox):
         self.c_function_value = kwargs["c_function_value"]
 
     def init_gui(self, container):
-        caglioti_box_1 = gui.widgetBox(container, "Caglioti's FWHM", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 55)
-        caglioti_box_2 = gui.widgetBox(container, "Caglioti's \u03b7", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 55)
+        caglioti_box_1 = gui.widgetBox(container, "Caglioti's FWHM", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 20)
+        caglioti_box_2 = gui.widgetBox(container, "Caglioti's \u03b7", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 20)
 
-        OWGenericWidget.create_box_in_widget(self, caglioti_box_1, "U", add_callback=True, trim=70)
-        OWGenericWidget.create_box_in_widget(self, caglioti_box_1, "V", add_callback=True, trim=70)
-        OWGenericWidget.create_box_in_widget(self, caglioti_box_1, "W", add_callback=True, trim=70)
-        OWGenericWidget.create_box_in_widget(self, caglioti_box_2, "a", add_callback=True, trim=70)
-        OWGenericWidget.create_box_in_widget(self, caglioti_box_2, "b", add_callback=True, trim=70)
-        OWGenericWidget.create_box_in_widget(self, caglioti_box_2, "c", add_callback=True, trim=70)
+        OWGenericWidget.create_box_in_widget(self, caglioti_box_1, "U", add_callback=True, trim=35)
+        OWGenericWidget.create_box_in_widget(self, caglioti_box_1, "V", add_callback=True, trim=35)
+        OWGenericWidget.create_box_in_widget(self, caglioti_box_1, "W", add_callback=True, trim=35)
+        OWGenericWidget.create_box_in_widget(self, caglioti_box_2, "a", add_callback=True, trim=35)
+        OWGenericWidget.create_box_in_widget(self, caglioti_box_2, "b", add_callback=True, trim=35)
+        OWGenericWidget.create_box_in_widget(self, caglioti_box_2, "c", add_callback=True, trim=35)
 
     def callback_U(self):
         if not self.is_on_init: self.widget.dump_U()

@@ -82,6 +82,9 @@ class OWStrainKW(OWGenericPhaseParameterWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 520
+
     def get_parameter_name(self):
         return "Strain K-W"
 

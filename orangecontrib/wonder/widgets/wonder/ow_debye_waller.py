@@ -37,9 +37,11 @@ class OWDebyeWaller(OWGenericWidget):
     def __init__(self):
         super().__init__(show_automatic_box=True)
 
+        self.setFixedHeight(410)
+
         main_box = gui.widgetBox(self.controlArea,
                                  "Line Profiles", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 10, height=600)
+                                 width=self.CONTROL_AREA_WIDTH - 10, height=300)
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
@@ -276,7 +278,7 @@ class DebyeWallerBox(InnerBox):
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
         self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
-        self.setFixedHeight(480)
+        self.setFixedHeight(140)
 
         self.widget = widget
         self.diffraction_pattern_index = diffraction_pattern_index
@@ -373,7 +375,7 @@ class DebyeWallerOfPhaseBox(InnerBox):
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
         self.setFixedWidth(widget.CONTROL_AREA_WIDTH - 35)
-        self.setFixedHeight(500)
+        self.setFixedHeight(200)
 
         self.widget = widget
         self.widget_container = widget_container
@@ -390,17 +392,17 @@ class DebyeWallerOfPhaseBox(InnerBox):
         self.debye_waller_factor_function = debye_waller_factor_function
         self.debye_waller_factor_function_value = debye_waller_factor_function_value
 
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH
+        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH - 65
 
         parent.layout().addWidget(self)
         container = self
 
         orangegui.comboBox(container, self, "use_debye_waller_factor", label="Calculate", items=["No", "Yes"], labelWidth=250, orientation="horizontal", callback=self.set_dw)
 
-        self.box_dw = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, height=30)
-        self.box_dw_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH, height=30)
+        self.box_dw = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 10, height=30)
+        self.box_dw_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH - 10, height=30)
 
-        OWGenericWidget.create_box_in_widget(self, self.box_dw, "debye_waller_factor", label="B [Å-2]", min_value=0.0, max_value=1.0, min_accepted=True, max_accepted=True, add_callback=True)
+        OWGenericWidget.create_box_in_widget(self, self.box_dw, "debye_waller_factor", label="B [Å-2]", min_value=0.0, max_value=1.0, min_accepted=True, max_accepted=True, add_callback=True, trim=25)
 
         self.is_on_init = False
 
@@ -438,7 +440,6 @@ class DebyeWallerOfPhaseBox(InnerBox):
         if not debye_waller_factor is None: debye_waller_factor.rescale(0.01)  # CONVERSIONE from A-2 to nm-2
 
         thermal_parameters.set_debye_waller_factor(self.phase_index, debye_waller_factor)
-
 
 if __name__ == "__main__":
     a = QApplication(sys.argv)

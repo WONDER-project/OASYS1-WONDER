@@ -36,7 +36,7 @@ class OWGenericParametersWidget(OWGenericWidget):
         orangegui.rubber(self.controlArea)
 
     def get_height(self):
-        return 600
+        return self.get_max_height() - 100
 
     def build_main_box(self):
         raise NotImplementedError()
@@ -220,9 +220,6 @@ class OWGenericPhaseParameterWidget(OWGenericParametersWidget):
 
             self.parameter_box_array.append(parameter_box)
 
-    def get_height(self):
-        return 600
-
     def set_data(self, data):
         if not data is None:
             try:
@@ -312,12 +309,13 @@ class ParameterBox(InnerBox):
 
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignTop)
-        self.get_width()
-        self.get_height()
+
+        self.setFixedWidth(self.get_width())
+        self.setFixedHeight(self.get_height())
 
         self.init_fields(**kwargs)
 
-        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH
+        self.CONTROL_AREA_WIDTH = widget.CONTROL_AREA_WIDTH - 45
 
         parent.layout().addWidget(self)
         container = self
@@ -327,7 +325,7 @@ class ParameterBox(InnerBox):
         self.is_on_init = False
 
     def get_width(self):
-        return self.setFixedWidth(self.widget.CONTROL_AREA_WIDTH - 35)
+        return self.widget.CONTROL_AREA_WIDTH - 35
 
     def get_height(self):
         return 500
@@ -367,6 +365,8 @@ class ParameterActivableBox(ParameterBox):
 
     def init_gui(self, container):
         self.cb_active = orangegui.comboBox(container, self, "active", label="Active", items=["No", "Yes"], callback=self.set_active, orientation="horizontal")
+
+        orangegui.separator(container)
 
         self.main_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-10)
 

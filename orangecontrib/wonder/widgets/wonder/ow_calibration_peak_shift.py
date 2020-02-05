@@ -55,6 +55,9 @@ class OWCalibrationPeakShift(OWGenericDiffractionPatternParametersWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 450
+
     def get_parameter_name(self):
         return "LaB6 Tan Correction"
 
@@ -220,6 +223,9 @@ class CalibrationPeakShiftBox(ParameterBox):
                                                       cx_function_value = cx_function_value,
                                                       dx_function_value = dx_function_value,
                                                       ex_function_value = ex_function_value)
+
+    def get_height(self):
+        return 300
 
     def init_fields(self, **kwargs):
         self.ax = kwargs["ax"]

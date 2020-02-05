@@ -52,6 +52,9 @@ class OWSize(OWGenericPhaseParameterWidget):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 500
+
     def get_parameter_name(self):
         return "Size"
 
@@ -233,7 +236,9 @@ class SizeBox(ParameterActivableBox):
         self.cb_shape = orangegui.comboBox(self.main_box, self, "shape", label="Shape", items=Shape.tuple(), callback=self.set_shape, orientation="horizontal")
         self.cb_distribution = orangegui.comboBox(self.main_box, self, "distribution", label="Distribution", items=Distribution.tuple(), callback=self.set_distribution, orientation="horizontal")
 
-        size_box = gui.widgetBox(self.main_box, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-30)
+        orangegui.separator(self.main_box)
+
+        size_box = gui.widgetBox(self.main_box, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-10)
 
         self.sigma_box = gui.widgetBox(size_box, "", orientation="vertical")
 
