@@ -364,6 +364,8 @@ class OWDiffractionPattern(OWGenericWidget):
         table_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
+    def get_parameter_box_array(self):
+        return self.diffraction_pattern_box_array
 
     ##############################
     # SINGLE FIELDS SIGNALS
@@ -377,73 +379,12 @@ class OWDiffractionPattern(OWGenericWidget):
         self.dump_twotheta_max()
         self.dump_diffraction_pattern_name()
 
-    def dump_filename(self):
-        bkp_filename = copy.deepcopy(self.filename)
-
-        try:
-            self.filename = []
-
-            for index in range(len(self.diffraction_pattern_box_array)):
-                self.filename.append(self.diffraction_pattern_box_array[index].filename)
-        except:
-            self.filename = copy.deepcopy(bkp_filename)
-
-    def dump_twotheta_min(self):
-        bkp_twotheta_min = copy.deepcopy(self.twotheta_min)
-
-        try:
-            self.twotheta_min = []
-
-            for index in range(len(self.diffraction_pattern_box_array)):
-                self.twotheta_min.append(self.diffraction_pattern_box_array[index].twotheta_min)
-        except:
-            self.twotheta_min = copy.deepcopy(bkp_twotheta_min)
-
-    def dump_twotheta_has_min(self):
-        bkp_twotheta_has_min = copy.deepcopy(self.twotheta_has_min)
-
-        try:
-            self.twotheta_has_min = []
-
-            for index in range(len(self.diffraction_pattern_box_array)):
-                self.twotheta_has_min.append(self.diffraction_pattern_box_array[index].twotheta_has_min)
-        except:
-            self.twotheta_has_min = copy.deepcopy(bkp_twotheta_has_min)
-
-    def dump_twotheta_max(self):
-        bkp_twotheta_max = copy.deepcopy(self.twotheta_max)
-
-        try:
-            self.twotheta_max = []
-
-            for index in range(len(self.diffraction_pattern_box_array)):
-                self.twotheta_max.append(self.diffraction_pattern_box_array[index].twotheta_max)
-        except:
-            self.twotheta_max = copy.deepcopy(bkp_twotheta_max)
-
-    def dump_twotheta_has_max(self):
-        bkp_twotheta_has_max = copy.deepcopy(self.twotheta_has_max)
-
-        try:
-            self.twotheta_has_max = []
-
-            for index in range(len(self.diffraction_pattern_box_array)):
-                self.twotheta_has_max.append(self.diffraction_pattern_box_array[index].twotheta_has_max)
-        except:
-            self.twotheta_has_max = copy.deepcopy(bkp_twotheta_has_max)
-
-    def dump_diffraction_pattern_name(self):
-        bkp_diffraction_pattern_name = copy.deepcopy(self.diffraction_pattern_name)
-
-        try:
-            self.diffraction_pattern_name = []
-
-            for index in range(len(self.diffraction_pattern_box_array)):
-                self.diffraction_pattern_name.append(self.diffraction_pattern_box_array[index].diffraction_pattern_name)
-        except Exception as e:
-            self.diffraction_pattern_name = copy.deepcopy(bkp_diffraction_pattern_name)
-
-            if self.IS_DEVELOP: raise e
+    def dump_filename(self): self.dump_variable("filename")
+    def dump_twotheta_min(self): self.dump_variable("twotheta_min")
+    def dump_twotheta_has_min(self): self.dump_variable("twotheta_has_min")
+    def dump_twotheta_max(self): self.dump_variable("twotheta_max")
+    def dump_twotheta_has_max(self): self.dump_variable("twotheta_has_max")
+    def dump_diffraction_pattern_name(self): self.dump_variable("diffraction_pattern_name")
 
 
 from PyQt5.QtWidgets import QVBoxLayout

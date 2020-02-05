@@ -6,36 +6,28 @@ from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
-from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import SpecimenDisplacement
 
 
-class OWGenericDiffractionPatternParametersWidget(OWGenericWidget):
+class OWGenericParametersWidget(OWGenericWidget):
     want_main_area = False
-
-    use_single_parameter_set = Setting(0)
 
     def __init__(self):
         super().__init__(show_automatic_box=True)
 
-        main_box = gui.widgetBox(self.controlArea,
-                                 self.get_parameter_name(), orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 10, height=self.get_height())
+        self.main_box = gui.widgetBox(self.controlArea, self.get_parameter_name(), orientation="vertical", width=self.CONTROL_AREA_WIDTH - 10, height=self.get_height())
 
-        button_box = gui.widgetBox(main_box,
-                                   "", orientation="horizontal",
-                                   width=self.CONTROL_AREA_WIDTH - 25)
+        self.button_box = gui.widgetBox(self.main_box, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH - 25)
 
-        gui.button(button_box, self, "Send " + self.get_parameter_name(), height=40, callback=self.send_parameter)
+        gui.button(self.button_box, self, "Send " + self.get_parameter_name(), height=40, callback=self.send_parameter)
 
-        orangegui.comboBox(main_box, self, "use_single_parameter_set", label="Use single set of Parameters", labelWidth=350, orientation="horizontal",
-                           items=["No", "Yes"], callback=self.set_use_single_parameter_set, sendSelectedValue=False)
+        self.build_main_box()
 
-        orangegui.separator(main_box)
+        orangegui.separator(self.main_box)
 
-        self.parameter_tabs = gui.tabWidget(main_box)
+        self.parameter_tabs = gui.tabWidget(self.main_box)
+        self.parameter_box_array = []
 
-        self.set_use_single_parameter_set(on_init=True)
+        self.build_parameter_box_array()
 
         runaction = OWAction("Send " + self.get_parameter_name(), self)
         runaction.triggered.connect(self.send_parameter)
@@ -46,9 +38,86 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericWidget):
     def get_height(self):
         return 600
 
+    def build_main_box(self):
+        raise NotImplementedError()
+
+    def build_parameter_box_array(self):
+        raise NotImplementedError()
+
+    def set_data(self, data):
+        raise NotImplementedError()
+
+    def send_parameter(self):
+        try:
+            if not self.fit_global_parameters is None:
+                self.dumpSettings()
+
+                self.set_parameter_data()
+
+                self.fit_global_parameters.evaluate_functions()
+                self.fit_global_parameters.regenerate_parameters()
+
+                self.send("Fit Global Parameters", self.fit_global_parameters)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error",
+                                 str(e),
+                                 QMessageBox.Ok)
+
+            if self.IS_DEVELOP: raise e
+
+    def get_parameter_box_array(self):
+        return self.parameter_box_array
+
+    def get_parameter_box(self, index):
+        return self.parameter_box_array[index]
+
+    def get_parameter_name(self):
+        raise NotImplementedError()
+
+    def get_current_dimension(self):
+        raise NotImplementedError()
+
+    def get_parameter_box_instance(self, parameter_tab, index):
+        raise NotImplementedError()
+
+    def get_empty_parameter_box_instance(self, parameter_tab, index):
+        raise NotImplementedError()
+
+    def set_parameter_data(self):
+        raise NotImplementedError()
+
+    def get_parameter_array(self):
+        raise NotImplementedError()
+
+    def get_parameter_item(self, diffraction_pattern_index):
+        raise NotImplementedError()
+
+    def dumpSettings(self):
+        raise NotImplementedError()
+
+# -----------------------------------------------------------------
+# Widget with Parameters related to Diffraction Pattern(s)
+# -----------------------------------------------------------------
+
+class OWGenericDiffractionPatternParametersWidget(OWGenericParametersWidget):
+    want_main_area = False
+
+    use_single_parameter_set = Setting(0)
+
+    def __init__(self):
+        super().__init__()
+
+    def build_main_box(self):
+        orangegui.comboBox(self.main_box, self, "use_single_parameter_set", label="Use single set of Parameters", labelWidth=350, orientation="horizontal",
+                           items=["No", "Yes"], callback=self.set_use_single_parameter_set, sendSelectedValue=False)
+
+    def build_parameter_box_array(self):
+        self.set_use_single_parameter_set(on_init=True)
+
     def set_use_single_parameter_set(self, on_init=False, recycle=True):
         self.parameter_tabs.clear()
-        self.parameter_box_array = []
+        self.parameter_box_array.clear()
 
         dimension = self.get_current_dimension() if self.fit_global_parameters is None else self.fit_global_parameters.measured_dataset.get_diffraction_patterns_number()
 
@@ -63,22 +132,6 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericWidget):
             self.parameter_box_array.append(parameter_box)
 
             if not on_init: self.dumpSettings()
-
-    def send_parameter(self):
-        try:
-            if not self.fit_global_parameters is None:
-                self.dumpSettings()
-                self.set_parameter()
-                self.fit_global_parameters.regenerate_parameters()
-
-                self.send("Fit Global Parameters", self.fit_global_parameters)
-
-        except Exception as e:
-            QMessageBox.critical(self, "Error",
-                                 str(e),
-                                 QMessageBox.Ok)
-
-            if self.IS_DEVELOP: raise e
 
     def set_data(self, data):
         if not data is None:
@@ -143,38 +196,107 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericWidget):
         if (len(parameters) == 1 and self.use_single_parameter_set == 0) or (len(parameters) > 1 and self.use_single_parameter_set == 1):
             raise ValueError("Previous " + self.get_parameter_name() + " parameters are incongruent with the current choice of using a single set")
 
-    def get_parameter_box_array(self):
-        return self.parameter_box_array
 
-    def get_parameter_box(self, index):
-        return self.parameter_box_array[index]
 
-    def get_parameter_name(self):
-        raise NotImplementedError()
+# -----------------------------------------------------------------
+# Widget with Parameters related to Phase(s)
+# -----------------------------------------------------------------
+from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
-    def get_current_dimension(self):
-        raise NotImplementedError()
+class OWGenericPhaseParameterWidget(OWGenericParametersWidget):
+    want_main_area =  False
 
-    def get_parameter_box_instance(self, parameter_tab, index):
-        raise NotImplementedError()
+    def __init__(self):
+        super().__init__()
 
-    def get_empty_parameter_box_instance(self, parameter_tab, index):
-        raise NotImplementedError()
+        try:
+            getattr(self, "active")
+        except:
+            raise NotImplementedError("attribute 'active' is missing")
 
-    def set_parameter(self):
-        raise NotImplementedError()
+    def build_main_box(self):
+        pass
 
-    def get_parameter_array(self):
-        raise NotImplementedError()
+    def build_parameter_box_array(self):
+        if self.active is None or len(self.active) != self.get_current_dimension():
+            self.active = [1]*self.get_current_dimension()
 
-    def get_parameter_item(self, diffraction_pattern_index):
-        raise NotImplementedError()
+        for index in range(self.get_current_dimension()):
+            parameter_box = self.get_parameter_box_instance(gui.createTabPage(self.parameter_tabs, Phase.get_default_name(index)), index)
+
+            self.parameter_box_array.append(parameter_box)
+
+    def get_height(self):
+        return 600
+
+    def set_data(self, data):
+        if not data is None:
+            try:
+                if data.measured_dataset is None:
+                    raise ValueError("Measured Dataset is missing")
+
+                if data.measured_dataset.phases is None:
+                    raise ValueError("Phases are missing")
+
+                self.check_input_global_parameters(data)
+
+                self.fit_global_parameters = data.duplicate()
+
+                phases = self.fit_global_parameters.measured_dataset.phases
+
+                tabs_to_remove = self.get_current_dimension()-len(phases)
+
+                if tabs_to_remove > 0:
+                    for index in range(tabs_to_remove):
+                        self.parameter_tabs.removeTab(-1)
+                        self.parameter_box_array.pop()
+
+                for phase_index in range(len(phases)):
+                    parameters = self.get_parameter_of_phase_item(phase_index)
+
+                    if phase_index < self.get_current_dimension():
+                        self.parameter_tabs.setTabText(phase_index, OWGenericWidget.phase_name(self.fit_global_parameters, phase_index))
+
+                        parameter_box = self.get_parameter_box(phase_index)
+
+                        if not parameters is None: parameter_box.set_data(parameters)
+                    else:
+                        parameter_box = self.get_empty_parameter_box_instance(gui.createTabPage(self.parameter_tabs, OWGenericWidget.phase_name(self.fit_global_parameters, phase_index)),
+                                                                              phase_index)
+
+                        if not parameters is None: parameter_box.set_data(parameters)
+
+                        self.parameter_box_array.append(parameter_box)
+
+                self.dumpSettings()
+
+                if self.is_automatic_run:
+                    self.send_parameter()
+
+            except Exception as e:
+                QMessageBox.critical(self, "Error",
+                                     str(e),
+                                     QMessageBox.Ok)
+
+                if self.IS_DEVELOP: raise e
+
+    def check_input_global_parameters(self, data):
+        pass
+
+    def get_parameter_of_phase_item(self, phase_index):
+        if self.get_parameter_array() is None:
+            return self.get_parameter_item(phase_index)
+        else:
+            return None
 
     def dumpSettings(self):
-        raise NotImplementedError()
+        self.dump_active()
+        self.dumpOtherSettings()
 
-class OWGenericPhaseParameterWidget(OWGenericWidget):
-    pass
+    def dump_active(self): self.dump_variable("active")
+
+    def dumpOtherSettings(self):
+        raise NotImplementedError
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QVBoxLayout
@@ -229,7 +351,7 @@ class ParameterBox(InnerBox):
         return self.get_basic_parameter_prefix() + self.get_parameter_progressive()
 
     def get_basic_parameter_prefix(self):
-        return SpecimenDisplacement.get_parameters_prefix()
+        raise NotImplementedError()
 
     def get_parameter_progressive(self):
         return str(self.index + 1) + "_"
@@ -238,3 +360,28 @@ class ParameterBox(InnerBox):
         raise NotImplementedError()
 
 
+class ParameterActivableBox(ParameterBox):
+
+    active=1
+
+    def __init__(self, widget=None, parent=None, index=0, active=1, **kwargs):
+        super(ParameterActivableBox, self).__init__(widget, parent, index, **kwargs)
+
+        self.active=active
+
+        self.set_active()
+
+    def init_gui(self, container):
+        self.cb_active = orangegui.comboBox(container, self, "active", label="Active", items=["No", "Yes"], callback=self.set_active, orientation="horizontal")
+
+        self.main_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-10)
+
+        self.init_main_box()
+
+    def init_main_box(self):
+        raise NotImplementedError()
+
+    def set_active(self):
+        self.main_box.setEnabled(self.active==1)
+
+        if not self.is_on_init: self.widget.dump_active()

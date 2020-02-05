@@ -46,7 +46,7 @@ class OWLorentzPolarization(OWGenericDiffractionPatternParametersWidget):
     def get_empty_parameter_box_instance(self, parameter_tab, index):
         return PolarizationParametersBox(widget=self, parent=parameter_tab, index=index)
 
-    def set_parameter(self):
+    def set_parameter_data(self):
         self.fit_global_parameters.set_instrumental_parameters([self.get_parameter_box(index).get_lorentz_polarization() for index in range(self.get_current_dimension())])
 
     def get_parameter_array(self):

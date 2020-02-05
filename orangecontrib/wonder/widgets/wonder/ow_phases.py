@@ -266,6 +266,9 @@ class OWPhases(OWGenericWidget):
 
                 if self.IS_DEVELOP: raise e
 
+    def get_parameter_box_array(self):
+        return self.phases_box_array
+
     ##############################
     # SINGLE FIELDS SIGNALS
     ##############################

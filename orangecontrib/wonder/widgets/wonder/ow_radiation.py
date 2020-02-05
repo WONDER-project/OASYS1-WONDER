@@ -238,18 +238,18 @@ class OWRadiation(OWGenericDiffractionPatternParametersWidget):
     def get_empty_parameter_box_instance(self, parameter_tab, index):
         return RadiationBox(widget=self, parent=parameter_tab, index=index)
 
-    def set_parameter(self):
+    def set_parameter_data(self):
         incident_radiations = []
     
         if self.use_single_parameter_set == 1:
-            incident_radiation = self.parameter_box_array[0].get_incident_radiation()
+            incident_radiation = self.get_parameter_box(0).get_incident_radiation()
             incident_radiations.append(incident_radiation)
     
             for diffraction_pattern in self.fit_global_parameters.measured_dataset.diffraction_patterns:
                 diffraction_pattern.apply_wavelength(incident_radiation.wavelength)
         else:
             for index in range(self.get_current_dimension()):
-                incident_radiation = self.parameter_box_array[index].get_incident_radiation()
+                incident_radiation = self.get_parameter_box(index).get_incident_radiation()
                 incident_radiations.append(incident_radiation)
     
                 self.fit_global_parameters.measured_dataset.diffraction_patterns[index].apply_wavelength(incident_radiation.wavelength)
