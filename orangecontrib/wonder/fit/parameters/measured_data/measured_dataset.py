@@ -32,7 +32,6 @@ class MeasuredDataset(ParametersList):
 
         diffraction_patterns_number = dataset.get_diffraction_patterns_number()
 
-        dataset.incident_radiations = [None] * diffraction_patterns_number
         dataset.line_profiles = [None] * diffraction_patterns_number
         dataset.initialized = True
 

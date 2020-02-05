@@ -98,7 +98,7 @@ class OWFitter(OWGenericWidget):
     text_size      = None
     
     def __fix_attrs(self):
-        if not isinstance(self.fwhm_autoscale, list) or len(self.fwhm_autoscale) == 0: self.fwhm_autoscale = [1]
+        if not isinstance(self.fwhm_autoscale, list) or len(self.fwhm_autoscale) != 0: self.fwhm_autoscale = [1]
         if not isinstance(self.fwhm_xmin, list) or len(self.fwhm_xmin) == 0: self.fwhm_xmin = [0.0]
         if not isinstance(self.fwhm_xmax, list) or len(self.fwhm_xmax) == 0: self.fwhm_xmax = [150.0]
         if not isinstance(self.fwhm_ymin, list) or len(self.fwhm_ymin) == 0: self.fwhm_ymin = [0.0]
@@ -780,13 +780,15 @@ class OWFitter(OWGenericWidget):
     def __refresh_ipf(self, diffraction_patterns_number, is_init=False):
         if is_init: self.__build_plot_ipf()
 
-        for diffraction_pattern_index in range(diffraction_patterns_number):
-            instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+        fit_global_parameters = self.__fit_global_parameters()
+
+        for diffraction_pattern_index in range(self.__get_number_of_ipf_tabs(fit_global_parameters)[1]):
+            instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
             if not instrumental_parameters is None:
                 self.refresh_caglioti_fwhm(instrumental_parameters, diffraction_pattern_index)
                 self.refresh_caglioti_eta(instrumental_parameters, diffraction_pattern_index)
 
-            shift_parameters = self.fitted_fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
+            shift_parameters = fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
             if not shift_parameters is None: self.refresh_lab6(shift_parameters, diffraction_pattern_index)
 
     # ------------------------------------------------------------------------
@@ -926,21 +928,23 @@ class OWFitter(OWGenericWidget):
 
             self.__build_plot_integral_breadth()
 
-        if not (self.fitted_fit_global_parameters.strain_parameters is None and \
-                self.fitted_fit_global_parameters.size_parameters is None and \
-                self.fitted_fit_global_parameters.instrumental_parameters is None) and \
+        fit_global_parameters = self.__fit_global_parameters()
+
+        if not (fit_global_parameters.strain_parameters is None and \
+                fit_global_parameters.size_parameters is None and \
+                fit_global_parameters.instrumental_parameters is None) and \
                 self.show_integral_breadth==1:
-            for diffraction_pattern_index in range(diffraction_pattern_number):
-                line_profile       = self.fitted_fit_global_parameters.measured_dataset.get_line_profile(diffraction_pattern_index)
-                incident_radiation = self.fitted_fit_global_parameters.measured_dataset.get_incident_radiations_item(diffraction_pattern_index)
+            for diffraction_pattern_index in range(self.__get_number_of_ipf_tabs(fit_global_parameters)[1]):
+                line_profile       = fit_global_parameters.measured_dataset.get_line_profile(diffraction_pattern_index)
+                incident_radiation = fit_global_parameters.measured_dataset.get_incident_radiations_item(diffraction_pattern_index)
                 wavelength         = incident_radiation.wavelength.value
 
-                instrumental_parameters = self.fitted_fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
 
                 for phase_index in range(phases_number):
                     self.__clear_annotations(diffraction_pattern_index, phase_index)
 
-                    phase             = self.fitted_fit_global_parameters.measured_dataset.get_phase(phase_index)
+                    phase             = fit_global_parameters.measured_dataset.get_phase(phase_index)
                     lattice_parameter = phase.a.value
 
                     nr_points = line_profile.get_reflections_number(phase_index=phase_index)
@@ -948,8 +952,8 @@ class OWFitter(OWGenericWidget):
                     self.x_ib[diffraction_pattern_index, phase_index]      = line_profile.get_s_list(phase_index)
                     self.labels_ib[diffraction_pattern_index, phase_index] = line_profile.get_hkl_list(phase_index)
 
-                    size_parameters = self.fitted_fit_global_parameters.get_size_parameters(phase_index)
-                    strain_parameters = self.fitted_fit_global_parameters.get_strain_parameters(phase_index)
+                    size_parameters   = fit_global_parameters.get_size_parameters(phase_index)
+                    strain_parameters = fit_global_parameters.get_strain_parameters(phase_index)
 
                     plot_instr = not instrumental_parameters is None
                     plot_size = not size_parameters is None
@@ -1024,14 +1028,22 @@ class OWFitter(OWGenericWidget):
     # ------------------------------------------------------------------------
     # ------------------------------------------------------------------------
 
+    def __get_number_of_ipf_tabs(self, fit_global_parameters):
+        if fit_global_parameters is None: return False, 1
+        else:
+            use_single_set = (len(fit_global_parameters.instrumental_parameters) == 1 and fit_global_parameters.measured_dataset.get_diffraction_patterns_number() > 1)
+
+            if use_single_set: return True, 1
+            else: return False, self.__diffraction_patterns_range(fit_global_parameters)
+
     def __build_plot_fit(self):
-        fit_global_parameter = self.__fit_global_parameters()
+        fit_global_parameters = self.__fit_global_parameters()
 
         self.plot_fit = []
         self.tabs_plot_fit_data.clear()
 
-        for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameter)):
-            tab_plot_fit_data = gui.createTabPage(self.tabs_plot_fit_data, OWGenericWidget.diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
+        for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameters)):
+            tab_plot_fit_data = gui.createTabPage(self.tabs_plot_fit_data, OWGenericWidget.diffraction_pattern_name(fit_global_parameters, diffraction_pattern_index))
 
             plot_fit = PlotWindow()
             plot_fit.setDefaultPlotLines(True)
@@ -1057,44 +1069,64 @@ class OWFitter(OWGenericWidget):
 
         self.tabs_plot_ipf.clear()
 
-        for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameters)):
-            tab_plot_ipf = gui.tabWidget(gui.createTabPage(self.tabs_plot_ipf, OWGenericWidget.diffraction_pattern_name(fit_global_parameters, diffraction_pattern_index)))
+        use_single_set, number_of_ipf_tabs = self.__get_number_of_ipf_tabs(fit_global_parameters)
+
+        for diffraction_pattern_index in range(number_of_ipf_tabs):
+            tab_plot_ipf = gui.tabWidget(gui.createTabPage(self.tabs_plot_ipf, OWGenericWidget.diffraction_pattern_name(fit_global_parameters, diffraction_pattern_index, use_single_set)))
 
             tab_plot_fwhm = gui.createTabPage(tab_plot_ipf, "Caglioti's FWHM")
             tab_plot_eta  = gui.createTabPage(tab_plot_ipf, "Caglioti's \u03b7")
             tab_plot_lab6 = gui.createTabPage(tab_plot_ipf, "LaB6 Tan Correction")
 
-            ## FWHM ---------------------------------------------------------------
-            
-            self.fwhm_box_array.append(FWHMBox(widget=self, 
-                                               parent=tab_plot_fwhm, 
-                                               fit_global_parameters=fit_global_parameters, 
-                                               diffraction_pattern_index=diffraction_pattern_index,
-                                               fwhm_autoscale=self.fwhm_autoscale[diffraction_pattern_index],
-                                               fwhm_xmin=self.fwhm_xmin[diffraction_pattern_index],
-                                               fwhm_xmax=self.fwhm_xmax[diffraction_pattern_index],
-                                               fwhm_ymin=self.fwhm_ymin[diffraction_pattern_index],
-                                               fwhm_ymax=self.fwhm_ymax[diffraction_pattern_index]))
-            
-            self.eta_box_array.append(EtaBox(widget=self, 
-                                             parent=tab_plot_eta, 
-                                             fit_global_parameters=fit_global_parameters, 
-                                             diffraction_pattern_index=diffraction_pattern_index,
-                                             eta_autoscale=self.eta_autoscale[diffraction_pattern_index],
-                                             eta_xmin=self.eta_xmin[diffraction_pattern_index],
-                                             eta_xmax=self.eta_xmax[diffraction_pattern_index],
-                                             eta_ymin=self.eta_ymin[diffraction_pattern_index],
-                                             eta_ymax=self.eta_ymax[diffraction_pattern_index]))
+            if diffraction_pattern_index < len(self.fwhm_autoscale):
+                self.fwhm_box_array.append(FWHMBox(widget=self,
+                                                   parent=tab_plot_fwhm,
+                                                   fit_global_parameters=fit_global_parameters,
+                                                   diffraction_pattern_index=diffraction_pattern_index,
+                                                   fwhm_autoscale=self.fwhm_autoscale[diffraction_pattern_index],
+                                                   fwhm_xmin=self.fwhm_xmin[diffraction_pattern_index],
+                                                   fwhm_xmax=self.fwhm_xmax[diffraction_pattern_index],
+                                                   fwhm_ymin=self.fwhm_ymin[diffraction_pattern_index],
+                                                   fwhm_ymax=self.fwhm_ymax[diffraction_pattern_index]))
+            else:
+                self.fwhm_box_array.append(FWHMBox(widget=self,
+                                                   parent=tab_plot_fwhm,
+                                                   fit_global_parameters=fit_global_parameters,
+                                                   diffraction_pattern_index=diffraction_pattern_index))
 
-            self.lab6_box_array.append(Lab6Box(widget=self,
-                                               parent=tab_plot_lab6, 
-                                               fit_global_parameters=fit_global_parameters, 
-                                               diffraction_pattern_index=diffraction_pattern_index,
-                                               lab6_autoscale=self.lab6_autoscale[diffraction_pattern_index],
-                                               lab6_xmin=self.lab6_xmin[diffraction_pattern_index],
-                                               lab6_xmax=self.lab6_xmax[diffraction_pattern_index],
-                                               lab6_ymin=self.lab6_ymin[diffraction_pattern_index],
-                                               lab6_ymax=self.lab6_ymax[diffraction_pattern_index]))
+            if diffraction_pattern_index < len(self.eta_autoscale):
+                self.eta_box_array.append(EtaBox(widget=self,
+                                                 parent=tab_plot_eta,
+                                                 fit_global_parameters=fit_global_parameters,
+                                                 diffraction_pattern_index=diffraction_pattern_index,
+                                                 eta_autoscale=self.eta_autoscale[diffraction_pattern_index],
+                                                 eta_xmin=self.eta_xmin[diffraction_pattern_index],
+                                                 eta_xmax=self.eta_xmax[diffraction_pattern_index],
+                                                 eta_ymin=self.eta_ymin[diffraction_pattern_index],
+                                                 eta_ymax=self.eta_ymax[diffraction_pattern_index]))
+            else:
+                self.eta_box_array.append(EtaBox(widget=self,
+                                                 parent=tab_plot_eta,
+                                                 fit_global_parameters=fit_global_parameters,
+                                                 diffraction_pattern_index=diffraction_pattern_index))
+
+            if diffraction_pattern_index < len(self.lab6_autoscale):
+                self.lab6_box_array.append(Lab6Box(widget=self,
+                                                   parent=tab_plot_lab6,
+                                                   fit_global_parameters=fit_global_parameters,
+                                                   diffraction_pattern_index=diffraction_pattern_index,
+                                                   lab6_autoscale=self.lab6_autoscale[diffraction_pattern_index],
+                                                   lab6_xmin=self.lab6_xmin[diffraction_pattern_index],
+                                                   lab6_xmax=self.lab6_xmax[diffraction_pattern_index],
+                                                   lab6_ymin=self.lab6_ymin[diffraction_pattern_index],
+                                                   lab6_ymax=self.lab6_ymax[diffraction_pattern_index]))
+            else:
+                self.lab6_box_array.append(Lab6Box(widget=self,
+                                                   parent=tab_plot_lab6,
+                                                   fit_global_parameters=fit_global_parameters,
+                                                   diffraction_pattern_index=diffraction_pattern_index))
+
+
 
             self.tab_plot_fwhm.append(tab_plot_fwhm)
             self.tab_plot_eta.append(tab_plot_eta)
@@ -1154,19 +1186,21 @@ class OWFitter(OWGenericWidget):
     # ------------------------------------------------------------------------
 
     def __build_plot_integral_breadth(self):
-        fit_global_parameter = self.__fit_global_parameters()
+        fit_global_parameters = self.__fit_global_parameters()
 
         self.plot_integral_breadth = []
         self.tabs_plot_integral_breadth.clear()
 
-        for diffraction_pattern_index in range(self.__diffraction_patterns_range(fit_global_parameter)):
-            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, OWGenericWidget.diffraction_pattern_name(fit_global_parameter, diffraction_pattern_index))
+        use_single_set, number_of_ipf_tabs = self.__get_number_of_ipf_tabs(fit_global_parameters)
+
+        for diffraction_pattern_index in range(number_of_ipf_tabs):
+            tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot_integral_breadth, OWGenericWidget.diffraction_pattern_name(fit_global_parameters, diffraction_pattern_index, use_single_set))
 
             tabs_plot_integral_breadth_phases = gui.tabWidget(tab_plot_integral_breadth)
             plot_integral_breadth_phases = []
 
-            for phase_index in range(self.__phases_range(fit_global_parameter)):
-                tab_plot_integral_breadth_phase = gui.createTabPage(tabs_plot_integral_breadth_phases, OWGenericWidget.phase_name(fit_global_parameter, phase_index))
+            for phase_index in range(self.__phases_range(fit_global_parameters)):
+                tab_plot_integral_breadth_phase = gui.createTabPage(tabs_plot_integral_breadth_phases, OWGenericWidget.phase_name(fit_global_parameters, phase_index))
 
                 plot_integral_breadth = PlotWindow(control=True)
                 legends_dock_widget = LegendsDockWidget(plot=plot_integral_breadth)
@@ -1288,201 +1322,57 @@ class OWFitter(OWGenericWidget):
         self.dump_fwhm_ymin()
         self.dump_fwhm_ymax()
 
-    def dump_fwhm_autoscale(self):
-        bkp_fwhm_autoscale = copy.deepcopy(self.fwhm_autoscale)
+        self.dump_eta_autoscale()
+        self.dump_eta_xmin()
+        self.dump_eta_xmax()
+        self.dump_eta_ymin()
+        self.dump_eta_ymax()
 
-        try:
-            self.fwhm_autoscale = []
+        self.dump_lab6_autoscale()
+        self.dump_lab6_xmin()
+        self.dump_lab6_xmax()
+        self.dump_lab6_ymin()
+        self.dump_lab6_ymax()
 
-            for index in range(len(self.fwhm_box_array)):
-                self.fwhm_autoscale.append(self.fwhm_box_array[index].fwhm_autoscale)
-        except Exception as e:
-            self.fwhm_autoscale = copy.deepcopy(bkp_fwhm_autoscale)
+    def get_parameter_box_array_fwhm(self):
+        return self.fwhm_box_array
 
-            if self.IS_DEVELOP: raise e
+    def get_parameter_box_array_eta(self):
+        return self.eta_box_array
 
-    def dump_fwhm_xmin(self):
-        bkp_fwhm_xmin = copy.deepcopy(self.fwhm_xmin)
+    def get_parameter_box_array_lab6(self):
+        return self.lab6_box_array
 
-        try:
-            self.fwhm_xmin = []
+    def dump_fwhm_variable(self, variable_name):
+        self.get_parameter_box_array = self.get_parameter_box_array_fwhm
+        self.dump_variable(variable_name)
 
-            for index in range(len(self.fwhm_box_array)):
-                self.fwhm_xmin.append(self.fwhm_box_array[index].fwhm_xmin)
-        except Exception as e:
-            self.fwhm_xmin = copy.deepcopy(bkp_fwhm_xmin)
+    def dump_eta_variable(self, variable_name):
+        self.get_parameter_box_array = self.get_parameter_box_array_eta
+        self.dump_variable(variable_name)
 
-            if self.IS_DEVELOP: raise e
+    def dump_lab6_variable(self, variable_name):
+        self.get_parameter_box_array = self.get_parameter_box_array_lab6
+        self.dump_variable(variable_name)
 
-    def dump_fwhm_xmax(self):
-        bkp_fwhm_xmax = copy.deepcopy(self.fwhm_xmax)
+    def dump_fwhm_autoscale(self): self.dump_fwhm_variable("fwhm_autoscale")
+    def dump_fwhm_xmin(self): self.dump_fwhm_variable("fwhm_xmin")
+    def dump_fwhm_xmax(self): self.dump_fwhm_variable("fwhm_xmax")
+    def dump_fwhm_ymin(self): self.dump_fwhm_variable("fwhm_ymin")
+    def dump_fwhm_ymax(self): self.dump_fwhm_variable("fwhm_ymax")
 
-        try:
-            self.fwhm_xmax = []
+    def dump_eta_autoscale(self): self.dump_eta_variable("eta_autoscale")
+    def dump_eta_xmin(self): self.dump_eta_variable("eta_xmin")
+    def dump_eta_xmax(self): self.dump_eta_variable("eta_xmax")
+    def dump_eta_ymin(self): self.dump_eta_variable("eta_ymin")
+    def dump_eta_ymax(self): self.dump_eta_variable("eta_ymax")
 
-            for index in range(len(self.fwhm_box_array)):
-                self.fwhm_xmax.append(self.fwhm_box_array[index].fwhm_xmax)
-        except Exception as e:
-            self.fwhm_xmax = copy.deepcopy(bkp_fwhm_xmax)
+    def dump_lab6_autoscale(self): self.dump_lab6_variable("lab6_autoscale")
+    def dump_lab6_xmin(self): self.dump_lab6_variable("lab6_xmin")
+    def dump_lab6_xmax(self): self.dump_lab6_variable("lab6_xmax")
+    def dump_lab6_ymin(self): self.dump_lab6_variable("lab6_ymin")
+    def dump_lab6_ymax(self): self.dump_lab6_variable("lab6_ymax")
 
-            if self.IS_DEVELOP: raise e
-
-    def dump_fwhm_ymin(self):
-        bkp_fwhm_ymin = copy.deepcopy(self.fwhm_ymin)
-
-        try:
-            self.fwhm_ymin = []
-
-            for index in range(len(self.fwhm_box_array)):
-                self.fwhm_ymin.append(self.fwhm_box_array[index].fwhm_ymin)
-        except Exception as e:
-            self.fwhm_ymin = copy.deepcopy(bkp_fwhm_ymin)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_fwhm_ymax(self):
-        bkp_fwhm_ymax = copy.deepcopy(self.fwhm_ymax)
-
-        try:
-            self.fwhm_ymax = []
-
-            for index in range(len(self.fwhm_box_array)):
-                self.fwhm_ymax.append(self.fwhm_box_array[index].fwhm_ymax)
-        except Exception as e:
-            self.fwhm_ymax = copy.deepcopy(bkp_fwhm_ymax)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_eta_autoscale(self):
-        bkp_eta_autoscale = copy.deepcopy(self.eta_autoscale)
-
-        try:
-            self.eta_autoscale = []
-
-            for index in range(len(self.eta_box_array)):
-                self.eta_autoscale.append(self.eta_box_array[index].eta_autoscale)
-        except Exception as e:
-            self.eta_autoscale = copy.deepcopy(bkp_eta_autoscale)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_eta_xmin(self):
-        bkp_eta_xmin = copy.deepcopy(self.eta_xmin)
-
-        try:
-            self.eta_xmin = []
-
-            for index in range(len(self.eta_box_array)):
-                self.eta_xmin.append(self.eta_box_array[index].eta_xmin)
-        except Exception as e:
-            self.eta_xmin = copy.deepcopy(bkp_eta_xmin)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_eta_xmax(self):
-        bkp_eta_xmax = copy.deepcopy(self.eta_xmax)
-
-        try:
-            self.eta_xmax = []
-
-            for index in range(len(self.eta_box_array)):
-                self.eta_xmax.append(self.eta_box_array[index].eta_xmax)
-        except Exception as e:
-            self.eta_xmax = copy.deepcopy(bkp_eta_xmax)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_eta_ymin(self):
-        bkp_eta_ymin = copy.deepcopy(self.eta_ymin)
-
-        try:
-            self.eta_ymin = []
-
-            for index in range(len(self.eta_box_array)):
-                self.eta_ymin.append(self.eta_box_array[index].eta_ymin)
-        except Exception as e:
-            self.eta_ymin = copy.deepcopy(bkp_eta_ymin)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_eta_ymax(self):
-        bkp_eta_ymax = copy.deepcopy(self.eta_ymax)
-
-        try:
-            self.eta_ymax = []
-
-            for index in range(len(self.eta_box_array)):
-                self.eta_ymax.append(self.eta_box_array[index].eta_ymax)
-        except Exception as e:
-            self.eta_ymax = copy.deepcopy(bkp_eta_ymax)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_lab6_autoscale(self):
-        bkp_lab6_autoscale = copy.deepcopy(self.lab6_autoscale)
-
-        try:
-            self.lab6_autoscale = []
-
-            for index in range(len(self.lab6_box_array)):
-                self.lab6_autoscale.append(self.lab6_box_array[index].lab6_autoscale)
-        except Exception as e:
-            self.lab6_autoscale = copy.deepcopy(bkp_lab6_autoscale)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_lab6_xmin(self):
-        bkp_lab6_xmin = copy.deepcopy(self.lab6_xmin)
-
-        try:
-            self.lab6_xmin = []
-
-            for index in range(len(self.lab6_box_array)):
-                self.lab6_xmin.append(self.lab6_box_array[index].lab6_xmin)
-        except Exception as e:
-            self.lab6_xmin = copy.deepcopy(bkp_lab6_xmin)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_lab6_xmax(self):
-        bkp_lab6_xmax = copy.deepcopy(self.lab6_xmax)
-
-        try:
-            self.lab6_xmax = []
-
-            for index in range(len(self.lab6_box_array)):
-                self.lab6_xmax.append(self.lab6_box_array[index].lab6_xmax)
-        except Exception as e:
-            self.lab6_xmax = copy.deepcopy(bkp_lab6_xmax)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_lab6_ymin(self):
-        bkp_lab6_ymin = copy.deepcopy(self.lab6_ymin)
-
-        try:
-            self.lab6_ymin = []
-
-            for index in range(len(self.lab6_box_array)):
-                self.lab6_ymin.append(self.lab6_box_array[index].lab6_ymin)
-        except Exception as e:
-            self.lab6_ymin = copy.deepcopy(bkp_lab6_ymin)
-
-            if self.IS_DEVELOP: raise e
-
-    def dump_lab6_ymax(self):
-        bkp_lab6_ymax = copy.deepcopy(self.lab6_ymax)
-
-        try:
-            self.lab6_ymax = []
-
-            for index in range(len(self.lab6_box_array)):
-                self.lab6_ymax.append(self.lab6_box_array[index].lab6_ymax)
-        except Exception as e:
-            self.lab6_ymax = copy.deepcopy(bkp_lab6_ymax)
-
-            if self.IS_DEVELOP: raise e
-            
 from PyQt5.QtCore import Qt
 
 from PyQt5.QtWidgets import QVBoxLayout
