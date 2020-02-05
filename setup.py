@@ -63,7 +63,7 @@ ENTRY_POINTS = {
     'oasys.widgets': (
         "Wonder 1 = orangecontrib.wonder.widgets.wonder",
     ),
-    #'oasys.menus': ("wondermenu = orangecontrib.wonder.menu",)
+    'oasys.menus': ("wondermenu = orangecontrib.wonder.menu",)
 
 }
 
