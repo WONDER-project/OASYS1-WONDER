@@ -20,10 +20,8 @@ from orangecontrib.wonder.fit.fitters.fitter_factory import FitterFactory, Fitte
 from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
-from orangecontrib.wonder.fit.parameters.measured_data.diffraction_pattern import DiffractionPattern
-from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, SpecimenDisplacement, Caglioti
 from orangecontrib.wonder.fit.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
 
@@ -1031,7 +1029,17 @@ class OWFitter(OWGenericWidget):
     def __get_number_of_ipf_tabs(self, fit_global_parameters):
         if fit_global_parameters is None: return False, 1
         else:
-            use_single_set = (len(fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)) == 1 and fit_global_parameters.measured_dataset.get_diffraction_patterns_number() > 1)
+            caglioti_list = fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)
+            shift_list    = fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__)
+
+            if not caglioti_list is None:
+                ipf_number = len(caglioti_list)
+            elif not shift_list is None:
+                ipf_number = len(shift_list)
+            else:
+                ipf_number = 0
+
+            use_single_set = (ipf_number == 1 and fit_global_parameters.measured_dataset.get_diffraction_patterns_number() > 1)
 
             if use_single_set: return True, 1
             else: return False, self.__diffraction_patterns_range(fit_global_parameters)
@@ -1256,9 +1264,9 @@ class OWFitter(OWGenericWidget):
 
                 self.__populate_table(self.table_fit_out, parameters)
 
-                if self.current_iteration == 1:
-                    self.tabs.setCurrentIndex(1)
-                    self.tabs_plot.setCurrentIndex(0)
+                #if self.current_iteration == 1:
+                #    self.tabs.setCurrentIndex(1)
+                #    self.tabs_plot.setCurrentIndex(0)
 
         except Exception as e:
             QMessageBox.critical(self, "Error",
@@ -1294,9 +1302,9 @@ class OWFitter(OWGenericWidget):
 
             self.__populate_table(self.table_fit_out, parameters)
 
-            if self.current_iteration == 1:
-                self.tabs.setCurrentIndex(1)
-                self.tabs_plot.setCurrentIndex(0)
+            #if self.current_iteration == 1:
+            #    self.tabs.setCurrentIndex(1)
+            #    self.tabs_plot.setCurrentIndex(0)
 
         self.send("Fit Global Parameters", self.fitted_fit_global_parameters)
 
