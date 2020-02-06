@@ -34,4 +34,8 @@ def run_gsas_ii():
 
 
 if __name__=="__main__":
-    run_gsas_ii()
+    #run_gsas_ii()
+
+    parameter_name = "invariant_aa"
+
+    print(parameter_name[:-2])

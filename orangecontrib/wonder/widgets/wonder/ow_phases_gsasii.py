@@ -220,7 +220,7 @@ class PhaseBox(ParameterBox):
 
         self.set_symmetry()
 
-        self.phase_name = phase.phase_name
+        self.phase_name = phase.name
 
     def get_phase(self):
         phase = GSASIIPhase.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),

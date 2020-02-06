@@ -210,7 +210,7 @@ class PhaseBox(ParameterBox):
         self.set_structure()
         self.set_symmetry()
 
-        self.phase_name = phase.phase_name
+        self.phase_name = phase.name
 
     def get_phase(self):
         if self.use_structure == 0:

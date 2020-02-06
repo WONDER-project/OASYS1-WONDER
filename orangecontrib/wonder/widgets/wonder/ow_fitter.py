@@ -1031,7 +1031,7 @@ class OWFitter(OWGenericWidget):
     def __get_number_of_ipf_tabs(self, fit_global_parameters):
         if fit_global_parameters is None: return False, 1
         else:
-            use_single_set = (len(fit_global_parameters.instrumental_parameters) == 1 and fit_global_parameters.measured_dataset.get_diffraction_patterns_number() > 1)
+            use_single_set = (len(fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)) == 1 and fit_global_parameters.measured_dataset.get_diffraction_patterns_number() > 1)
 
             if use_single_set: return True, 1
             else: return False, self.__diffraction_patterns_range(fit_global_parameters)
