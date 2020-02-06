@@ -1,6 +1,4 @@
-
-#WONDER 
-###(Whole POwder PatterN moDelling in ORange)
+# WONDER (Whole POwder PatterN moDelling in ORange)
 
 WONDER is a graphic user interface to implement the WPPM approach to XRPD data analysis, that is fully based on the OASYS graphic and data flow engine, providing high flexibility and ease of use. 
 
