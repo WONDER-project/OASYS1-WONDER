@@ -3,7 +3,7 @@
 	<nodes>
 		<node id="0" name="FFT Parameters" position="(157.0, -23.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fft_parameters.OWFFTParameters" title="FFT Parameters" version="" />
 		<node id="1" name="Chebyshev Background" position="(586.0, -23.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_chebyshev_background.OWChebyshevBackground" title="Chebyshev Background" version="" />
-		<node id="2" name="GSAS-II Phases" position="(119.0, 123.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases_gsasii.OWGSASIIPhases" title="GSAS-II Phases" version="" />
+		<node id="2" name="GSAS-II Phases" position="(119.0, 122.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_phases_gsasii.OWGSASIIPhases" title="GSAS-II Phases" version="" />
 		<node id="3" name="Line Profile" position="(228.0, 122.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_line_profile.OWLineProfile" title="Line Profile" version="" />
 		<node id="4" name="Load Diffraction Pattern" position="(52.0, -23.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_diffraction_pattern.OWDiffractionPattern" title="Load Diffraction Pattern" version="" />
 		<node id="5" name="Incident Radiation" position="(262.0, -22.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_radiation.OWRadiation" title="Incident Radiation" version="" />
@@ -16,7 +16,7 @@
 		<node id="12" name="Debye-Waller Factor" position="(334.0, 120.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_debye_waller.OWDebyeWaller" title="Debye-Waller Factor" version="" />
 		<node id="13" name="Fitter" position="(757.0, 264.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (PAH-GSAS)" version="" />
 		<node id="14" name="Fitter" position="(507.0, 264.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter (Size)" version="" />
-		<node id="15" name="Fitter" position="(539.0, 122.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
+		<node id="15" name="Fitter" position="(545.0, 120.0)" project_name="OASYS1-WONDER" qualified_name="orangecontrib.wonder.widgets.wonder.ow_fitter.OWFitter" title="Fitter" version="" />
 	</nodes>
 	<links>
 		<link enabled="true" id="0" sink_channel="Fit Global Parameters" sink_node_id="10" source_channel="Fit Global Parameters" source_node_id="9" />
@@ -63,8 +63,8 @@ b3JfaGFzX21pbnEiXXEjSwFhWBoAAABpbnRlbnNpdHlfc2NhbGVfZmFjdG9yX21heHEkXXElRwAA
 AAAAAAAAYVgaAAAAaW50ZW5zaXR5X3NjYWxlX2ZhY3Rvcl9taW5xJl1xJ0cAAAAAAAAAAGFYEAAA
 AGlzX2F1dG9tYXRpY19ydW5xKIhYCgAAAHBoYXNlX25hbWVxKV1xKlgEAAAARmVNb3ErYVgTAAAA
 c2F2ZWRXaWRnZXRHZW9tZXRyeXEsY3NpcApfdW5waWNrbGVfdHlwZQpxLVgMAAAAUHlRdDUuUXRD
-b3JlcS5YCgAAAFFCeXRlQXJyYXlxL0NCAdnQywADAAD///tOAAAAfv///bQAAAJz///8kgAAAN7/
-//74AAACvQAAAAECAAAABpD///tOAAAAlP///bQAAAJzcTCFcTGHcTJScTNYCAAAAHN5bW1ldHJ5
+b3JlcS5YCgAAAFFCeXRlQXJyYXlxL0NCAdnQywADAAAAAA1jAAAAOQAAD8kAAALYAAANYwAAAE8A
+AA/JAAAC2AAAAAACAAAAD/AAAA1jAAAATwAAD8kAAALYcTCFcTGHcTJScTNYCAAAAHN5bW1ldHJ5
 cTRdcTVLAWFYDQAAAHVzZV9zdHJ1Y3R1cmVxNl1xN0sBYXUu
 </properties>
 		<properties format="pickle" node_id="3">gAN9cQAoWBAAAABpc19hdXRvbWF0aWNfcnVucQGIWAsAAABsaW1pdF90eXBlc3ECXXEDXXEESwBh
@@ -314,8 +314,8 @@ bWF4cR1dcR5HQGLAAAAAAABhWAkAAABsYWI2X3htaW5xH11xIEcAAAAAAAAAAGFYCQAAAGxhYjZf
 eW1heHEhXXEiRz/wAAAAAAAAYVgJAAAAbGFiNl95bWlucSNdcSRHv/AAAAAAAABhWAwAAABuX2l0
 ZXJhdGlvbnNxJUsKWA4AAABzYXZlX2ZpbGVfbmFtZXEmWA4AAABmaXRfb3V0cHV0LmRhdHEnWBMA
 AABzYXZlZFdpZGdldEdlb21ldHJ5cShjc2lwCl91bnBpY2tsZV90eXBlCnEpWAwAAABQeVF0NS5R
-dENvcmVxKlgKAAAAUUJ5dGVBcnJheXErQ0IB2dDLAAMAAP//+psAAACJ////wgAAA1r///qbAAAA
-n////8IAAANaAAAAAQIAAAAGkP//+psAAACf////wgAAA1pxLIVxLYdxLlJxL1gVAAAAc2hvd19p
+dENvcmVxKlgKAAAAUUJ5dGVBcnJheXErQ0IB2dDLAAMAAAAABdsAAAAiAAALAgAAAvMAAAXaAAAA
+PwAACwEAAAL6AAAAAAIAAAAP8AAABdsAAAA4AAALAgAAAvNxLIVxLYdxLlJxL1gVAAAAc2hvd19p
 bnRlZ3JhbF9icmVhZHRocTBLAVgIAAAAc2hvd19pcGZxMUsAWAoAAABzaG93X3NoaWZ0cTJLAFgJ
 AAAAc2hvd19zaXplcTNLAVgLAAAAc2hvd193YXJyZW5xNEsBWAwAAABzaG93X3dzc19nb2ZxNUsB
 dS4=
@@ -332,8 +332,8 @@ bWF4cR1dcR5HQGLAAAAAAABhWAkAAABsYWI2X3htaW5xH11xIEcAAAAAAAAAAGFYCQAAAGxhYjZf
 eW1heHEhXXEiRz/wAAAAAAAAYVgJAAAAbGFiNl95bWlucSNdcSRHv/AAAAAAAABhWAwAAABuX2l0
 ZXJhdGlvbnNxJUsKWA4AAABzYXZlX2ZpbGVfbmFtZXEmWA4AAABmaXRfb3V0cHV0LmRhdHEnWBMA
 AABzYXZlZFdpZGdldEdlb21ldHJ5cShjc2lwCl91bnBpY2tsZV90eXBlCnEpWAwAAABQeVF0NS5R
-dENvcmVxKlgKAAAAUUJ5dGVBcnJheXErQ0IB2dDLAAMAAP//+d8AAABY////BgAAAyn///oEAAAA
-nf///ysAAANYAAAAAQIAAAAGkP//+d8AAABu////BgAAAylxLIVxLYdxLlJxL1gVAAAAc2hvd19p
+dENvcmVxKlgKAAAAUUJ5dGVBcnJheXErQ0IB2dDLAAMAAAAABqUAAAAXAAALzAAAAugAAAfTAAAA
+OAAADPoAAALzAAAAAAIAAAAP8AAABqUAAAAtAAALzAAAAuhxLIVxLYdxLlJxL1gVAAAAc2hvd19p
 bnRlZ3JhbF9icmVhZHRocTBLAFgIAAAAc2hvd19pcGZxMUsAWAoAAABzaG93X3NoaWZ0cTJLAFgJ
 AAAAc2hvd19zaXplcTNLAVgLAAAAc2hvd193YXJyZW5xNEsAWAwAAABzaG93X3dzc19nb2ZxNUsB
 dS4=

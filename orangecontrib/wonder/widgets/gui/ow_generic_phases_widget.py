@@ -6,11 +6,8 @@ from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 from orangewidget.widget import OWAction
 
-from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import ParameterBox
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
-from orangecontrib.wonder.util import congruence
-from orangecontrib.wonder.util.fit_utilities import Symmetry
 
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 
@@ -44,7 +41,7 @@ class OWGenericPhases(OWGenericWidget):
 
         main_box = gui.widgetBox(self.controlArea,
                                  "Phases", orientation="vertical",
-                                 width=self.CONTROL_AREA_WIDTH - 5, height=380)
+                                 width=self.CONTROL_AREA_WIDTH - 5, height=self.get_height())
 
         button_box = gui.widgetBox(main_box,
                                    "", orientation="horizontal",
@@ -85,6 +82,9 @@ class OWGenericPhases(OWGenericWidget):
 
     def get_max_height(self):
         return 480
+
+    def get_height(self):
+        return self.get_max_height() - 100
 
     def insert_before(self):
         current_index = self.phases_tabs.currentIndex()

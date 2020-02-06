@@ -66,10 +66,10 @@ class GSASIIReflectionData:
         return str(self.h           ) + " "  + \
                str(self.k           ) + " "  + \
                str(self.l           ) + " "  + \
-               str(self.pos         ) + " "  + \
-               str(self.multiplicity) + " "  + \
-               str(self.F2          ) + " "  + \
-               str(self.get_intensity_factor())
+               "%7s"%str(round(self.pos,3)) + " "  + \
+               "%2s"%str(self.multiplicity) + " "  + \
+               "%10s"%str(round(self.F2, 3)) + " "  + \
+               "%12s"%str(round(self.get_intensity_factor(),3))
 
 class GSASIIReflectionList:
     def __init__(self, cif_file, wavelength, twotheta_min=0.0, twotheta_max=180.0):

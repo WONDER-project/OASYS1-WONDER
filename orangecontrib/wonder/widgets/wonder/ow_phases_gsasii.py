@@ -22,6 +22,9 @@ class OWGSASIIPhases(OWGenericPhases):
     def __init__(self):
         super().__init__()
 
+    def get_max_height(self):
+        return 650
+
     def get_phase_box_instance(self, index, phase_tab):
         return PhaseBox(widget=self,
                         parent=phase_tab,
@@ -68,11 +71,16 @@ class OWGSASIIPhases(OWGenericPhases):
             for phase_index in range(self.fit_global_parameters.measured_dataset.get_phases_number()):
                 gsasii_phase = measured_dataset.phases[phase_index]
 
+                gsasii_reflections_list = gsasii_load_reflections(gsasii_phase.cif_file,
+                                                                  incident_radiation.wavelength.value,
+                                                                  diffraction_pattern.get_diffraction_point(0).twotheta,
+                                                                  diffraction_pattern.get_diffraction_point(-1).twotheta)
+
                 line_profile.set_additional_parameters_of_phase(phase_index=phase_index,
-                                                                additional_parameters=gsasii_load_reflections(gsasii_phase.cif_file,
-                                                                                                              incident_radiation.wavelength.value,
-                                                                                                              diffraction_pattern.get_diffraction_point(0).twotheta,
-                                                                                                              diffraction_pattern.get_diffraction_point(-1).twotheta))
+                                                                additional_parameters=gsasii_reflections_list)
+
+                self.phases_box_array[phase_index].set_gsasii_result(gsasii_reflections_list)
+
 class PhaseBox(ParameterBox):
     use_structure = 1
 
@@ -125,7 +133,7 @@ class PhaseBox(ParameterBox):
                                        phase_name=phase_name)
 
     def get_height(self):
-        return 300
+        return 470
 
     def init_fields(self, **kwargs):
         self.a = kwargs["a"]
@@ -178,6 +186,13 @@ class PhaseBox(ParameterBox):
 
         OWGenericWidget.create_box_in_widget(self, self.structure_box_1, "intensity_scale_factor", "I0",
                                              add_callback=True, min_value=0.0, min_accepted=False, trim=5)
+
+        text_area_box = gui.widgetBox(structure_box, "Calculation Result", orientation="vertical", height=165, width=self.CONTROL_AREA_WIDTH - 10)
+
+        self.text_area = gui.textArea(height=125, width=self.CONTROL_AREA_WIDTH - 30, readOnly=True)
+        self.text_area.setText("")
+
+        text_area_box.layout().addWidget(self.text_area)
 
         self.is_on_init = False
 
@@ -232,6 +247,16 @@ class PhaseBox(ParameterBox):
                                       progressive=self.get_parameter_progressive())
 
         return phase
+
+    def set_gsasii_result(self, gsasii_reflection_list):
+        self.text_area.clear()
+
+        text = "h k l    2\u03b8    m     |F|^2         I\n" + \
+               "-----------------------------------------------------\n"
+        for reflection in gsasii_reflection_list.get_reflections():
+            text += str(reflection) + "\n"
+
+        self.text_area.setText(text)
 
 from PyQt5.QtWidgets import QApplication
 
