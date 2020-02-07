@@ -90,39 +90,25 @@ class MeasuredDataset(ParametersList):
         except:
             return None
 
-    def duplicate_diffraction_patterns(self):
-        if self.diffraction_patterns is None: diffraction_patterns = None
+    @classmethod
+    def __duplicate_attributes_list(self, attributes_list):
+        if attributes_list is None: attributes_list_copy = None
         else:
-            dimension = len(self.diffraction_patterns)
-            diffraction_patterns = [None]*dimension
+            dimension = len(attributes_list)
+            attributes_list_copy = [None]*dimension
             for index in range(dimension):
-                diffraction_patterns[index] = self.diffraction_patterns[index].duplicate()
+                attributes_list_copy[index] = attributes_list[index].duplicate()
 
-        return diffraction_patterns
+        return attributes_list_copy
+
+    def duplicate_diffraction_patterns(self):
+        return MeasuredDataset.__duplicate_attributes_list(self.diffraction_patterns)
 
     def duplicate(self):
-        diffraction_patterns = self.duplicate_diffraction_patterns()
-
-        if self.incident_radiations is None: incident_radiations = None
-        else:
-            dimension = len(self.incident_radiations)
-            incident_radiations = [None]*dimension
-            for index in range(dimension):
-                incident_radiations[index] = self.incident_radiations[index].duplicate()
-
-        if self.phases is None: phases = None
-        else:
-            dimension = len(self.phases)
-            phases = [None]*dimension
-            for index in range(dimension):
-                phases[index] = self.phases[index].duplicate()
-
-        if self.line_profiles is None: line_profiles = None
-        else:
-            dimension = len(self.line_profiles)
-            line_profiles = [None]*dimension
-            for index in range(dimension):
-                line_profiles[index] = self.line_profiles[index].duplicate()
+        diffraction_patterns = MeasuredDataset.__duplicate_attributes_list(self.diffraction_patterns)
+        incident_radiations  = MeasuredDataset.__duplicate_attributes_list(self.incident_radiations)
+        phases               = MeasuredDataset.__duplicate_attributes_list(self.phases)
+        line_profiles        = MeasuredDataset.__duplicate_attributes_list(self.line_profiles)
 
         dataset = MeasuredDataset(diffraction_patterns=diffraction_patterns,
                                   incident_radiations=incident_radiations,

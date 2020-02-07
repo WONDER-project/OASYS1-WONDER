@@ -12,7 +12,7 @@ class OWDecreasePoints(OWGenericDiffractionPatternParametersWidget):
     name = "Decrease Number of Points"
     description = "Decrease Number of Points"
     icon = "icons/decrease.png"
-    priority = 1.001
+    priority = 1000
     
     reduction_factor = Setting([1])
     
