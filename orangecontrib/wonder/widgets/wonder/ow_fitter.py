@@ -900,8 +900,8 @@ class OWFitter(OWGenericWidget):
             strain_parameters = self.fitted_fit_global_parameters.get_strain_parameters(phase_index)
 
             if not strain_parameters is None and self.show_warren==1:
-                if self.distributions is None: L_max = 20
-                else: L_max = 2*self.distributions[0].D_avg
+                if self.distributions is None or self.distributions[phase_index] is None: L_max = 20
+                else: L_max = 2*self.distributions[phase_index].D_avg
 
                 x, y = strain_parameters.get_warren_plot(1, 0, 0, L_max=L_max)
                 self.plot_strain[phase_index].addCurve(x, y, legend="h00", color='blue')
@@ -1301,10 +1301,6 @@ class OWFitter(OWGenericWidget):
             parameters.extend(self.fitted_fit_global_parameters.free_output_parameters.as_parameters())
 
             self.__populate_table(self.table_fit_out, parameters)
-
-            #if self.current_iteration == 1:
-            #    self.tabs.setCurrentIndex(1)
-            #    self.tabs_plot.setCurrentIndex(0)
 
         self.send("Fit Global Parameters", self.fitted_fit_global_parameters)
 
