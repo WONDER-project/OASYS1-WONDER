@@ -275,7 +275,7 @@ class OWGenericPhaseParameterWidget(OWGenericParametersWidget):
         pass
 
     def get_parameter_of_phase_item(self, phase_index):
-        if self.get_parameter_array() is None:
+        if not self.get_parameter_array() is None:
             return self.get_parameter_item(phase_index)
         else:
             return None
