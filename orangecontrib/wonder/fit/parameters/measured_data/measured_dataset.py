@@ -91,7 +91,7 @@ class MeasuredDataset(ParametersList):
             return None
 
     @classmethod
-    def __duplicate_attributes_list(self, attributes_list):
+    def __duplicate_attributes_list(cls, attributes_list):
         if attributes_list is None: attributes_list_copy = None
         else:
             dimension = len(attributes_list)

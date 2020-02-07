@@ -3,7 +3,7 @@ from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTTypes
 from orangecontrib.wonder.fit.parameters.instrument.polarization_parameters import PolarizationParameters, Beampath, LorentzFormula
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
-from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
+from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
 from orangecontrib.wonder.fit.parameters.gsasii.gsasii_phase import GSASIIPhase
@@ -186,7 +186,7 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
 
         # ADD DEBYE-WALLER FACTOR --------------------------------------------------------------------------------------
 
-        thermal_parameters = fit_global_parameters.get_instrumental_parameters_item(ThermalParameters.__name__, diffraction_pattern_index)
+        thermal_parameters = fit_global_parameters.get_thermal_parameters_item(ThermalParameters.__name__, diffraction_pattern_index)
 
         if not thermal_parameters is None:
             debye_waller_factor = thermal_parameters.get_debye_waller_factor(phase_index)
@@ -564,7 +564,6 @@ from scipy.special import erfc
 import os
 
 # performance improvement
-from numba import jit
 
 ######################################################################
 # THERMAL AND POLARIZATION

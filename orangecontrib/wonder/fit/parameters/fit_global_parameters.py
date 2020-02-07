@@ -4,34 +4,19 @@ from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
 from orangecontrib.wonder.fit.parameters.fit_parameter import FreeInputParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
-from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
+from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, KrivoglazWilkensModel, WarrenModel
 
 from orangecontrib.wonder.fit.wppm_functions import Distribution, Shape
 
 class FitGlobalParameters(ParametersList):
-
-    fit_initialization = None
-    measured_dataset = None
-    instrumental_parameters = None
-    background_parameters   = None
-    shift_parameters = None
-    size_parameters = None
-    strain_parameters = None
-    free_input_parameters = None
-    free_output_parameters = None
-
-    n_max_iterations = 10
-    convergence_reached = False
-
-    __parameters = numpy.full(10000, None)
-
     def __init__(self,
                  fit_initialization = None,
                  masured_dataset=None,
                  instrumental_parameters = {},
                  background_parameters = {},
                  shift_parameters = {},
+                 thermal_parameters = {},
                  size_parameters = None,
                  strain_parameters = None,
                  free_input_parameters = FreeInputParameters(),
@@ -43,6 +28,7 @@ class FitGlobalParameters(ParametersList):
         self.background_parameters = background_parameters
         self.instrumental_parameters = instrumental_parameters
         self.shift_parameters = shift_parameters
+        self.thermal_parameters = thermal_parameters
         self.size_parameters = size_parameters
         self.strain_parameters = strain_parameters
         self.free_input_parameters = free_input_parameters
@@ -50,6 +36,8 @@ class FitGlobalParameters(ParametersList):
 
         self.n_max_iterations = 10
         self.convergence_reached = False
+
+        self.__parameters = numpy.full(10000, None)
 
     def get_parameters_count(self):
         return len(self.__parameters[numpy.where(self.__parameters != None)])
@@ -98,80 +86,92 @@ class FitGlobalParameters(ParametersList):
     def space_parameters(self):
         return FitSpaceParameters(self)
 
-    def get_instrumental_parameters(self, key):
+    @classmethod
+    def __get_dict_parameters(cls, dict_parameters, key):
+        try: return dict_parameters[key]
+        except: return None
+
+    @classmethod
+    def __get_dict_parameters_item(cls, dict_parameters, key, index):
         try:
-            return self.instrumental_parameters[key]
-        except:
-            return None
+            parameters_list = dict_parameters[key]
+            return parameters_list[0 if len(parameters_list) == 1 else index]
+        except: return None
+
+    @classmethod
+    def __set_dict_parameters(cls, dict_parameters, parameters):
+        if not parameters is None: dict_parameters[parameters[0].__class__.__name__] = parameters
+
+    @classmethod
+    def __get_list_parameters(cls, list_parameters, index):
+        try: return list_parameters[index]
+        except: return None
+        
+    # INSTRUMENTAL -------------------------------
+
+    def get_instrumental_parameters(self, key):
+        return FitGlobalParameters.__get_dict_parameters(self.instrumental_parameters, key)
 
     def get_instrumental_parameters_item(self, key, diffraction_pattern_index):
-        try:
-            instrumental_parameters_list = self.instrumental_parameters[key]
-            return instrumental_parameters_list[0 if len(instrumental_parameters_list) == 1 else diffraction_pattern_index]
-        except:
-            return None
+        return FitGlobalParameters.__get_dict_parameters_item(self.instrumental_parameters, key, diffraction_pattern_index)
 
     def set_instrumental_parameters(self, instrumental_parameters):
         if self.instrumental_parameters is None: self.instrumental_parameters = {}
-        if not instrumental_parameters is None:
-            key = instrumental_parameters[0].__class__.__name__
-            self.instrumental_parameters[key] = instrumental_parameters
-
+        FitGlobalParameters.__set_dict_parameters(self.instrumental_parameters, instrumental_parameters)
+    
+    # BACKGROUND -------------------------------
+    
     def get_background_parameters(self, key):
-        try:
-            return self.background_parameters[key]
-        except:
-            return None
+        return FitGlobalParameters.__get_dict_parameters(self.background_parameters, key)
 
     def get_background_parameters_item(self, key, diffraction_pattern_index):
-        try:
-            background_parameters_list = self.background_parameters[key]
-            return background_parameters_list[0 if len(background_parameters_list) == 1 else diffraction_pattern_index]
-        except:
-            return None
-        
+        return FitGlobalParameters.__get_dict_parameters_item(self.background_parameters, key, diffraction_pattern_index)
+
     def set_background_parameters(self, background_parameters):
         if self.background_parameters is None: self.background_parameters = {}
-        if not background_parameters is None:
-            key = background_parameters[0].__class__.__name__
-            self.background_parameters[key] = background_parameters
+        FitGlobalParameters.__set_dict_parameters(self.background_parameters, background_parameters)
+
+    # SHIFT -------------------------------
 
     def get_shift_parameters(self, key):
-        try:
-            return self.shift_parameters[key]
-        except:
-            return None
+        return FitGlobalParameters.__get_dict_parameters(self.shift_parameters, key)
 
     def get_shift_parameters_item(self, key, diffraction_pattern_index):
-        try:
-            shift_parameters_list = self.shift_parameters[key]
-            return shift_parameters_list[0 if len(shift_parameters_list) == 1 else diffraction_pattern_index]
-        except:
-            return None
+        return FitGlobalParameters.__get_dict_parameters_item(self.shift_parameters, key, diffraction_pattern_index)
 
     def set_shift_parameters(self, shift_parameters):
         if self.shift_parameters is None: self.shift_parameters = {}
-        if not shift_parameters is None:
-            key = shift_parameters[0].__class__.__name__
-            self.shift_parameters[key] = shift_parameters
+        FitGlobalParameters.__set_dict_parameters(self.shift_parameters, shift_parameters)
+
+    # THERMAL -------------------------------
+
+    def get_thermal_parameters(self, key):
+        return FitGlobalParameters.__get_dict_parameters(self.thermal_parameters, key)
+
+    def get_thermal_parameters_item(self, key, diffraction_pattern_index):
+        return FitGlobalParameters.__get_dict_parameters_item(self.thermal_parameters, key, diffraction_pattern_index)
+
+    def set_thermal_parameters(self, thermal_parameters):
+        if self.thermal_parameters is None: self.thermal_parameters = {}
+        FitGlobalParameters.__set_dict_parameters(self.thermal_parameters, thermal_parameters)
+        
+    # SIZE -------------------------------
 
     def set_size_parameters(self, size_parameters):
         self.size_parameters = size_parameters
 
     def get_size_parameters(self, phase_index):
-        try:
-            return self.size_parameters[phase_index]
-        except:
-            return None
+        return FitGlobalParameters.__get_list_parameters(self.size_parameters, phase_index)
+
+    # STRAIN -------------------------------
 
     def set_strain_parameters(self, strain_parameters):
         self.strain_parameters = strain_parameters
 
     def get_strain_parameters(self, phase_index):
-        try:
-            return self.strain_parameters[phase_index]
-        except:
-            return None
+        return FitGlobalParameters.__get_list_parameters(self.strain_parameters, phase_index)
+
+    # ----------------------------------------
 
     def evaluate_functions(self):
         FitGlobalParameters.compute_functions(self.get_parameters(), self.free_input_parameters, self.free_output_parameters)
@@ -239,12 +239,6 @@ class FitGlobalParameters(ParametersList):
                             parameters[last_index + 5] = instrumental_parameters.b
                             parameters[last_index + 6] = instrumental_parameters.c
                             last_index += 6
-                        elif key == ThermalParameters.__name__:
-                            for phase_index in range(self.measured_dataset.get_phases_number()):
-                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
-                                if not debye_waller_factor is None:
-                                    parameters[last_index + 1] = debye_waller_factor
-                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -292,6 +286,19 @@ class FitGlobalParameters(ParametersList):
                         elif key == SpecimenDisplacement.__name__:
                             parameters[last_index + 1] = shift_parameters.displacement
                             last_index += 1
+
+        if not self.thermal_parameters is None:
+            for key in self.thermal_parameters.keys():
+                thermal_parameters_list = self.get_thermal_parameters(key)
+
+                if not thermal_parameters_list is None:
+                    for thermal_parameters in thermal_parameters_list:
+                        if key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = thermal_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    parameters[last_index + 1] = debye_waller_factor
+                                    last_index += 1
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
@@ -395,12 +402,6 @@ class FitGlobalParameters(ParametersList):
                             instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
                             instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
                             last_index += 6
-                        elif key == ThermalParameters.__name__:
-                            for phase_index in range(self.measured_dataset.get_phases_number()):
-                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
-                                if not debye_waller_factor is None:
-                                    debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
-                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -428,7 +429,7 @@ class FitGlobalParameters(ParametersList):
                             background_parameters.a2.set_value(fitted_parameters[last_index + 5].value)
                             background_parameters.b2.set_value(fitted_parameters[last_index + 6].value)
                             last_index += 6
-
+                                    
         if not self.shift_parameters is None:
             for key in self.shift_parameters.keys():
                 shift_parameters_list = self.get_shift_parameters(key)
@@ -448,6 +449,19 @@ class FitGlobalParameters(ParametersList):
                         elif key == SpecimenDisplacement.__name__:
                             shift_parameters.displacement.set_value(fitted_parameters[last_index + 1].value)
                             last_index += 1
+
+        if not self.thermal_parameters is None:
+            for key in self.thermal_parameters.keys():
+                thermal_parameters_list = self.get_thermal_parameters(key)
+
+                if not thermal_parameters_list is None:
+                    for thermal_parameters in thermal_parameters_list:
+                        if key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = thermal_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
+                                    last_index += 1
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
@@ -555,12 +569,6 @@ class FitGlobalParameters(ParametersList):
                             instrumental_parameters.b.error = errors[last_index + 5]
                             instrumental_parameters.c.error = errors[last_index + 6]
                             last_index += 6
-                        elif key == ThermalParameters.__name__:
-                            for phase_index in range(self.measured_dataset.get_phases_number()):
-                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
-                                if not debye_waller_factor is None:
-                                    debye_waller_factor.error = errors[last_index + 1]
-                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -608,6 +616,19 @@ class FitGlobalParameters(ParametersList):
                         elif key == SpecimenDisplacement.__name__:
                             shift_parameters.displacement.error = errors[last_index + 1]
                             last_index += 1
+
+        if not self.thermal_parameters is None:
+            for key in self.thermal_parameters.keys():
+                thermal_parameters_list = self.get_thermal_parameters(key)
+
+                if not thermal_parameters_list is None:
+                    for thermal_parameters in thermal_parameters_list:
+                        if key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = thermal_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    debye_waller_factor.error = errors[last_index + 1]
+                                    last_index += 1
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
@@ -726,13 +747,6 @@ class FitGlobalParameters(ParametersList):
                             instrumental_parameters.b.error = errors[last_index + 5]
                             instrumental_parameters.c.error = errors[last_index + 6]
                             last_index += 6
-                        elif key == ThermalParameters.__name__:
-                            for phase_index in range(self.measured_dataset.get_phases_number()):
-                                debye_waller_factor = instrumental_parameters.get_debye_waller_factor(phase_index)
-                                if not debye_waller_factor is None:
-                                    debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
-                                    debye_waller_factor.error = errors[last_index + 1]
-                                    last_index += 1
 
         if not self.background_parameters is None:
             for key in self.background_parameters.keys():
@@ -803,6 +817,20 @@ class FitGlobalParameters(ParametersList):
                             shift_parameters.displacement.set_value(fitted_parameters[last_index + 1].value)
                             shift_parameters.displacement.error = errors[last_index + 1]
                             last_index += 1
+
+        if not self.thermal_parameters is None:
+            for key in self.thermal_parameters.keys():
+                thermal_parameters_list = self.get_thermal_parameters(key)
+
+                if not thermal_parameters_list is None:
+                    for thermal_parameters in thermal_parameters_list:
+                        if key == ThermalParameters.__name__:
+                            for phase_index in range(self.measured_dataset.get_phases_number()):
+                                debye_waller_factor = thermal_parameters.get_debye_waller_factor(phase_index)
+                                if not debye_waller_factor is None:
+                                    debye_waller_factor.set_value(fitted_parameters[last_index + 1].value)
+                                    debye_waller_factor.error = errors[last_index + 1]
+                                    last_index += 1
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:

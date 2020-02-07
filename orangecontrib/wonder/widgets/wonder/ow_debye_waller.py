@@ -11,7 +11,7 @@ from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 from orangecontrib.wonder.util import congruence
 
-from orangecontrib.wonder.fit.parameters.instrument.thermal_parameters import ThermalParameters
+from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 
 class OWDebyeWaller(OWGenericWidget):
     name = "Debye-Waller Factor"
@@ -146,7 +146,7 @@ class OWDebyeWaller(OWGenericWidget):
             if not self.fit_global_parameters is None:
                 self.dumpSettings()
 
-                thermal_parameters = self.fit_global_parameters.get_instrumental_parameters(ThermalParameters.__name__)
+                thermal_parameters = self.fit_global_parameters.get_thermal_parameters(ThermalParameters.__name__)
 
                 if thermal_parameters is None:
                     dimension = self.fit_global_parameters.measured_dataset.get_diffraction_patterns_number() if self.use_single_parameter_set == 0 else 1
@@ -171,7 +171,7 @@ class OWDebyeWaller(OWGenericWidget):
                         send_data = ConfirmDialog.confirmed(parent=self, message="Debye-Waller factor is better refined when the structural model is activated.\nProceed anyway?")
 
                 if send_data:
-                    self.fit_global_parameters.set_instrumental_parameters(thermal_parameters)
+                    self.fit_global_parameters.set_thermal_parameters(thermal_parameters)
                     self.fit_global_parameters.regenerate_parameters()
                     self.fit_global_parameters.evaluate_functions()
 
@@ -217,7 +217,7 @@ class OWDebyeWaller(OWGenericWidget):
                     else:
                         self.__check_data_congruence(thermal_parameters)
 
-                        thermal_parameters_item = self.fit_global_parameters.get_instrumental_parameters_item(thermal_parameters.__name__, 0)
+                        thermal_parameters_item = self.fit_global_parameters.get_thermal_parameters_item(thermal_parameters.__name__, 0)
 
                         self.debye_wallers_tabs.setTabText(0, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, 0, True))
 
