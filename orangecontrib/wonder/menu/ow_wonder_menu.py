@@ -70,7 +70,7 @@ class WonderMenu(OMenu):
     def executeAction_5(self, action):
         try:
             import webbrowser
-            webbrowser.open("https://github.com/WONDER-project/OASYS1-WONDER/tree/master/Use_Cases")
+            webbrowser.open("https://github.com/WONDER-project/WONDER_Use-Cases")
         except Exception as exception:
             QMessageBox.critical(None, "Error", exception.args[0], QMessageBox.Ok)
 
