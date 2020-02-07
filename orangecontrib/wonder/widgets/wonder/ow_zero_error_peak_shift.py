@@ -3,7 +3,6 @@ import sys, copy
 from orangewidget.settings import Setting
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
-from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import ZeroError
 
 class OWZeroErrorPeakShift(OWGenericDiffractionPatternParametersWidget):

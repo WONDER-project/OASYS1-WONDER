@@ -90,13 +90,18 @@ class MeasuredDataset(ParametersList):
         except:
             return None
 
-    def duplicate(self):
+    def duplicate_diffraction_patterns(self):
         if self.diffraction_patterns is None: diffraction_patterns = None
         else:
             dimension = len(self.diffraction_patterns)
             diffraction_patterns = [None]*dimension
             for index in range(dimension):
                 diffraction_patterns[index] = self.diffraction_patterns[index].duplicate()
+
+        return diffraction_patterns
+
+    def duplicate(self):
+        diffraction_patterns = self.duplicate_diffraction_patterns()
 
         if self.incident_radiations is None: incident_radiations = None
         else:
