@@ -6,7 +6,7 @@ from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters impo
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
-from wonder.fit.parameters.measured_data.phase_gsasii import GSASIIPhase
+from orangecontrib.wonder.fit.parameters.measured_data.phase_gsasii import GSASIIPhase
 from orangecontrib.wonder.fit.functions.gsasii_functions import gsasii_intensity_factor
 from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import SpuriousPeaks
 
