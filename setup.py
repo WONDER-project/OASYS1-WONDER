@@ -12,7 +12,7 @@ NAME = 'OASYS1-WONDER'
 
 MAJOR = 1
 MINOR = 0
-MICRO = 21
+MICRO = 22
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 AUTHOR = 'Luca Rebuffi, Paolo Scardi, Alberto Flor'

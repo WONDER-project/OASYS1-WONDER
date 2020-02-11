@@ -1,7 +1,7 @@
 import numpy
 
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
-from wonder.fit.functions.wppm_functions import \
+from orangecontrib.wonder.fit.functions.wppm_functions import \
     Normalization, Distribution, WulffCubeFace, \
     lognormal_distribution, delta_distribution, gamma_distribution, york_distribution, \
     lognormal_average, lognormal_average_surface_weigthed, lognormal_average_volume_weigthed, lognormal_standard_deviation

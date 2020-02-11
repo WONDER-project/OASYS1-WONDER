@@ -11,7 +11,7 @@ from oasys.widgets import congruence
 from orangecontrib.wonder.util.fit_utilities import Symmetry
 
 from wonder.fit.parameters.measured_data.phase_gsasii import GSASIIPhase
-from wonder.fit.functions.gsasii_functions import gsasii_load_reflections
+from orangecontrib.wonder.fit.functions.gsasii_functions import gsasii_load_reflections
 
 class OWGSASIIPhases(OWGenericPhases):
     name = "GSAS-II Phases"
