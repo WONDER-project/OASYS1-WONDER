@@ -158,7 +158,7 @@ class PhaseBox(ParameterBox):
         self.phase_name = kwargs["phase_name"]
 
     def init_gui(self, container):
-        gui.lineEdit(container, self, "phase_name", "Phase id", labelWidth=110, valueType=str, callback=self.widget.dump_phase_name)
+        gui.lineEdit(container, self, "phase_name", "Phase Name", labelWidth=110, valueType=str, callback=self.widget.dump_phase_name)
 
         self.cb_symmetry = orangegui.comboBox(container, self, "symmetry", label="Symmetry", items=Symmetry.tuple(),
                                               callback=self.set_symmetry, orientation="horizontal")

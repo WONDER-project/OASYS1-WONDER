@@ -488,7 +488,7 @@ class DiffractionPatternBox(InnerBox):
         parent.layout().addWidget(self)
         container = self
 
-        gui.lineEdit(container, self, "diffraction_pattern_name", "Diff. Patt. id", labelWidth=110, valueType=str, callback=widget.dump_diffraction_pattern_name)
+        gui.lineEdit(container, self, "diffraction_pattern_name", "Sample Name", labelWidth=110, valueType=str, callback=widget.dump_diffraction_pattern_name)
 
         file_box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH)
 
