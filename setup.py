@@ -12,7 +12,7 @@ NAME = 'OASYS1-WONDER'
 
 MAJOR = 1
 MINOR = 0
-MICRO = 24
+MICRO = 25
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 AUTHOR = 'Luca Rebuffi, Paolo Scardi, Alberto Flor'
@@ -39,7 +39,7 @@ PACKAGES = find_packages()
 
 PACKAGE_DATA = {
     'orangecontrib.wonder.widgets.wonder' : ['icons/*.*', 'data/*.*'],
-    'orangecontrib.wonder.fit.data'       : ['*.*', 'delta_l_files/*.*', 'wulff_solids/*.*'],
+    'orangecontrib.wonder.fit.functions.data'       : ['*.*', 'delta_l_files/*.*', 'wulff_solids/*.*'],
 }
 
 INSTALL_REQUIRES = sorted(set(
