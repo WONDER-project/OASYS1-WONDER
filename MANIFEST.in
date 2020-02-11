@@ -1,9 +1,9 @@
 recursive-include orangecontrib/wonder *.svg *.png *.jpg
 recursive-include orangecontrib/wonder *.pyx
 
-recursive-include orangecontrib/wonder/fit/data *.dat
-recursive-include orangecontrib/wonder/fit/data/wulff_solids *.data
-recursive-include orangecontrib/wonder/fit/data/delta_l_files *.FTinfo
+recursive-include orangecontrib/wonder/fit/functions/data *.dat
+recursive-include orangecontrib/wonder/fit/functions/data/wulff_solids *.data
+recursive-include orangecontrib/wonder/fit/functions/data/delta_l_files *.FTinfo
 recursive-include orangecontrib/wonder/widgets/wonder/data *.dat
 
 include requirements.txt
