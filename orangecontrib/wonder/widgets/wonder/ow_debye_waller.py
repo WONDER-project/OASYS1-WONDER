@@ -196,14 +196,14 @@ class OWDebyeWaller(OWGenericWidget):
                 diffraction_patterns = self.fit_global_parameters.measured_dataset.diffraction_patterns
                 if diffraction_patterns is None: raise ValueError("Add Diffraction Pattern(s) before this widget!")
 
-                thermal_parameters = self.fit_global_parameters.get_instrumental_parameters(ThermalParameters.__name__)
+                thermal_parameters = self.fit_global_parameters.get_thermal_parameters(ThermalParameters.__name__)
 
                 self.set_use_single_parameter_set(on_init=True)
 
                 if self.use_single_parameter_set == 0:  # NO
                     if not thermal_parameters is None:
                         for diffraction_pattern_index in range(len(thermal_parameters)):
-                            thermal_parameters_item = self.fit_global_parameters.get_instrumental_parameters_item(ThermalParameters.__name__, diffraction_pattern_index)
+                            thermal_parameters_item = self.fit_global_parameters.get_thermal_parameters_item(ThermalParameters.__name__, diffraction_pattern_index)
 
                             self.debye_wallers_tabs.setTabText(diffraction_pattern_index,
                                                                OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, diffraction_pattern_index, False))

@@ -74,7 +74,7 @@ class PseudoVoigtPeak():
         if line.strip().startswith("#"):
             return None
         else:
-            parameter_prefix = PseudoVoigtPeak.get_parameters_prefix() + str(diffraction_pattern_index + 1) + "_"
+            parameter_prefix = PseudoVoigtPeak.get_parameters_prefix() + str(diffraction_pattern_index + 1) + "_" + str(line_index+1) + "_"
 
             line_id = "(d.p. " + str(diffraction_pattern_index+1) +", line " + str(line_index+1) + ")"
 
