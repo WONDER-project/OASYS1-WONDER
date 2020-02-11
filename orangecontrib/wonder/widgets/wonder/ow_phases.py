@@ -7,7 +7,7 @@ from orangewidget import gui as orangegui
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import ParameterBox
 from orangecontrib.wonder.widgets.gui.ow_generic_phases_widget import OWGenericWidget, OWGenericPhases
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.util.fit_utilities import Symmetry
 
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase

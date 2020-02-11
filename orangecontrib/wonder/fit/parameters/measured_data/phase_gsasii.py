@@ -41,9 +41,3 @@ class GSASIIPhase(Phase):
                            formula=formula,
                            intensity_scale_factor=intensity_scale_factor,
                            name=name)
-
-    def set_gsasii_reflections_list(self, gsasii_reflections_list):
-        self.gsasii_reflections_list = gsasii_reflections_list
-
-    def get_gsasii_reflections_list(self):
-        return self.gsasii_reflections_list

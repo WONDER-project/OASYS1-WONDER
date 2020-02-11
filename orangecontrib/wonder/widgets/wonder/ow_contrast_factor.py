@@ -6,7 +6,7 @@ from orangewidget.settings import Setting
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericPhaseParameterWidget, ParameterActivableBox
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.fit.parameters.microstructure.constrast_factor import calculate_A_B_coefficients
 from orangecontrib.wonder.fit.parameters.microstructure.strain import KrivoglazWilkensModel
 

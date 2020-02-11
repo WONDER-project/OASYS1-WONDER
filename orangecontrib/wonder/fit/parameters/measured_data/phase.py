@@ -1,6 +1,6 @@
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList, FitParameter
 from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 
 
 class Phase(ParametersList):

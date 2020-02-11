@@ -11,18 +11,18 @@ from silx.gui import qt
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 from orangewidget.widget import OWAction
+from oasys.widgets import congruence
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget, OW_IS_DEVELOP
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog, EmittingStream
 
 from orangecontrib.wonder.fit.fitters.fitter_factory import FitterFactory, FitterName
 
-from orangecontrib.wonder.util import congruence
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, SpecimenDisplacement, Caglioti
-from orangecontrib.wonder.fit.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
+from wonder.fit.functions.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
 
 

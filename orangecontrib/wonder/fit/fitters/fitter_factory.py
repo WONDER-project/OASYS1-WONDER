@@ -1,4 +1,4 @@
-import orangecontrib.wonder.util.congruence as congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.fit.fitters.fitter_minpack import FitterMinpack
 
 class FitterName:

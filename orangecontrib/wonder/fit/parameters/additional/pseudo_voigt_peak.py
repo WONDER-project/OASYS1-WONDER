@@ -1,7 +1,7 @@
 import numpy
 
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList, FitParameter, Boundary, PARAM_HWMAX, PARAM_HWMIN
-import orangecontrib.wonder.util.congruence as congruence
+from oasys.widgets import congruence
 
 
 class SpuriousPeaks(ParametersList):

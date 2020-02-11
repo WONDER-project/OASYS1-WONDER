@@ -1,6 +1,6 @@
 import numpy
 
-import orangecontrib.wonder.util.congruence as congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.util.fit_utilities import Utilities
 
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList, FitParameter, Boundary, PARAM_HWMAX, PARAM_HWMIN

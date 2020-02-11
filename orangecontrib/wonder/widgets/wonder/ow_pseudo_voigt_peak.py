@@ -8,7 +8,7 @@ from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import SpuriousPeaks, PseudoVoigtPeak
 
 class OWPseudoVoigtPeak(OWGenericDiffractionPatternParametersWidget):

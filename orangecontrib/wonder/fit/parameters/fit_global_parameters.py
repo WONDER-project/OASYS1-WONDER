@@ -8,7 +8,7 @@ from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import Therm
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, KrivoglazWilkensModel, WarrenModel
 from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import SpuriousPeaks
 
-from orangecontrib.wonder.fit.wppm_functions import Distribution, Shape
+from wonder.fit.functions.wppm_functions import Distribution, Shape
 
 class FitGlobalParameters(ParametersList):
     def __init__(self,

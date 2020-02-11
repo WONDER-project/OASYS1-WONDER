@@ -3,7 +3,7 @@ import sys, copy
 from orangewidget.settings import Setting
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericPhaseParameterWidget, ParameterActivableBox
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.fit.parameters.microstructure.strain import KrivoglazWilkensModel
 
 class OWStrainKW(OWGenericPhaseParameterWidget):

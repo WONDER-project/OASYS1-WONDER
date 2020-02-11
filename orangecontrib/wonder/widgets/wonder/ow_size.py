@@ -7,9 +7,9 @@ from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericPhaseParameterWidget, ParameterActivableBox
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.fit.parameters.microstructure.size import SizeParameters
-from orangecontrib.wonder.fit.wppm_functions import Distribution, Normalization, Shape, WulffCubeFace
+from wonder.fit.functions.wppm_functions import Distribution, Normalization, Shape, WulffCubeFace
 
 class OWSize(OWGenericPhaseParameterWidget):
     name = "Size"

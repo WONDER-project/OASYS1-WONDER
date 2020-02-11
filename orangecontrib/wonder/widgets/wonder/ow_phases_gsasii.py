@@ -7,11 +7,11 @@ from orangewidget import gui as orangegui
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import ParameterBox
 from orangecontrib.wonder.widgets.gui.ow_generic_phases_widget import OWGenericWidget, OWGenericPhases
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.util.fit_utilities import Symmetry
 
-from orangecontrib.wonder.fit.parameters.gsasii.gsasii_phase import GSASIIPhase
-from orangecontrib.wonder.fit.parameters.gsasii.gsasii_functions import gsasii_load_reflections
+from wonder.fit.parameters.measured_data.phase_gsasii import GSASIIPhase
+from wonder.fit.functions.gsasii_functions import gsasii_load_reflections
 
 class OWGSASIIPhases(OWGenericPhases):
     name = "GSAS-II Phases"

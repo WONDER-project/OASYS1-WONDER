@@ -1,4 +1,4 @@
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
 
 class FFTTypes:

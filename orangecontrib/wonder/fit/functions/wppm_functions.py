@@ -6,11 +6,11 @@ from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters impo
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
-from orangecontrib.wonder.fit.parameters.gsasii.gsasii_phase import GSASIIPhase
-from orangecontrib.wonder.fit.parameters.gsasii.gsasii_functions import gsasii_intensity_factor
+from wonder.fit.parameters.measured_data.phase_gsasii import GSASIIPhase
+from wonder.fit.functions.gsasii_functions import gsasii_intensity_factor
 from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import SpuriousPeaks
 
-from orangecontrib.wonder.util.general_functions import ChemicalFormulaParser
+from wonder.fit.functions.chemical_formula_parser import ChemicalFormulaParser
 from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
 
 class Distribution:

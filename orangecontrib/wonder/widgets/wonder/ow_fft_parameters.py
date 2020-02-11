@@ -9,7 +9,7 @@ from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTInitParameters, FFTTypes
 

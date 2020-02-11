@@ -9,7 +9,7 @@ from orangewidget.widget import OWAction
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 

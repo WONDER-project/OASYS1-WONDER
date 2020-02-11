@@ -1,7 +1,7 @@
 import numpy
 import copy
 
-from orangecontrib.wonder.util import congruence
+from oasys.widgets import congruence
 
 PARAM_FIX		= 1 << 0
 PARAM_SYS		= 1 << 1

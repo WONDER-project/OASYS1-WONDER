@@ -1,6 +1,6 @@
 import numpy
 import multiprocessing
-from orangecontrib.wonder.fit.wppm_functions import _wrapper_fit_function_direct
+from wonder.fit.functions.wppm_functions import _wrapper_fit_function_direct
 
 n_pools = multiprocessing.cpu_count() - 1
 pool = multiprocessing.Pool(n_pools)
