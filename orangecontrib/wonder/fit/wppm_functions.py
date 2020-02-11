@@ -8,6 +8,7 @@ from orangecontrib.wonder.fit.parameters.instrument.background_parameters import
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
 from orangecontrib.wonder.fit.parameters.gsasii.gsasii_phase import GSASIIPhase
 from orangecontrib.wonder.fit.parameters.gsasii.gsasii_functions import gsasii_intensity_factor
+from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import SpuriousPeaks
 
 from orangecontrib.wonder.util.general_functions import ChemicalFormulaParser
 from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
@@ -123,6 +124,16 @@ def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_ind
                                                         background_parameters.b1.value,
                                                         background_parameters.a2.value,
                                                         background_parameters.b2.value])
+
+    # ADD PSEUDO VOIGTS  ---------------------------------------------------------------------------------------------
+
+    if not fit_global_parameters.additional_parameters is None:
+        for key in fit_global_parameters.additional_parameters.keys():
+            additional_parameters = fit_global_parameters.get_additional_parameters_item(key, diffraction_pattern_index)
+
+            if not additional_parameters is None:
+                if key == SpuriousPeaks.__name__:
+                    add_pseudo_voigt_peaks(twotheta, I, additional_parameters)
 
     return I
 
@@ -1216,76 +1227,6 @@ def instrumental_function(L, h, k, l, lattice_parameter, wavelength, U, V, W, a,
     return k*numpy.exp(-2.0*exponent) + (1-k)*numpy.exp(-(exponent**2)/numpy.log(2))
 
 ######################################################################
-# BACKGROUND
-######################################################################
-
-def add_chebyshev_background(x, I, parameters=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]):
-    degree = len(parameters)
-    bkg = numpy.zeros(len(x))
-    T = numpy.zeros((len(x), degree))
-
-    for j in range(degree):
-        if j==0:
-            T[:, j] = 1
-        elif j==1:
-            T[:, j] = x
-        else:
-            T[:, j] = 2*x*T[:, j-1] - T[:, j-2]
-
-        bkg += parameters[j]*T[:, j]
-
-    I += bkg
-
-
-def add_polynomial_background(x, I, parameters):
-    degree = len(parameters)
-
-    for j in range(0, degree):
-        I += parameters[j]*numpy.pow(x, j)
-
-
-def add_polynomial_N_background(x, I, parameters):
-    degree = len(parameters)
-
-    for j in range(0, int(degree/2 - 1)):
-        a_i = parameters[2*j]
-        b_i = parameters[2*j+1]
-
-        I += a_i*numpy.pow(x, b_i)
-
-
-def add_polynomial_0N_background(x, I, parameters):
-    degree = len(parameters)
-    x0 = parameters[0]
-
-    for j in range(0, int(degree/2 - 1)):
-        a_i = parameters[1 + 2*j]
-        b_i = parameters[1 + 2*j+1]
-
-        I += a_i*numpy.pow((x-x0), b_i)
-
-
-def add_expdecay_background(x, I, parameters):
-    degree = len(parameters)
-
-    for j in range(0, int(degree/2 - 1)):
-        a_i = parameters[2*j]
-        b_i = parameters[2*j+1]
-
-        I += a_i*numpy.exp(-numpy.abs(x)*b_i)
-
-
-def add_expdecay_0_background(x, I, parameters):
-    degree = len(parameters)
-    x0 = parameters[0]
-
-    for j in range(0, int(degree/2 - 1)):
-        a_i = parameters[1 + 2*j]
-        b_i = parameters[1 + 2*j+1]
-
-        I += a_i*numpy.exp(-numpy.abs(x-x0)*b_i)
-
-######################################################################
 # CALCULATION OF INTEGRAL BREADTH
 ######################################################################
 
@@ -1371,6 +1312,85 @@ def integral_breadth_total(reflection, lattice_parameter, wavelength, instrument
                                __strain_function(L, reflection, lattice_parameter, strain_parameters, True)
 
     return 1 / (2 * integrate.quad(total_function, 0, numpy.inf)[0])
+
+######################################################################
+# BACKGROUND
+######################################################################
+
+def add_chebyshev_background(x, I, parameters=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]):
+    degree = len(parameters)
+    bkg = numpy.zeros(len(x))
+    T = numpy.zeros((len(x), degree))
+
+    for j in range(degree):
+        if j==0:
+            T[:, j] = 1
+        elif j==1:
+            T[:, j] = x
+        else:
+            T[:, j] = 2*x*T[:, j-1] - T[:, j-2]
+
+        bkg += parameters[j]*T[:, j]
+
+    I += bkg
+
+
+def add_polynomial_background(x, I, parameters):
+    degree = len(parameters)
+
+    for j in range(0, degree):
+        I += parameters[j]*numpy.pow(x, j)
+
+
+def add_polynomial_N_background(x, I, parameters):
+    degree = len(parameters)
+
+    for j in range(0, int(degree/2 - 1)):
+        a_i = parameters[2*j]
+        b_i = parameters[2*j+1]
+
+        I += a_i*numpy.pow(x, b_i)
+
+
+def add_polynomial_0N_background(x, I, parameters):
+    degree = len(parameters)
+    x0 = parameters[0]
+
+    for j in range(0, int(degree/2 - 1)):
+        a_i = parameters[1 + 2*j]
+        b_i = parameters[1 + 2*j+1]
+
+        I += a_i*numpy.pow((x-x0), b_i)
+
+
+def add_expdecay_background(x, I, parameters):
+    degree = len(parameters)
+
+    for j in range(0, int(degree/2 - 1)):
+        a_i = parameters[2*j]
+        b_i = parameters[2*j+1]
+
+        I += a_i*numpy.exp(-numpy.abs(x)*b_i)
+
+
+def add_expdecay_0_background(x, I, parameters):
+    degree = len(parameters)
+    x0 = parameters[0]
+
+    for j in range(0, int(degree/2 - 1)):
+        a_i = parameters[1 + 2*j]
+        b_i = parameters[1 + 2*j+1]
+
+        I += a_i*numpy.exp(-numpy.abs(x-x0)*b_i)
+
+######################################################################
+# OTHER
+######################################################################
+
+def add_pseudo_voigt_peaks(twotheta, I, spurious_peaks):
+    for pseudo_voigt_peak in spurious_peaks.get_pseudo_voigt_peaks():
+        I += pseudo_voigt_peak.get_pseudo_voigt_peak(twotheta)
+
 
 if __name__=="__main__":
 

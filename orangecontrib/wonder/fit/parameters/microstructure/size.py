@@ -20,15 +20,6 @@ class SizeDistribution:
 
 class SizeParameters(ParametersList):
 
-    shape = Shape.SPHERE
-    distribution = Distribution.LOGNORMAL
-    mu = None
-    sigma = None
-    truncation = None
-    cube_face = WulffCubeFace.HEXAGONAL
-    add_saxs = False
-    normalize_to = Normalization.NORMALIZE_TO_N
-
     @classmethod
     def get_parameters_prefix(cls):
         return "size_"

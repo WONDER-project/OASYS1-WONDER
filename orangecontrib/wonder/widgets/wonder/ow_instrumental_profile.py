@@ -345,13 +345,13 @@ class InstrumentalProfileBox(ParameterBox):
     def get_basic_parameter_prefix(self):
         return Caglioti.get_parameters_prefix()
 
-    def set_data(self, instrumental_parameter):
-        OWGenericWidget.populate_fields_in_widget(self, "U", instrumental_parameter.U, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "V", instrumental_parameter.V, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "W", instrumental_parameter.W, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "a", instrumental_parameter.a, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "b", instrumental_parameter.b, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "c", instrumental_parameter.c, value_only=True)
+    def set_data(self, instrumental_parameters):
+        OWGenericWidget.populate_fields_in_widget(self, "U", instrumental_parameters.U, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "V", instrumental_parameters.V, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "W", instrumental_parameters.W, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "a", instrumental_parameters.a, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "b", instrumental_parameters.b, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "c", instrumental_parameters.c, value_only=True)
 
     def get_instrumental_profile(self):
         return Caglioti(U=OWGenericWidget.populate_parameter_in_widget(self, "U", self.get_parameters_prefix()),

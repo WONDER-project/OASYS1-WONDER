@@ -6,6 +6,7 @@ from orangecontrib.wonder.fit.parameters.instrument.background_parameters import
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, KrivoglazWilkensModel, WarrenModel
+from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import SpuriousPeaks
 
 from orangecontrib.wonder.fit.wppm_functions import Distribution, Shape
 
@@ -19,6 +20,7 @@ class FitGlobalParameters(ParametersList):
                  thermal_parameters = {},
                  size_parameters = None,
                  strain_parameters = None,
+                 additional_parameters = {},
                  free_input_parameters = FreeInputParameters(),
                  free_output_parameters = FreeOutputParameters()):
         super().__init__()
@@ -31,6 +33,7 @@ class FitGlobalParameters(ParametersList):
         self.thermal_parameters = thermal_parameters
         self.size_parameters = size_parameters
         self.strain_parameters = strain_parameters
+        self.additional_parameters = additional_parameters
         self.free_input_parameters = free_input_parameters
         self.free_output_parameters = free_output_parameters
 
@@ -170,6 +173,18 @@ class FitGlobalParameters(ParametersList):
 
     def get_strain_parameters(self, phase_index):
         return FitGlobalParameters.__get_list_parameters(self.strain_parameters, phase_index)
+
+    # ADDITIONAL -------------------------------
+
+    def get_additional_parameters(self, key):
+        return FitGlobalParameters.__get_dict_parameters(self.additional_parameters, key)
+
+    def get_additional_parameters_item(self, key, diffraction_pattern_index):
+        return FitGlobalParameters.__get_dict_parameters_item(self.additional_parameters, key, diffraction_pattern_index)
+
+    def set_additional_parameters(self, additional_parameters):
+        if self.additional_parameters is None: self.additional_parameters = {}
+        FitGlobalParameters.__set_dict_parameters(self.additional_parameters, additional_parameters)
 
     # ----------------------------------------
 
@@ -340,7 +355,21 @@ class FitGlobalParameters(ParametersList):
                     elif isinstance(strain_parameters, WarrenModel):
                         parameters[last_index + 1] = strain_parameters.average_cell_parameter
                         last_index += 1
+                        
+        if not self.additional_parameters is None:
+            for key in self.additional_parameters.keys():
+                additional_parameters_list = self.get_additional_parameters(key)
 
+                if not additional_parameters_list is None:
+                    for additional_parameters in additional_parameters_list:
+                        if key == SpuriousPeaks.__name__:
+                            for pseudo_voigt_peak in additional_parameters.get_pseudo_voigt_peaks():
+                                parameters[last_index + 1]  = pseudo_voigt_peak.twotheta_0
+                                parameters[last_index + 2]  = pseudo_voigt_peak.eta
+                                parameters[last_index + 3]  = pseudo_voigt_peak.fwhm
+                                parameters[last_index + 4]  = pseudo_voigt_peak.intensity
+                                last_index += 4
+                            
         self.evaluate_functions()
 
     def from_fitted_parameters(self, fitted_parameters):
@@ -504,6 +533,20 @@ class FitGlobalParameters(ParametersList):
                         strain_parameters.average_cell_parameter.set_value(fitted_parameters[last_index + 1].value)
                         last_index += 1
 
+        if not self.additional_parameters is None:
+            for key in self.additional_parameters.keys():
+                additional_parameters_list = self.get_additional_parameters(key)
+
+                if not additional_parameters_list is None:
+                    for additional_parameters in additional_parameters_list:
+                        if key == SpuriousPeaks.__name__:
+                            for pseudo_voigt_peak in additional_parameters.get_pseudo_voigt_peaks():
+                                pseudo_voigt_peak.twotheta_0.set_value(fitted_parameters[last_index + 1].value)
+                                pseudo_voigt_peak.eta.set_value(fitted_parameters[last_index + 2].value)
+                                pseudo_voigt_peak.fwhm.set_value(fitted_parameters[last_index + 3].value)
+                                pseudo_voigt_peak.intensity.set_value(fitted_parameters[last_index + 4].value)
+                                last_index += 4
+                            
         self.replace_parameters(fitted_parameters)
         self.evaluate_functions()
 
@@ -670,6 +713,21 @@ class FitGlobalParameters(ParametersList):
                     elif isinstance(strain_parameters, WarrenModel):
                         strain_parameters.average_cell_parameter.error = errors[last_index + 1]
                         last_index += 1
+
+        if not self.additional_parameters is None:
+            for key in self.additional_parameters.keys():
+                additional_parameters_list = self.get_additional_parameters(key)
+
+                if not additional_parameters_list is None:
+                    for additional_parameters in additional_parameters_list:
+                        if key == SpuriousPeaks.__name__:
+                            for pseudo_voigt_peak in additional_parameters.get_pseudo_voigt_peaks():
+                                pseudo_voigt_peak.twotheta_0.error = errors[last_index + 1]
+                                pseudo_voigt_peak.eta.error = errors[last_index + 2]
+                                pseudo_voigt_peak.fwhm.error = errors[last_index + 3]
+                                pseudo_voigt_peak.intensity.error = errors[last_index + 4]
+                                last_index += 4
+
 
     def from_fitted_parameters_and_errors(self, fitted_parameters, errors):
         last_index = -1
@@ -892,6 +950,24 @@ class FitGlobalParameters(ParametersList):
                         strain_parameters.average_cell_parameter.set_value(fitted_parameters[last_index + 1].value)
                         strain_parameters.average_cell_parameter.error = errors[last_index + 1]
                         last_index += 1
+
+        if not self.additional_parameters is None:
+            for key in self.additional_parameters.keys():
+                additional_parameters_list = self.get_additional_parameters(key)
+
+                if not additional_parameters_list is None:
+                    for additional_parameters in additional_parameters_list:
+                        if key == SpuriousPeaks.__name__:
+                            for pseudo_voigt_peak in additional_parameters.get_pseudo_voigt_peaks():
+                                pseudo_voigt_peak.twotheta_0.set_value(fitted_parameters[last_index + 1].value)
+                                pseudo_voigt_peak.eta.set_value(fitted_parameters[last_index + 2].value)
+                                pseudo_voigt_peak.fwhm.set_value(fitted_parameters[last_index + 3].value)
+                                pseudo_voigt_peak.intensity.set_value(fitted_parameters[last_index + 4].value)
+                                pseudo_voigt_peak.twotheta_0.error = errors[last_index + 1]
+                                pseudo_voigt_peak.eta.error = errors[last_index + 2]
+                                pseudo_voigt_peak.fwhm.error = errors[last_index + 3]
+                                pseudo_voigt_peak.intensity.error = errors[last_index + 4]
+                                last_index += 4
 
         self.replace_parameters(fitted_parameters)
         self.evaluate_functions()
