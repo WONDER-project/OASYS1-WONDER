@@ -697,7 +697,7 @@ class RadiationBox(ParameterBox):
         return IncidentRadiation.get_parameters_prefix()
 
     def get_incident_radiation(self):
-        incident_radiation = IncidentRadiation(wavelength=OWGenericWidget.populate_parameter_in_widget(self, "wavelength", self.get_parameters_prefix()))
+        incident_radiation = IncidentRadiation(wavelength=OWGenericWidget.get_fit_parameter_from_widget(self, "wavelength", self.get_parameters_prefix()))
 
         if self.is_multiple_wavelength == 1:
             secondary_wavelengths = []
@@ -707,8 +707,8 @@ class RadiationBox(ParameterBox):
                 var_wl = "wavelength_" + str(2 + index)
                 var_we = "weight_" + str(2 + index)
 
-                secondary_wavelength        = OWGenericWidget.populate_parameter_in_widget(self, var_wl, self.get_parameters_prefix())
-                secondary_wavelength_weight = OWGenericWidget.populate_parameter_in_widget(self, var_we, self.get_parameters_prefix())
+                secondary_wavelength        = OWGenericWidget.get_fit_parameter_from_widget(self, var_wl, self.get_parameters_prefix())
+                secondary_wavelength_weight = OWGenericWidget.get_fit_parameter_from_widget(self, var_we, self.get_parameters_prefix())
 
                 if secondary_wavelength.value > 0.0:
                     secondary_wavelengths.append(secondary_wavelength)

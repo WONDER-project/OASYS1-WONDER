@@ -302,11 +302,11 @@ class CalibrationPeakShiftBox(ParameterBox):
         OWGenericWidget.populate_fields_in_widget(self, "ex", shift_parameters.ex, value_only=True)
 
     def get_peak_shift(self):
-        return Lab6TanCorrection(ax=OWGenericWidget.populate_parameter_in_widget(self, "ax", self.get_parameters_prefix()),
-                                 bx=OWGenericWidget.populate_parameter_in_widget(self, "bx", self.get_parameters_prefix()),
-                                 cx=OWGenericWidget.populate_parameter_in_widget(self, "cx", self.get_parameters_prefix()),
-                                 dx=OWGenericWidget.populate_parameter_in_widget(self, "dx", self.get_parameters_prefix()),
-                                 ex=OWGenericWidget.populate_parameter_in_widget(self, "ex", self.get_parameters_prefix()))
+        return Lab6TanCorrection(ax=OWGenericWidget.get_fit_parameter_from_widget(self, "ax", self.get_parameters_prefix()),
+                                 bx=OWGenericWidget.get_fit_parameter_from_widget(self, "bx", self.get_parameters_prefix()),
+                                 cx=OWGenericWidget.get_fit_parameter_from_widget(self, "cx", self.get_parameters_prefix()),
+                                 dx=OWGenericWidget.get_fit_parameter_from_widget(self, "dx", self.get_parameters_prefix()),
+                                 ex=OWGenericWidget.get_fit_parameter_from_widget(self, "ex", self.get_parameters_prefix()))
 
 from PyQt5.QtWidgets import QApplication
 

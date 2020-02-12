@@ -111,7 +111,7 @@ class ZeroErrorPeakShiftBox(ParameterBox):
         OWGenericWidget.populate_fields_in_widget(self, "shift", shift_parameters.shift, value_only=True)
 
     def get_peak_shift(self):
-        return ZeroError(shift=OWGenericWidget.populate_parameter_in_widget(self, "shift", self.get_parameters_prefix()))
+        return ZeroError(shift=OWGenericWidget.get_fit_parameter_from_widget(self, "shift", self.get_parameters_prefix()))
 
 from PyQt5.QtWidgets import QApplication
 

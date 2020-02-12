@@ -297,15 +297,15 @@ class StrainBox(ParameterActivableBox):
         if self.active == 0: return None
         else:
             if self.laue_id == 12:
-                return InvariantPAHLaueGroup13(aa=OWGenericWidget.populate_parameter_in_widget(self, "aa", self.get_parameters_prefix()),
-                                               bb=OWGenericWidget.populate_parameter_in_widget(self, "bb", self.get_parameters_prefix()),
-                                               e1=OWGenericWidget.populate_parameter_in_widget(self, "e1", self.get_parameters_prefix()),
-                                               e4=OWGenericWidget.populate_parameter_in_widget(self, "e4", self.get_parameters_prefix()))
+                return InvariantPAHLaueGroup13(aa=OWGenericWidget.get_fit_parameter_from_widget(self, "aa", self.get_parameters_prefix()),
+                                               bb=OWGenericWidget.get_fit_parameter_from_widget(self, "bb", self.get_parameters_prefix()),
+                                               e1=OWGenericWidget.get_fit_parameter_from_widget(self, "e1", self.get_parameters_prefix()),
+                                               e4=OWGenericWidget.get_fit_parameter_from_widget(self, "e4", self.get_parameters_prefix()))
             elif self.laue_id == 13:
-                return InvariantPAHLaueGroup14(aa=OWGenericWidget.populate_parameter_in_widget(self, "aa", self.get_parameters_prefix()),
-                                               bb=OWGenericWidget.populate_parameter_in_widget(self, "bb", self.get_parameters_prefix()),
-                                               e1=OWGenericWidget.populate_parameter_in_widget(self, "e1", self.get_parameters_prefix()),
-                                               e4=OWGenericWidget.populate_parameter_in_widget(self, "e4", self.get_parameters_prefix()))
+                return InvariantPAHLaueGroup14(aa=OWGenericWidget.get_fit_parameter_from_widget(self, "aa", self.get_parameters_prefix()),
+                                               bb=OWGenericWidget.get_fit_parameter_from_widget(self, "bb", self.get_parameters_prefix()),
+                                               e1=OWGenericWidget.get_fit_parameter_from_widget(self, "e1", self.get_parameters_prefix()),
+                                               e4=OWGenericWidget.get_fit_parameter_from_widget(self, "e4", self.get_parameters_prefix()))
             else:
                 return None
 

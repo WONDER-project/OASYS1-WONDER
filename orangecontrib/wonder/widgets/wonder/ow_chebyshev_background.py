@@ -540,16 +540,16 @@ class ChebyshevBackgroundBox(ParameterBox):
         OWGenericWidget.populate_fields_in_widget(self, "c9", background_parameters.c9, value_only=True)
 
     def get_background(self):
-        return ChebyshevBackground(c0=OWGenericWidget.populate_parameter_in_widget(self, "c0", self.get_parameters_prefix()),
-                                   c1=OWGenericWidget.populate_parameter_in_widget(self, "c1", self.get_parameters_prefix()),
-                                   c2=OWGenericWidget.populate_parameter_in_widget(self, "c2", self.get_parameters_prefix()),
-                                   c3=OWGenericWidget.populate_parameter_in_widget(self, "c3", self.get_parameters_prefix()),
-                                   c4=OWGenericWidget.populate_parameter_in_widget(self, "c4", self.get_parameters_prefix()),
-                                   c5=OWGenericWidget.populate_parameter_in_widget(self, "c5", self.get_parameters_prefix()),
-                                   c6=OWGenericWidget.populate_parameter_in_widget(self, "c6", self.get_parameters_prefix()),
-                                   c7=OWGenericWidget.populate_parameter_in_widget(self, "c7", self.get_parameters_prefix()),
-                                   c8=OWGenericWidget.populate_parameter_in_widget(self, "c8", self.get_parameters_prefix()),
-                                   c9=OWGenericWidget.populate_parameter_in_widget(self, "c9", self.get_parameters_prefix()))
+        return ChebyshevBackground(c0=OWGenericWidget.get_fit_parameter_from_widget(self, "c0", self.get_parameters_prefix()),
+                                   c1=OWGenericWidget.get_fit_parameter_from_widget(self, "c1", self.get_parameters_prefix()),
+                                   c2=OWGenericWidget.get_fit_parameter_from_widget(self, "c2", self.get_parameters_prefix()),
+                                   c3=OWGenericWidget.get_fit_parameter_from_widget(self, "c3", self.get_parameters_prefix()),
+                                   c4=OWGenericWidget.get_fit_parameter_from_widget(self, "c4", self.get_parameters_prefix()),
+                                   c5=OWGenericWidget.get_fit_parameter_from_widget(self, "c5", self.get_parameters_prefix()),
+                                   c6=OWGenericWidget.get_fit_parameter_from_widget(self, "c6", self.get_parameters_prefix()),
+                                   c7=OWGenericWidget.get_fit_parameter_from_widget(self, "c7", self.get_parameters_prefix()),
+                                   c8=OWGenericWidget.get_fit_parameter_from_widget(self, "c8", self.get_parameters_prefix()),
+                                   c9=OWGenericWidget.get_fit_parameter_from_widget(self, "c9", self.get_parameters_prefix()))
 
 from PyQt5.QtWidgets import QApplication
 

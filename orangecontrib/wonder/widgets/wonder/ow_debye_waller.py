@@ -427,16 +427,13 @@ class DebyeWallerOfPhaseBox(InnerBox):
         if not debye_waller_factor is None:
             self.use_debye_waller_factor = 1
 
-            debye_waller_factor = debye_waller_factor.duplicate()
-            debye_waller_factor.rescale(100)  # CONVERSIONE from nm-2 to A-2
-
             OWGenericWidget.populate_fields_in_widget(self, "debye_waller_factor", debye_waller_factor, value_only=True)
 
     def update_debye_waller(self, thermal_parameters):
         if self.use_debye_waller_factor == 1 and not self.debye_waller_factor_function == 1:
             congruence.checkStrictlyPositiveNumber(self.debye_waller_factor, "B")
 
-        debye_waller_factor = None if self.use_debye_waller_factor == 0 else OWGenericWidget.populate_parameter_in_widget(self, "debye_waller_factor", self.get_parameters_prefix())
+        debye_waller_factor = None if self.use_debye_waller_factor == 0 else OWGenericWidget.get_fit_parameter_from_widget(self, "debye_waller_factor", self.get_parameters_prefix())
 
         thermal_parameters.set_debye_waller_factor(self.phase_index, debye_waller_factor)
 

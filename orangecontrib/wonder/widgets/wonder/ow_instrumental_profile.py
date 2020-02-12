@@ -354,12 +354,12 @@ class InstrumentalProfileBox(ParameterBox):
         OWGenericWidget.populate_fields_in_widget(self, "c", instrumental_parameters.c, value_only=True)
 
     def get_instrumental_profile(self):
-        return Caglioti(U=OWGenericWidget.populate_parameter_in_widget(self, "U", self.get_parameters_prefix()),
-                        V=OWGenericWidget.populate_parameter_in_widget(self, "V", self.get_parameters_prefix()),
-                        W=OWGenericWidget.populate_parameter_in_widget(self, "W", self.get_parameters_prefix()),
-                        a=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
-                        b=OWGenericWidget.populate_parameter_in_widget(self, "b", self.get_parameters_prefix()),
-                        c=OWGenericWidget.populate_parameter_in_widget(self, "c", self.get_parameters_prefix()))
+        return Caglioti(U=OWGenericWidget.get_fit_parameter_from_widget(self, "U", self.get_parameters_prefix()),
+                        V=OWGenericWidget.get_fit_parameter_from_widget(self, "V", self.get_parameters_prefix()),
+                        W=OWGenericWidget.get_fit_parameter_from_widget(self, "W", self.get_parameters_prefix()),
+                        a=OWGenericWidget.get_fit_parameter_from_widget(self, "a", self.get_parameters_prefix()),
+                        b=OWGenericWidget.get_fit_parameter_from_widget(self, "b", self.get_parameters_prefix()),
+                        c=OWGenericWidget.get_fit_parameter_from_widget(self, "c", self.get_parameters_prefix()))
 
 from PyQt5.QtWidgets import QApplication
 

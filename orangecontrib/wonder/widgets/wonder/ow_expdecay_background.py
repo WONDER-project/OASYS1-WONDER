@@ -350,12 +350,12 @@ class ExpDecayBackgroundBox(ParameterBox):
         OWGenericWidget.populate_fields_in_widget(self, "b2", background_parameters.b2, value_only=True)
 
     def get_background(self):
-        return ExpDecayBackground(a0=OWGenericWidget.populate_parameter_in_widget(self, "a0", self.get_parameters_prefix()),
-                                  b0=OWGenericWidget.populate_parameter_in_widget(self, "b0", self.get_parameters_prefix()),
-                                  a1=OWGenericWidget.populate_parameter_in_widget(self, "a1", self.get_parameters_prefix()),
-                                  b1=OWGenericWidget.populate_parameter_in_widget(self, "b1", self.get_parameters_prefix()),
-                                  a2=OWGenericWidget.populate_parameter_in_widget(self, "a2", self.get_parameters_prefix()),
-                                  b2=OWGenericWidget.populate_parameter_in_widget(self, "b2", self.get_parameters_prefix()))
+        return ExpDecayBackground(a0=OWGenericWidget.get_fit_parameter_from_widget(self, "a0", self.get_parameters_prefix()),
+                                  b0=OWGenericWidget.get_fit_parameter_from_widget(self, "b0", self.get_parameters_prefix()),
+                                  a1=OWGenericWidget.get_fit_parameter_from_widget(self, "a1", self.get_parameters_prefix()),
+                                  b1=OWGenericWidget.get_fit_parameter_from_widget(self, "b1", self.get_parameters_prefix()),
+                                  a2=OWGenericWidget.get_fit_parameter_from_widget(self, "a2", self.get_parameters_prefix()),
+                                  b2=OWGenericWidget.get_fit_parameter_from_widget(self, "b2", self.get_parameters_prefix()))
 
 from PyQt5.QtWidgets import QApplication
 

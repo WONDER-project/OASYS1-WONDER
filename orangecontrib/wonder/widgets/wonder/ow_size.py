@@ -353,9 +353,9 @@ class SizeBox(ParameterActivableBox):
 
             return SizeParameters(shape=self.cb_shape.currentText(),
                                   distribution=self.cb_distribution.currentText(),
-                                  mu=OWGenericWidget.populate_parameter_in_widget(self, "mu", self.get_parameters_prefix()),
-                                  sigma=None if self.cb_distribution.currentText() == Distribution.DELTA else OWGenericWidget.populate_parameter_in_widget(self, "sigma", self.get_parameters_prefix()),
-                                  truncation=OWGenericWidget.populate_parameter_in_widget(self, "truncation",self.get_parameters_prefix()) if (self.cb_distribution.currentText() == Distribution.LOGNORMAL and self.cb_shape.currentText() == Shape.WULFF) else None,
+                                  mu=OWGenericWidget.get_fit_parameter_from_widget(self, "mu", self.get_parameters_prefix()),
+                                  sigma=None if self.cb_distribution.currentText() == Distribution.DELTA else OWGenericWidget.get_fit_parameter_from_widget(self, "sigma", self.get_parameters_prefix()),
+                                  truncation=OWGenericWidget.get_fit_parameter_from_widget(self, "truncation", self.get_parameters_prefix()) if (self.cb_distribution.currentText() == Distribution.LOGNORMAL and self.cb_shape.currentText() == Shape.WULFF) else None,
                                   cube_face=self.cb_cube_face.currentText() if (self.cb_distribution.currentText() == Distribution.LOGNORMAL and self.cb_shape.currentText() == Shape.WULFF) else None,
                                   add_saxs=self.add_saxs if self.cb_distribution.currentText() == Distribution.DELTA else False,
                                   normalize_to=self.normalize_to if self.cb_distribution.currentText() == Distribution.DELTA else None)

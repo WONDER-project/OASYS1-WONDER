@@ -129,16 +129,13 @@ class SpecimenDisplacementPeakShiftBox(ParameterBox):
     def set_data(self, shift_parameters):
         self.goniometer_radius = shift_parameters.goniometer_radius
 
-        displacement = shift_parameters.displacement.duplicate()
-        displacement.rescale(1e6)  # to um
-
-        OWGenericWidget.populate_fields_in_widget(self, "displacement", displacement, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "displacement", shift_parameters.displacement, value_only=True)
 
     def get_peak_shift(self):
         congruence.checkStrictlyPositiveNumber(self.goniometer_radius, "Goniometer Radius")
 
         return SpecimenDisplacement(goniometer_radius=self.goniometer_radius,
-                                    displacement=OWGenericWidget.populate_parameter_in_widget(self, "displacement", self.get_parameters_prefix()))
+                                    displacement=OWGenericWidget.get_fit_parameter_from_widget(self, "displacement", self.get_parameters_prefix()))
 
 from PyQt5.QtWidgets import QApplication
 

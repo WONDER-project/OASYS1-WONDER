@@ -214,16 +214,16 @@ class PhaseBox(ParameterBox):
 
     def get_phase(self):
         if self.use_structure == 0:
-            phase = Phase.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
+            phase = Phase.init_cube(a0=OWGenericWidget.get_fit_parameter_from_widget(self, "a", self.get_parameters_prefix()),
                                     symmetry=self.cb_symmetry.currentText(),
                                     name=self.phase_name,
                                     progressive=self.get_parameter_progressive())
         elif self.use_structure == 1:
-            phase = Phase.init_cube(a0=OWGenericWidget.populate_parameter_in_widget(self, "a", self.get_parameters_prefix()),
+            phase = Phase.init_cube(a0=OWGenericWidget.get_fit_parameter_from_widget(self, "a", self.get_parameters_prefix()),
                                     symmetry=self.cb_symmetry.currentText(),
                                     use_structure=True,
                                     formula=congruence.checkEmptyString(self.formula, "Chemical Formula"),
-                                    intensity_scale_factor=OWGenericWidget.populate_parameter_in_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
+                                    intensity_scale_factor=OWGenericWidget.get_fit_parameter_from_widget(self, "intensity_scale_factor", self.get_parameters_prefix()),
                                     name=self.phase_name,
                                     progressive=self.get_parameter_progressive())
 
