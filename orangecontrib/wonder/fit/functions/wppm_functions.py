@@ -202,7 +202,7 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
         if not thermal_parameters is None:
             debye_waller_factor = thermal_parameters.get_debye_waller_factor(phase_index)
             if not debye_waller_factor is None:
-                intensity_phase *= debye_waller(s, debye_waller_factor.value)
+                intensity_phase *= debye_waller(s, debye_waller_factor.value*0.01) # from A-2 to nm-2
 
         separated_phases_intensities[phase_index, 0] = s
         separated_phases_intensities[phase_index, 1] = intensity_phase
@@ -549,7 +549,7 @@ def create_one_peak(diffraction_pattern_index,
                 elif key == ZeroError.__name__:
                     s += Utilities.s(shift_parameters.shift.value/2, wavelength)
                 elif key == SpecimenDisplacement.__name__:
-                    s += specimen_displacement(theta, wavelength, shift_parameters.goniometer_radius, shift_parameters.displacement.value)
+                    s += specimen_displacement(theta, wavelength, shift_parameters.goniometer_radius, shift_parameters.displacement.value*1e-6) # to m
 
     # LORENTZ FACTOR --------------------------------------------------------------------------------------
 

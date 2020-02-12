@@ -475,16 +475,6 @@ class OWFitter(OWGenericWidget):
             if change_color: table_item.setBackground(color)
             table_widget.setItem(row_index, column_index, table_item)
 
-    def __analyze_parameter(self, parameter):
-        if parameter.parameter_name == ThermalParameters.get_parameters_prefix() + "debye_waller_factor":
-            parameter = parameter.duplicate()
-            parameter.rescale(100) # from nm-2 to A-2
-        elif parameter.parameter_name == SpecimenDisplacement.get_parameters_prefix() + "displacement":
-            parameter = parameter.duplicate()
-            parameter.rescale(1e6) # from m to um
-
-        return parameter
-
     def __populate_table(self, table_widget, parameters, is_output=True):
         table_widget.clear()
 
@@ -497,7 +487,7 @@ class OWFitter(OWGenericWidget):
 
         for index in range(0, len(parameters)):
             parameter = parameters[index]
-            parameter = self.__analyze_parameter(parameter)
+
             change_color = not parameter.is_variable()
 
             if change_color:

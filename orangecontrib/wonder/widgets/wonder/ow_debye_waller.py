@@ -437,7 +437,6 @@ class DebyeWallerOfPhaseBox(InnerBox):
             congruence.checkStrictlyPositiveNumber(self.debye_waller_factor, "B")
 
         debye_waller_factor = None if self.use_debye_waller_factor == 0 else OWGenericWidget.populate_parameter_in_widget(self, "debye_waller_factor", self.get_parameters_prefix())
-        if not debye_waller_factor is None: debye_waller_factor.rescale(0.01)  # CONVERSIONE from A-2 to nm-2
 
         thermal_parameters.set_debye_waller_factor(self.phase_index, debye_waller_factor)
 
