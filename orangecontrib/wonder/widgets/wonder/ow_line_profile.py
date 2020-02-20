@@ -329,7 +329,7 @@ class ReflectionsOfPhaseBox(InnerBox):
                                        "Reflections", orientation="vertical",
                                        width=self.CONTROL_AREA_WIDTH - 10)
 
-        orangegui.label(reflection_box, self, "h, k, l, <intensity_name> int <, min value, max value>")
+        orangegui.label(reflection_box, self, "h, k, l, <name> int <, fixed> or <, min value, max value> or <name> := function")
 
         scrollarea = QScrollArea(reflection_box)
         scrollarea.setMaximumWidth(self.CONTROL_AREA_WIDTH - 40)

@@ -17,6 +17,9 @@ class Boundary:
         self.min_value = min_value
         self.max_value = max_value
 
+    def is_free(self):
+        return self.min_value == PARAM_HWMIN and self.max_value == PARAM_HWMAX
+
 class FitParameter:
     def __init__(self,
                  value=None,

@@ -109,6 +109,7 @@ class LineProfile(ParametersList):
 
                         if len(intensity_data) == 2:
                             intensity_name = intensity_data[0].strip()
+                            intensity_name = None if len(intensity_name) == 0 else intensity_name
                             function_value = intensity_data[1].strip()
                         else:
                             intensity_name = None

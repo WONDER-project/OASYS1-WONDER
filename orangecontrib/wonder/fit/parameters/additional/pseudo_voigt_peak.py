@@ -50,10 +50,10 @@ class PseudoVoigtPeak():
         self.intensity = intensity
 
     def __str__(self):
-        return "--" if self.twotheta_0 is None else str(self.twotheta_0.value) + ", " + \
-               "--" if self.eta is None else str(self.eta.value) + ", " + \
-               "--" if self.fwhm is None else str(self.fwhm.value) + ", " + \
-               "--" if self.intensity is None else str(self.intensity.value)
+        return ("--" if self.twotheta_0 is None else str(self.twotheta_0)) + ", " + \
+               ("--" if self.eta is None else str(self.eta)) + ", " + \
+               ("--" if self.fwhm is None else str(self.fwhm)) + ", " + \
+               ("--" if self.intensity is None else str(self.intensity))
 
     def get_pseudo_voigt_peak(self, twotheta):
         tths = (2 * (twotheta - self.twotheta_0.value) / self.fwhm.value) ** 2
@@ -63,6 +63,76 @@ class PseudoVoigtPeak():
         gaussian = numpy.sqrt(numpy.pi * numpy.log(2)) * numpy.exp(-numpy.log(2) * tths) / pis
 
         return self.intensity.value * (((1 - self.eta.value) * gaussian) + (self.eta.value * lorentzian))
+
+    @classmethod
+    def parse_parameter(cls, parameter_string, parameter_prefix, parameter_name):
+        parameter_string = parameter_string.strip()
+
+        if ":=" in parameter_string: # is function
+            parameter_data = parameter_string.split(":=")
+
+            if len(parameter_data) == 2:
+                user_parameter_name = parameter_data[0].strip()
+                user_parameter_name = None if len(user_parameter_name) == 0 else user_parameter_name
+                function_value      = parameter_data[1].strip()
+            else:
+                user_parameter_name = None
+                function_value      = parameter_string
+
+            if user_parameter_name is None:
+                user_parameter_name = parameter_prefix + parameter_name
+            elif not user_parameter_name.startswith(parameter_prefix):
+                user_parameter_name = parameter_prefix + user_parameter_name
+
+            parameter = FitParameter(parameter_name=user_parameter_name, function=True, function_value=function_value)
+        else:
+            parameter_data = parameter_string.split()
+
+            boundary = None
+            fixed = False
+
+            if len(parameter_data) == 1:
+                user_parameter_name = None
+                parameter_value     = float(parameter_string)
+            else:
+                first_element = parameter_data[0].strip()
+
+                try:
+                    user_parameter_name = None
+                    parameter_value = float(first_element)
+                except:
+                    user_parameter_name = first_element
+                    parameter_value = float(parameter_data[1].strip())
+
+
+                first_index = 1 if user_parameter_name is None else 2
+
+                min_value = PARAM_HWMIN
+                max_value = PARAM_HWMAX
+
+                for j in range(first_index, len(parameter_data), 2):
+                    if parameter_data[j] == "min":
+                        min_value = float(parameter_data[j+1].strip())
+                    elif parameter_data[j] == "max":
+                        max_value = float(parameter_data[j+1].strip())
+                    elif parameter_data[j] == "fixed":
+                        fixed = True
+                        break
+
+                if not fixed:
+                    if min_value != PARAM_HWMIN or max_value != PARAM_HWMAX:
+                        boundary = Boundary(min_value=min_value, max_value=max_value)
+                    else:
+                        boundary = Boundary()
+
+            if user_parameter_name is None:
+                user_parameter_name = parameter_prefix + parameter_name
+            elif not user_parameter_name.startswith(parameter_prefix):
+                user_parameter_name = parameter_prefix + user_parameter_name
+
+            parameter = FitParameter(parameter_name=user_parameter_name, value=parameter_value, fixed=fixed, boundary=boundary)
+
+        return parameter
 
     @classmethod
     def parse_peak(cls, line, line_index=0, diffraction_pattern_index=0):
@@ -84,19 +154,38 @@ class PseudoVoigtPeak():
 
             if len(data) < 4: raise ValueError("Pseudo-Voigt Peak, malformed line: " + str(line_index+1))
 
-            twotheta_0 = float(data[0].strip())
-            eta = float(data[1].strip())
-            fwhm = float(data[2].strip())
-            intensity = float(data[3].strip())
+            try:
+                twotheta_0 = PseudoVoigtPeak.parse_parameter(data[0], parameter_prefix, "twotheta0")
+                eta        = PseudoVoigtPeak.parse_parameter(data[1], parameter_prefix, "eta")
+                fwhm       = PseudoVoigtPeak.parse_parameter(data[2], parameter_prefix, "fwhm")
+                intensity  = PseudoVoigtPeak.parse_parameter(data[3], parameter_prefix, "intensity")
+            except:
+                raise "Row " + line_id + " is malformed"
 
-            congruence.checkStrictlyPositiveAngle(twotheta_0, "2\u03b80 " + line_id)
-            if not 0.0 < eta < 1.0: raise ValueError("\u03b7 " + line_id + " must be between 0 and 1")
-            congruence.checkStrictlyPositiveNumber(fwhm, "fwhm " + line_id)
-            congruence.checkStrictlyPositiveNumber(intensity, "intensity " + line_id)
+            if not twotheta_0.function:
+                congruence.checkStrictlyPositiveAngle(twotheta_0.value, "2\u03b80 " + line_id)
+                if twotheta_0.boundary.is_free(): twotheta_0.boundary = Boundary(min_value=0.0)
 
-            psuedo_voigt_peak.twotheta_0 = FitParameter(value=twotheta_0, parameter_name=parameter_prefix + "twotheta0", boundary=Boundary(min_value=0.0))
-            psuedo_voigt_peak.eta        = FitParameter(value=eta,        parameter_name=parameter_prefix + "eta", boundary=Boundary(min_value=0.0, max_value=1.0))
-            psuedo_voigt_peak.fwhm       = FitParameter(value=fwhm,       parameter_name=parameter_prefix + "fwhm", boundary=Boundary(min_value=0.0))
-            psuedo_voigt_peak.intensity  = FitParameter(value=intensity,  parameter_name=parameter_prefix + "intensity", boundary=Boundary(min_value=0.0))
+            if not eta.function:
+                if not 0.0 < eta.value < 1.0: raise ValueError("\u03b7 " + line_id + " must be between 0 and 1")
+                if eta.boundary.is_free(): eta.boundary = Boundary(min_value=0.0, max_value=1.0)
+
+            if not fwhm.function:
+                congruence.checkStrictlyPositiveNumber(fwhm.value, "fwhm " + line_id)
+                if fwhm.boundary.is_free(): fwhm.boundary = Boundary(min_value=0.0)
+
+            if not intensity.function:
+                congruence.checkStrictlyPositiveNumber(intensity.value, "intensity " + line_id)
+                if intensity.boundary.is_free():  intensity.boundary  = Boundary(min_value=0.0)
+
+            psuedo_voigt_peak.twotheta_0 = twotheta_0
+            psuedo_voigt_peak.eta        = eta
+            psuedo_voigt_peak.fwhm       = fwhm
+            psuedo_voigt_peak.intensity  = intensity
 
             return psuedo_voigt_peak
+
+if __name__ == "__main__":
+
+    peak = PseudoVoigtPeak.parse_peak("10 fixed, eta_mio 0.2 min 0.0 max 1.0, := ciccio, 20")
+    print (peak)

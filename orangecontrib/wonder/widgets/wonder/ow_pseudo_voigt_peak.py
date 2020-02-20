@@ -72,7 +72,7 @@ class PseudoVoigtPeakBox(ParameterBox):
         self.pv_peaks = kwargs["pv_peaks"]
 
     def init_gui(self, container):
-        orangegui.label(container, self, "2\u03b8_0, \u03b7, fwhm, intensity")
+        orangegui.label(container, self, "2\u03b8_0, \u03b7, fwhm, intensity\n\nevery parameter: <name> int <, fixed> or <, min value, max value> or <name> := function")
 
         scrollarea = QScrollArea(container)
         scrollarea.setMaximumWidth(self.CONTROL_AREA_WIDTH - 10)
@@ -82,7 +82,7 @@ class PseudoVoigtPeakBox(ParameterBox):
             self.pv_peaks = self.text_area.toPlainText()
             if not self.is_on_init: self.widget.dump_pv_peaks()
 
-        self.text_area = gui.textArea(height=250, width=self.CONTROL_AREA_WIDTH - 30, readOnly=False)
+        self.text_area = gui.textArea(height=220, width=self.CONTROL_AREA_WIDTH - 30, readOnly=False)
         self.text_area.setText(self.pv_peaks)
         self.text_area.textChanged.connect(write_text)
 
