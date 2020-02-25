@@ -8,6 +8,5 @@ recursive-include orangecontrib/wonder/widgets/wonder/data *.dat
 
 include requirements.txt
 include README.md
-include LICENSE.txt
-include about.md
+include LICENSE.pdf
 include *.py *.txt
