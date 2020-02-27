@@ -81,6 +81,9 @@ class OWLineProfile(OWGenericWidget):
     inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
     outputs = [("Fit Global Parameters", FitGlobalParameters)]
 
+    MAX_WIDTH_NO_MAIN = 715
+    CONTROL_AREA_WIDTH_NO_MAIN = 705
+
     def __init__(self):
         super().__init__(show_automatic_box=True)
         
@@ -377,7 +380,7 @@ class ReflectionsOfPhaseBox(InnerBox):
                                        "Reflections", orientation="vertical",
                                        width=self.CONTROL_AREA_WIDTH - 10)
 
-        orangegui.label(reflection_box, self, "h, k, l, <name> int <, fixed> or <, min value, max value> or <name> := function")
+        orangegui.label(reflection_box, self, "h, k, l, <name> value <min minimum> <max maximum> or < fixed> or <name := function>")
 
         scrollarea = QScrollArea(reflection_box)
         scrollarea.setMaximumWidth(self.CONTROL_AREA_WIDTH - 40)
@@ -387,7 +390,7 @@ class ReflectionsOfPhaseBox(InnerBox):
             self.reflections_of_phase = self.text_area.toPlainText()
             if not self.is_on_init: widget_container.dump_reflections_of_phases()
 
-        self.text_area = gui.textArea(height=500, width=1000, readOnly=False)
+        self.text_area = gui.textArea(height=500, width=5000, readOnly=False)
         self.text_area.setText(self.reflections_of_phase)
         self.text_area.textChanged.connect(write_text)
 

@@ -162,6 +162,94 @@ class FitParameter:
     def to_parameter_text(self):
         return self.parameter_name + " = " + str(self.value)
 
+    def to_parameter_on_row(self):
+        text = self.parameter_name + " "
+
+        if self.function:
+            text += ":= " + str(self.function_value)
+        else:
+            text += str(self.value)
+
+            if self.fixed:
+                text += "fixed"
+            elif not self.boundary is None:
+                if not self.boundary.min_value == PARAM_HWMIN:
+                    text += " min " + str(self.boundary.min_value)
+
+                if not self.boundary.max_value == PARAM_HWMAX:
+                    text += " max " + str(self.boundary.max_value)
+
+        return text
+
+    @classmethod
+    def parse_parameter_on_row(cls, parameter_string, parameter_prefix, parameter_name):
+        parameter_string = parameter_string.strip()
+
+        if ":=" in parameter_string: # is function
+            parameter_data = parameter_string.split(":=")
+
+            if len(parameter_data) == 2:
+                user_parameter_name = parameter_data[0].strip()
+                user_parameter_name = None if len(user_parameter_name) == 0 else user_parameter_name
+                function_value      = parameter_data[1].strip()
+            else:
+                user_parameter_name = None
+                function_value      = parameter_string
+
+            if user_parameter_name is None:
+                user_parameter_name = parameter_prefix + parameter_name
+            elif not user_parameter_name.startswith(parameter_prefix):
+                user_parameter_name = parameter_prefix + user_parameter_name
+
+            parameter = FitParameter(parameter_name=user_parameter_name, function=True, function_value=function_value)
+        else:
+            parameter_data = parameter_string.split()
+
+            boundary = None
+            fixed = False
+
+            if len(parameter_data) == 1:
+                user_parameter_name = None
+                parameter_value     = float(parameter_string)
+            else:
+                first_element = parameter_data[0].strip()
+
+                try:
+                    user_parameter_name = None
+                    parameter_value = float(first_element)
+                except:
+                    user_parameter_name = first_element
+                    parameter_value = float(parameter_data[1].strip())
+
+                first_index = 1 if user_parameter_name is None else 2
+
+                min_value = PARAM_HWMIN
+                max_value = PARAM_HWMAX
+
+                for j in range(first_index, len(parameter_data), 2):
+                    if parameter_data[j] == "min":
+                        min_value = float(parameter_data[j+1].strip())
+                    elif parameter_data[j] == "max":
+                        max_value = float(parameter_data[j+1].strip())
+                    elif parameter_data[j] == "fixed":
+                        fixed = True
+                        break
+
+                if not fixed:
+                    if min_value != PARAM_HWMIN or max_value != PARAM_HWMAX:
+                        boundary = Boundary(min_value=min_value, max_value=max_value)
+                    else:
+                        boundary = Boundary()
+
+            if user_parameter_name is None:
+                user_parameter_name = parameter_prefix + parameter_name
+            elif not user_parameter_name.startswith(parameter_prefix):
+                user_parameter_name = parameter_prefix + user_parameter_name
+
+            parameter = FitParameter(parameter_name=user_parameter_name, value=parameter_value, fixed=fixed, boundary=boundary)
+
+        return parameter
+
     def to_python_code(self):
         if not self.function:
             raise ValueError("Fit parameter " + self.parameter_name + "is not a function")

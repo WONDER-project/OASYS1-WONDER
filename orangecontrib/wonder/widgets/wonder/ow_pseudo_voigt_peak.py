@@ -64,6 +64,9 @@ class OWPseudoVoigtPeak(OWGenericDiffractionPatternParametersWidget):
 
     pv_peaks = Setting([""])
 
+    MAX_WIDTH_NO_MAIN = 715
+    CONTROL_AREA_WIDTH_NO_MAIN = 705
+
     def __init__(self):
         super().__init__()
 
@@ -117,7 +120,7 @@ class PseudoVoigtPeakBox(ParameterBox):
         self.pv_peaks = kwargs["pv_peaks"]
 
     def init_gui(self, container):
-        orangegui.label(container, self, "2\u03b8_0, \u03b7, fwhm, intensity\n\nevery parameter: <name> int <, fixed> or <, min value, max value> or <name> := function")
+        orangegui.label(container, self, "2\u03b8_0, \u03b7, fwhm, intensity\n\nevery parameter: <name> value <min minimum> <max maximum> or < fixed> or <name := function>")
 
         scrollarea = QScrollArea(container)
         scrollarea.setMaximumWidth(self.CONTROL_AREA_WIDTH - 10)
@@ -127,7 +130,7 @@ class PseudoVoigtPeakBox(ParameterBox):
             self.pv_peaks = self.text_area.toPlainText()
             if not self.is_on_init: self.widget.dump_pv_peaks()
 
-        self.text_area = gui.textArea(height=220, width=self.CONTROL_AREA_WIDTH - 30, readOnly=False)
+        self.text_area = gui.textArea(height=200, width=5000, readOnly=False)
         self.text_area.setText(self.pv_peaks)
         self.text_area.textChanged.connect(write_text)
 
@@ -142,7 +145,7 @@ class PseudoVoigtPeakBox(ParameterBox):
     def set_data(self, spurious_peaks):
         self.pv_peaks = ""
         for pseudo_voigt_peak in spurious_peaks.get_pseudo_voigt_peaks():
-            self.pv_peaks += str(pseudo_voigt_peak) + "\n"
+            self.pv_peaks += pseudo_voigt_peak.to_row() + "\n"
 
         self.text_area.setText(self.pv_peaks)
 

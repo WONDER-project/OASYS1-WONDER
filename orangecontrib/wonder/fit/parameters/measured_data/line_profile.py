@@ -151,64 +151,13 @@ class LineProfile(ParametersList):
                     k = int(data[1].strip())
                     l = int(data[2].strip())
 
-                    if ":=" in data[3].strip():
-                        intensity_data = data[3].strip().split(":=")
+                    intensity = FitParameter.parse_parameter_on_row(parameter_string=data[3].strip(),
+                                                                    parameter_prefix=Reflection.get_parameters_prefix() + progressive_str,
+                                                                    parameter_name="I" + str(h) + str(k) + str(l))
+                    if intensity.boundary.is_free(): intensity.boundary = Boundary(min_value=0.0)
 
-                        if len(intensity_data) == 2:
-                            intensity_name = intensity_data[0].strip()
-                            intensity_name = None if len(intensity_name) == 0 else intensity_name
-                            function_value = intensity_data[1].strip()
-                        else:
-                            intensity_name = None
-                            function_value = data[3].strip()
+                    reflection = Reflection(h, k, l, intensity=intensity)
 
-                        if intensity_name is None:
-                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
-                        elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
-                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
-
-                        reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
-                                                                                function=True,
-                                                                                function_value=function_value))
-                    else:
-                        intensity_data = data[3].strip().split()
-
-                        if len(intensity_data) == 2:
-                            intensity_name = intensity_data[0].strip()
-                            intensity_value = float(intensity_data[1])
-                        else:
-                            intensity_name = None
-                            intensity_value = float(data[3])
-
-                        boundary = None
-                        fixed = False
-
-                        if len(data) > 4:
-                            min_value = PARAM_HWMIN
-                            max_value = PARAM_HWMAX
-
-                            for j in range(4, len(data)):
-                                boundary_data = data[j].strip().split()
-
-                                if boundary_data[0] == "min": min_value = float(boundary_data[1].strip())
-                                elif boundary_data[0] == "max": max_value = float(boundary_data[1].strip())
-                                elif boundary_data[0] == "fixed": fixed = True
-
-                            if not fixed:
-                                if min_value != PARAM_HWMIN or max_value != PARAM_HWMAX:
-                                    boundary = Boundary(min_value=min_value, max_value=max_value)
-                                else:
-                                    boundary = Boundary()
-
-                        if intensity_name is None:
-                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + "I" + str(h) + str(k) + str(l)
-                        elif not intensity_name.startswith(Reflection.get_parameters_prefix()):
-                            intensity_name = Reflection.get_parameters_prefix() + progressive_str + intensity_name
-
-                        reflection = Reflection(h, k, l, intensity=FitParameter(parameter_name=intensity_name,
-                                                                                value=intensity_value,
-                                                                                fixed=fixed,
-                                                                                boundary=boundary))
                     reflections.append(reflection)
 
         self.reflections_of_phases[phase_index] = reflections

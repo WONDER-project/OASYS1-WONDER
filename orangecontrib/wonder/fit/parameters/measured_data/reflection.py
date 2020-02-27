@@ -74,23 +74,7 @@ class Reflection():
         return str(self.h) + ", " + str(self.k) + ", " + str(self.l) + ", "  + str(self.intensity)
 
     def to_row(self):
-        text = str(self.h) + ", " + str(self.k) + ", " + str(self.l) + ", " + self.intensity.parameter_name + " "
-
-        if self.intensity.function:
-            text += ":= " + str(self.intensity.function_value)
-        else:
-            text += str(self.intensity.value)
-
-            if self.intensity.fixed:
-                text += "fixed"
-            elif not self.intensity.boundary is None:
-                if not self.intensity.boundary.min_value == PARAM_HWMIN:
-                    text += ", min " + str(self.intensity.boundary.min_value)
-
-                if not self.intensity.boundary.max_value == PARAM_HWMAX:
-                    text += ", max " + str(self.intensity.boundary.max_value)
-
-        return text
+        return str(self.h) + ", " + str(self.k) + ", " + str(self.l) + ", " + self.intensity.to_parameter_on_row()
 
     def get_theta_hkl(self, wavelength):
         return numpy.degrees(numpy.asin(2*self.d_spacing/wavelength))

@@ -102,6 +102,15 @@ class PseudoVoigtPeak():
                ("--" if self.fwhm is None else str(self.fwhm)) + ", " + \
                ("--" if self.intensity is None else str(self.intensity))
 
+    def to_row(self):
+        if not self.twotheta_0 is None and not self.eta is None and not self.fwhm is None and not self.intensity is None:
+            return self.twotheta_0.to_parameter_on_row() + ", " + \
+                   self.eta.to_parameter_on_row() + ", " + \
+                   self.fwhm.to_parameter_on_row() + ", " + \
+                   self.intensity.to_parameter_on_row()
+        else:
+            return ""
+
     def get_pseudo_voigt_peak(self, twotheta):
         tths = (2 * (twotheta - self.twotheta_0.value) / self.fwhm.value) ** 2
         pis = numpy.pi * self.fwhm.value / 2
@@ -110,76 +119,6 @@ class PseudoVoigtPeak():
         gaussian = numpy.sqrt(numpy.pi * numpy.log(2)) * numpy.exp(-numpy.log(2) * tths) / pis
 
         return self.intensity.value * (((1 - self.eta.value) * gaussian) + (self.eta.value * lorentzian))
-
-    @classmethod
-    def parse_parameter(cls, parameter_string, parameter_prefix, parameter_name):
-        parameter_string = parameter_string.strip()
-
-        if ":=" in parameter_string: # is function
-            parameter_data = parameter_string.split(":=")
-
-            if len(parameter_data) == 2:
-                user_parameter_name = parameter_data[0].strip()
-                user_parameter_name = None if len(user_parameter_name) == 0 else user_parameter_name
-                function_value      = parameter_data[1].strip()
-            else:
-                user_parameter_name = None
-                function_value      = parameter_string
-
-            if user_parameter_name is None:
-                user_parameter_name = parameter_prefix + parameter_name
-            elif not user_parameter_name.startswith(parameter_prefix):
-                user_parameter_name = parameter_prefix + user_parameter_name
-
-            parameter = FitParameter(parameter_name=user_parameter_name, function=True, function_value=function_value)
-        else:
-            parameter_data = parameter_string.split()
-
-            boundary = None
-            fixed = False
-
-            if len(parameter_data) == 1:
-                user_parameter_name = None
-                parameter_value     = float(parameter_string)
-            else:
-                first_element = parameter_data[0].strip()
-
-                try:
-                    user_parameter_name = None
-                    parameter_value = float(first_element)
-                except:
-                    user_parameter_name = first_element
-                    parameter_value = float(parameter_data[1].strip())
-
-
-                first_index = 1 if user_parameter_name is None else 2
-
-                min_value = PARAM_HWMIN
-                max_value = PARAM_HWMAX
-
-                for j in range(first_index, len(parameter_data), 2):
-                    if parameter_data[j] == "min":
-                        min_value = float(parameter_data[j+1].strip())
-                    elif parameter_data[j] == "max":
-                        max_value = float(parameter_data[j+1].strip())
-                    elif parameter_data[j] == "fixed":
-                        fixed = True
-                        break
-
-                if not fixed:
-                    if min_value != PARAM_HWMIN or max_value != PARAM_HWMAX:
-                        boundary = Boundary(min_value=min_value, max_value=max_value)
-                    else:
-                        boundary = Boundary()
-
-            if user_parameter_name is None:
-                user_parameter_name = parameter_prefix + parameter_name
-            elif not user_parameter_name.startswith(parameter_prefix):
-                user_parameter_name = parameter_prefix + user_parameter_name
-
-            parameter = FitParameter(parameter_name=user_parameter_name, value=parameter_value, fixed=fixed, boundary=boundary)
-
-        return parameter
 
     @classmethod
     def parse_peak(cls, line, line_index=0, diffraction_pattern_index=0):
@@ -202,10 +141,10 @@ class PseudoVoigtPeak():
             if len(data) < 4: raise ValueError("Pseudo-Voigt Peak, malformed line: " + str(line_index+1))
 
             try:
-                twotheta_0 = PseudoVoigtPeak.parse_parameter(data[0], parameter_prefix, "twotheta0")
-                eta        = PseudoVoigtPeak.parse_parameter(data[1], parameter_prefix, "eta")
-                fwhm       = PseudoVoigtPeak.parse_parameter(data[2], parameter_prefix, "fwhm")
-                intensity  = PseudoVoigtPeak.parse_parameter(data[3], parameter_prefix, "intensity")
+                twotheta_0 = FitParameter.parse_parameter_on_row(data[0], parameter_prefix, "twotheta0")
+                eta        = FitParameter.parse_parameter_on_row(data[1], parameter_prefix, "eta")
+                fwhm       = FitParameter.parse_parameter_on_row(data[2], parameter_prefix, "fwhm")
+                intensity  = FitParameter.parse_parameter_on_row(data[3], parameter_prefix, "intensity")
             except:
                 raise "Row " + line_id + " is malformed"
 
