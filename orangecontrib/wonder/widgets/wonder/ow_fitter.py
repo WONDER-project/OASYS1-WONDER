@@ -910,12 +910,10 @@ class OWFitter(OWGenericWidget):
             if not size_parameters is None and self.show_size==1:
                 self.plot_size[phase_index].setEnabled(True)
 
-                if self.current_iteration <= 1: #TO BE SURE...
-                    self.distributions[phase_index] = size_parameters.get_distribution(auto=True)
-                else:
-                    self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
-                                                                                       D_min=self.distributions[phase_index].D_min,
-                                                                                       D_max=self.distributions[phase_index].D_max)
+                if self.distributions[phase_index] is None: self.distributions[phase_index] = size_parameters.get_distribution(auto=True)
+                else: self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
+                                                                                         D_min=self.distributions[phase_index].D_min,
+                                                                                         D_max=self.distributions[phase_index].D_max)
 
                 distribution = self.distributions[phase_index]
 
