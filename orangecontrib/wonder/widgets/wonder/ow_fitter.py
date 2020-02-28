@@ -61,14 +61,14 @@ from orangewidget.widget import OWAction
 from oasys.widgets import congruence
 
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget, OW_IS_DEVELOP
-from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog, EmittingStream
+from orangecontrib.wonder.util.gui_utility import gui, ConfirmDialog
 
 from orangecontrib.wonder.fit.fitters.fitter_factory import FitterFactory, FitterName
+from orangecontrib.wonder.fit.fitters.fitter import FeedbackManager
 
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
-from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, SpecimenDisplacement, Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, Caglioti
 from orangecontrib.wonder.fit.functions.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
 
@@ -348,7 +348,7 @@ class OWFitter(OWGenericWidget):
 
         self.tab_fit_out.layout().addWidget(self.table_fit_out, alignment=Qt.AlignHCenter)
 
-    def write_stdout(self, text):
+    def fit_text_write(self, text):
         cursor = self.std_output.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.insertText(text)
@@ -633,14 +633,13 @@ class OWFitter(OWGenericWidget):
                     if len(initial_fit_global_parameters.get_parameters()) != len(self.fitter.fit_global_parameters.get_parameters()):
                         raise Exception("Incremental Fit is not possibile!\n\nParameters in the last fitting procedure are incompatible with the received ones")
 
-                sys.stdout = EmittingStream(textWritten=self.write_stdout)
-
                 self.fitted_fit_global_parameters = initial_fit_global_parameters
                 self.current_running_iteration = 0
 
                 try:
                     self.fit_thread = FitThread(self)
                     self.fit_thread.begin.connect(self.fit_begin)
+                    self.fit_thread.text_write.connect(self.fit_text_write)
                     self.fit_thread.update.connect(self.fit_update)
                     self.fit_thread.finished.connect(self.fit_completed)
                     self.fit_thread.error.connect(self.fit_error)
@@ -672,8 +671,6 @@ class OWFitter(OWGenericWidget):
             self.fit_global_parameters.set_n_max_iterations(self.n_iterations)
             self.fit_global_parameters.set_convergence_reached(False)
         else:
-            sys.stdout = EmittingStream(textWritten=self.write_stdout)
-
             self.fitter = FitterFactory.create_fitter(fitter_name=self.cb_fitter.currentText())
 
         self.fit_global_parameters.free_output_parameters.parse_formulas(self.free_output_parameters_text)
@@ -1270,25 +1267,21 @@ class OWFitter(OWGenericWidget):
     ##########################################
 
     def fit_begin(self):
-        self.fit_thread.mutex.tryLock()
+        #self.fit_thread.mutex.tryLock()
 
         self.progressBarInit()
         self.setStatusMessage("Fitting procedure started")
-        print("Fitting procedure started")
+        self.fit_text_write("Fitting procedure started")
         self.fit_running = True
 
-        self.fit_thread.mutex.unlock()
-
     def fit_update(self):
-        self.fit_thread.mutex.tryLock()
-
         try:
             self.current_iteration += 1
             self.current_running_iteration += 1
 
             self.progressBarSet(int(self.current_running_iteration*100/self.n_iterations))
             self.setStatusMessage("Fit iteration nr. " + str(self.current_iteration) + "/" + str(self.n_iterations) + " completed")
-            print("Fit iteration nr. " + str(self.current_iteration) + "/" + str(self.n_iterations) + " completed")
+            self.fit_text_write("Fit iteration nr. " + str(self.current_iteration) + "/" + str(self.n_iterations) + " completed")
 
             if self.is_interactive == 1:
                 self.__show_data()
@@ -1298,11 +1291,6 @@ class OWFitter(OWGenericWidget):
                 parameters.extend(self.fitted_fit_global_parameters.free_output_parameters.as_parameters())
 
                 self.__populate_table(self.table_fit_out, parameters)
-
-                #if self.current_iteration == 1:
-                #    self.tabs.setCurrentIndex(1)
-                #    self.tabs_plot.setCurrentIndex(0)
-
         except Exception as e:
             QMessageBox.critical(self, "Error",
                                  str(e),
@@ -1310,11 +1298,9 @@ class OWFitter(OWGenericWidget):
 
             if self.IS_DEVELOP: raise e
 
-        self.fit_thread.mutex.unlock()
-
     def fit_completed(self):
         self.setStatusMessage("Fitting procedure completed")
-        print("Fitting procedure completed")
+        self.fit_text_write("Fitting procedure completed")
 
         sys.stdout = self.standard_output
 
@@ -1616,14 +1602,15 @@ class Lab6Box(InnerBox):
         self.is_on_init = False
 # ------------------------------------------------------------------------
 
-from PyQt5.QtCore import QThread, pyqtSignal
 import time
+from PyQt5.QtCore import QThread, pyqtSignal
 
-class FitThread(QThread):
+class FitThread(QThread, FeedbackManager):
 
     begin = pyqtSignal()
     update = pyqtSignal()
     error = pyqtSignal()
+    text_write = pyqtSignal(str)
     mutex = QMutex()
 
     def __init__(self, fitter_widget):
@@ -1632,6 +1619,10 @@ class FitThread(QThread):
 
     def run(self):
         try:
+            self.mutex.lock()
+
+            self.fitter_widget.fitter.set_feedback_manager(self)
+
             self.begin.emit()
 
             t0 = time.clock()
@@ -1660,12 +1651,17 @@ class FitThread(QThread):
                     break
                 if self.fitter_widget.fitted_fit_global_parameters.is_convergence_reached(): break
 
-            print("Fit duration: ", round(time.clock()-t0, 3), " seconds")
+            self.feedback("Fit duration: " + str(round(time.clock()-t0, 3)) + " seconds")
 
+            self.mutex.unlock()
         except Exception as exception:
-            self.fitter_widget.thread_exception = exception
+            self.mutex.unlock()
 
+            self.fitter_widget.thread_exception = exception
             self.error.emit()
+
+    def feedback(self, text):
+        self.text_write.emit(text + "\n")
 
 class FitNotStartedException(Exception):
     def __init__(self, *args, **kwargs): # real signature unknown

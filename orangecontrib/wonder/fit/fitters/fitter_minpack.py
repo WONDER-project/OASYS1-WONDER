@@ -94,24 +94,30 @@ class MinpackData:
         return self.rwp / self.rexp
 
     def print_init_data(self):
-        print("Current Fit data:\n",
-              "  total parameters   (nprm): %d \n" % self.nprm,
-              "  parameters to fit  (nfit): %d \n" % self.nfit,
-              "  nr. of observables (nobs): %d \n" % self.nobs,
-              "  dof (nobs - nfit)        : %d \n" % self.dof)
+        return "Current Fit data:\n" + \
+              "  total parameters   (nprm): %d \n" % self.nprm + \
+              "  parameters to fit  (nfit): %d \n" % self.nfit + \
+              "  nr. of observables (nobs): %d \n" % self.nobs + \
+              "  dof (nobs - nfit)        : %d \n" % self.dof
 
     def print_fit_data(self):
-        print("\nCurrent fit results:\n\n",
-              "  LAMBDA: %f \n" % self.calc_lambda,
-              "  wss: %f \n" % self.wss,
-              "  ss : %f \n" % self.ss,
-              "  wsq: %f \n" % self.wsq,
-              "  gof: %f \n" % self.gof())
+        return "\nCurrent fit results:\n\n" + \
+              "  LAMBDA: %f \n" % self.calc_lambda + \
+              "  wss: %f \n" % self.wss + \
+              "  ss : %f \n" % self.ss + \
+              "  wsq: %f \n" % self.wsq + \
+              "  gof: %f \n" % self.gof()
 
 class FitterMinpack(FitterInterface):
 
     def __init__(self):
         super().__init__()
+
+        self.feedback_manager = None
+
+    def set_feedback_manager(self, feedback_manager=None):
+         self.feedback_manager = feedback_manager
+
 
     def initialize(self, fit_global_parameters):
         self.fit_global_parameters = fit_global_parameters.duplicate()
@@ -178,11 +184,12 @@ class FitterMinpack(FitterInterface):
 
         self.__populate_variables()
 
-
     def do_fit(self, current_fit_global_parameters, current_iteration, compute_pattern, compute_errors):
-        if current_iteration == 0: self.fit_data.print_init_data()
+        if self.feedback_manager is None: raise Exception("Feedback Manager not set!")
 
-        print("Fitter - Begin iteration nr. " + str(current_iteration))
+        if current_iteration == 0: self.feedback_manager.feedback(self.fit_data.print_init_data())
+
+        self.feedback_manager.feedback("Fitter - Begin iteration nr. " + str(current_iteration))
 
         if current_iteration <= current_fit_global_parameters.get_n_max_iterations() and not self.converged:
             # check values of lambda for large number of iterations
@@ -210,7 +217,7 @@ class FitterMinpack(FitterInterface):
             # emulate C++ do ... while cycle
             do_cycle = True
 
-            print("Begin Minization using LAMBDA: ", self._lambda)
+            self.feedback_manager.feedback("Begin Minization using LAMBDA: " + str(self._lambda))
 
             while do_cycle:
                 self.exit_flag = False
@@ -294,14 +301,14 @@ class FitterMinpack(FitterInterface):
 
                     self.build_minpack_data()
 
-                    self.fit_data.print_fit_data()
+                    self.feedback_manager.feedback(self.fit_data.print_fit_data())
                 else:
                     if self.has_functions:
                         FitGlobalParameters.compute_functions(self.parameters,
                                                               current_fit_global_parameters.free_input_parameters,
                                                               current_fit_global_parameters.free_output_parameters)
 
-                    print("Chlolesky decomposition failed!")
+                    self.feedback_manager.feedback("Chlolesky decomposition failed!")
 
                 if not self.exit_flag and not self.converged:
                     if self._lambda<PRCSN: self._lambda = PRCSN
@@ -336,7 +343,7 @@ class FitterMinpack(FitterInterface):
                     errors[i] = numpy.sqrt(numpy.abs(self.g[k]))
                     k += 1
             else:
-                print("Errors not calculated: cholesky decomposition != 0")
+                self.feedback_manager.feedback("Errors not calculated: cholesky decomposition != 0")
 
             fit_global_parameters_out = self.fit_global_parameters.from_fitted_parameters_and_errors(self.parameters, errors).duplicate()
         else:
