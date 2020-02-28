@@ -59,15 +59,6 @@ OW_IS_DEVELOP = False if not "OASYSDEVELOP" in os.environ.keys() else str(os.env
 current_module = sys.modules[__name__]
 gui_point_size=12
 
-class EmittingStream(QObject):
-    textWritten = pyqtSignal(str)
-
-    def write(self, text):
-        self.textWritten.emit(str(text))
-
-    def flush(self):
-        pass
-
 class gui:
 
     @classmethod
@@ -243,7 +234,6 @@ class ShowTextDialog(QDialog):
 
 
 class ConfirmTextDialog(QDialog):
-
     def __init__(self, title, text, text_before="", text_after="", width=650, height=400, parent=None):
         QDialog.__init__(self, parent)
         self.setModal(True)
