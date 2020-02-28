@@ -351,7 +351,7 @@ class OWFitter(OWGenericWidget):
     def fit_text_write(self, text):
         cursor = self.std_output.textCursor()
         cursor.movePosition(QTextCursor.End)
-        cursor.insertText(text)
+        cursor.insertText(text + "\n")
         self.std_output.setTextCursor(cursor)
         self.std_output.ensureCursorVisible()
 
@@ -1281,7 +1281,6 @@ class OWFitter(OWGenericWidget):
 
             self.progressBarSet(int(self.current_running_iteration*100/self.n_iterations))
             self.setStatusMessage("Fit iteration nr. " + str(self.current_iteration) + "/" + str(self.n_iterations) + " completed")
-            self.fit_text_write("Fit iteration nr. " + str(self.current_iteration) + "/" + str(self.n_iterations) + " completed")
 
             if self.is_interactive == 1:
                 self.__show_data()
@@ -1641,6 +1640,8 @@ class FitThread(QThread, FeedbackManager):
                 self.fitter_widget.current_wss.append(self.fitter_widget.fit_data.wss)
                 self.fitter_widget.current_gof.append(self.fitter_widget.fit_data.gof())
 
+                self.feedback("Fit iteration nr. " + str(iteration) + "/" + str(self.fitter_widget.n_iterations) + " completed")
+
                 self.update.emit()
 
                 if self.fitter_widget.stop_fit:
@@ -1661,7 +1662,7 @@ class FitThread(QThread, FeedbackManager):
             self.error.emit()
 
     def feedback(self, text):
-        self.text_write.emit(text + "\n")
+        self.text_write.emit(text)
 
 class FitNotStartedException(Exception):
     def __init__(self, *args, **kwargs): # real signature unknown
