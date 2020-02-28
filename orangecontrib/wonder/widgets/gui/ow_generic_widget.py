@@ -121,7 +121,7 @@ class OWGenericWidget(widget.OWWidget):
     warning_id = 0
     info_id = 0
 
-    MAX_WIDTH_MAIN = 1320
+    MAX_WIDTH_MAIN = 1420
     MAX_WIDTH_NO_MAIN = 615
     MAX_HEIGHT = 700
 

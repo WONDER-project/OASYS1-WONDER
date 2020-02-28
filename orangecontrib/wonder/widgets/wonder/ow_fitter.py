@@ -80,7 +80,6 @@ class OWFitter(OWGenericWidget):
     priority = 60
 
     want_main_area = True
-    standard_output = sys.stdout
 
     if OW_IS_DEVELOP:
         fitter_name = Setting(1)
@@ -141,7 +140,12 @@ class OWFitter(OWGenericWidget):
     annotations_ib = None
     distributions  = None
     text_size      = None
-    
+
+    free_input_parameter_label = ""
+    free_output_parameter_label = ""
+    fixed_label = ""
+    function_label = ""
+
     def __fix_attrs(self):
         if not isinstance(self.fwhm_autoscale, list) or len(self.fwhm_autoscale) != 0: self.fwhm_autoscale = [1]
         if not isinstance(self.fwhm_xmin, list) or len(self.fwhm_xmin) == 0: self.fwhm_xmin = [0.0]
@@ -283,10 +287,10 @@ class OWFitter(OWGenericWidget):
         self.tab_plot_strain           = gui.createTabPage(self.tabs_plot, "Warren's Plot")
         self.tab_plot_integral_breadth = gui.createTabPage(self.tabs_plot, "Integral Breadth")
 
-        self.std_output = gui.textArea(height=100, width=800)
+        self.fit_text_output = gui.textArea(height=100, width=865)
 
-        out_box = gui.widgetBox(self.mainArea, "System Output", addSpace=False, orientation="horizontal")
-        out_box.layout().addWidget(self.std_output)
+        out_box = gui.widgetBox(self.mainArea, "Fit Output", addSpace=False, orientation="horizontal")
+        out_box.layout().addWidget(self.fit_text_output)
 
         # ---------------------------------------------------------------\
 
@@ -338,6 +342,24 @@ class OWFitter(OWGenericWidget):
 
         # ---------------------------------------------------------------
 
+        def get_box_header(widget, tab_widget):
+            orangegui.separator(tab_widget)
+            box_header = gui.widgetBox(tab_widget, "", orientation="horizontal", width=600)
+
+            le = gui.lineEdit(box_header, widget, "fixed_label", "Color Codes: ", valueType=str)
+            le.setStyleSheet("background-color: rgb(190,190,190);")
+            le = gui.lineEdit(box_header, widget, "function_label", "fixed    ", valueType=str)
+            le.setStyleSheet("background-color: rgb(169,208,245);")
+            le = gui.lineEdit(box_header, widget, "free_input_parameter_label", "function    ", valueType=str)
+            le.setStyleSheet("background-color: rgb(213,245,227);")
+            le = gui.lineEdit(box_header, widget, "free_output_parameter_label", "free input parameter    ", valueType=str)
+            le.setStyleSheet("background-color: rgb(242,245,169);")
+            gui.widgetLabel(box_header, "free output parameter")
+            orangegui.separator(tab_widget)
+
+        get_box_header(self, self.tab_fit_in)
+        get_box_header(self, self.tab_fit_out)
+
         self.table_fit_in = self.__create_table_widget(is_output=False)
 
         self.tab_fit_in.layout().addWidget(self.table_fit_in, alignment=Qt.AlignHCenter)
@@ -349,11 +371,11 @@ class OWFitter(OWGenericWidget):
         self.tab_fit_out.layout().addWidget(self.table_fit_out, alignment=Qt.AlignHCenter)
 
     def fit_text_write(self, text):
-        cursor = self.std_output.textCursor()
+        cursor = self.fit_text_output.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.insertText(text + "\n")
-        self.std_output.setTextCursor(cursor)
-        self.std_output.ensureCursorVisible()
+        self.fit_text_output.setTextCursor(cursor)
+        self.fit_text_output.ensureCursorVisible()
 
     def set_incremental(self):
         if self.is_incremental == 0:
@@ -498,7 +520,7 @@ class OWFitter(OWGenericWidget):
         from PyQt5.QtWidgets import QAbstractItemView
 
         table_fit = QTableWidget(1, 8 if is_output else 7)
-        table_fit.setMinimumWidth(780)
+        table_fit.setMinimumWidth(865)
         table_fit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         table_fit.setAlternatingRowColors(True)
         table_fit.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
@@ -1300,8 +1322,6 @@ class OWFitter(OWGenericWidget):
     def fit_completed(self):
         self.setStatusMessage("Fitting procedure completed")
         self.fit_text_write("Fitting procedure completed")
-
-        sys.stdout = self.standard_output
 
         self.fitted_fit_global_parameters.regenerate_parameters()
 
