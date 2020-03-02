@@ -172,7 +172,8 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericParametersWidget):
             parameter_tab = gui.createTabPage(self.parameter_tabs, OWGenericWidget.diffraction_pattern_name(self.fit_global_parameters, index, self.use_single_parameter_set == 1))
 
             if index < self.get_current_dimension():  # keep the existing
-                parameter_box = self.get_parameter_box_instance(parameter_tab, index)
+                try:    parameter_box = self.get_parameter_box_instance(parameter_tab, index)
+                except: parameter_box = self.get_empty_parameter_box_instance(parameter_tab, index) # prevents crash
             else:
                 parameter_box = self.get_empty_parameter_box_instance(parameter_tab, index)
 
@@ -263,7 +264,9 @@ class OWGenericPhaseParameterWidget(OWGenericParametersWidget):
             self.active = [1]*self.get_current_dimension()
 
         for index in range(self.get_current_dimension()):
-            parameter_box = self.get_parameter_box_instance(gui.createTabPage(self.parameter_tabs, Phase.get_default_name(index)), index)
+            tab_widget = gui.createTabPage(self.parameter_tabs, Phase.get_default_name(index))
+            try:    parameter_box = self.get_parameter_box_instance(tab_widget, index)
+            except: parameter_box = self.get_empty_parameter_box_instance(tab_widget, index) # prevents crash
 
             self.parameter_box_array.append(parameter_box)
 
