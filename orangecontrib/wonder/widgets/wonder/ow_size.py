@@ -392,21 +392,21 @@ class SizeBox(ParameterActivableBox):
         self.set_distribution()
 
     def get_size_parameters(self):
-        if self.active == 0: return None
-        else:
+        if self.active==1:
             if not self.mu_function == 1: congruence.checkStrictlyPositiveNumber(self.mu, "\u03bc or D")
             if self.cb_distribution.currentText() != Distribution.DELTA and not self.sigma_function == 1: congruence.checkStrictlyPositiveNumber(self.sigma, "\u03c3")
             if self.cb_distribution.currentText() == Distribution.DELTA and not self.fit_global_parameters.measured_dataset.phases[self.index].use_structure:
                 raise Exception("Delta Distribution cannot be used when the structural model is not activated")
 
-            return SizeParameters(shape=self.cb_shape.currentText(),
-                                  distribution=self.cb_distribution.currentText(),
-                                  mu=OWGenericWidget.get_fit_parameter_from_widget(self, "mu", self.get_parameters_prefix()),
-                                  sigma=None if self.cb_distribution.currentText() == Distribution.DELTA else OWGenericWidget.get_fit_parameter_from_widget(self, "sigma", self.get_parameters_prefix()),
-                                  truncation=OWGenericWidget.get_fit_parameter_from_widget(self, "truncation", self.get_parameters_prefix()) if (self.cb_distribution.currentText() == Distribution.LOGNORMAL and self.cb_shape.currentText() == Shape.WULFF) else None,
-                                  cube_face=self.cb_cube_face.currentText() if (self.cb_distribution.currentText() == Distribution.LOGNORMAL and self.cb_shape.currentText() == Shape.WULFF) else None,
-                                  add_saxs=self.add_saxs if self.cb_distribution.currentText() == Distribution.DELTA else False,
-                                  normalize_to=self.normalize_to if self.cb_distribution.currentText() == Distribution.DELTA else None)
+        return SizeParameters(shape=self.cb_shape.currentText(),
+                              distribution=self.cb_distribution.currentText(),
+                              mu=OWGenericWidget.get_fit_parameter_from_widget(self, "mu", self.get_parameters_prefix()),
+                              sigma=None if self.cb_distribution.currentText() == Distribution.DELTA else OWGenericWidget.get_fit_parameter_from_widget(self, "sigma", self.get_parameters_prefix()),
+                              truncation=OWGenericWidget.get_fit_parameter_from_widget(self, "truncation", self.get_parameters_prefix()) if (self.cb_distribution.currentText() == Distribution.LOGNORMAL and self.cb_shape.currentText() == Shape.WULFF) else None,
+                              cube_face=self.cb_cube_face.currentText() if (self.cb_distribution.currentText() == Distribution.LOGNORMAL and self.cb_shape.currentText() == Shape.WULFF) else None,
+                              add_saxs=self.add_saxs if self.cb_distribution.currentText() == Distribution.DELTA else False,
+                              normalize_to=self.normalize_to if self.cb_distribution.currentText() == Distribution.DELTA else None,
+                              active=self.active==1)
 
 from PyQt5.QtWidgets import QApplication
 

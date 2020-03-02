@@ -135,6 +135,10 @@ class OWFitter(OWGenericWidget):
     lab6_ymin = Setting([-1.0])
     lab6_ymax = Setting([1.0])
 
+    size_autoscale = Setting([1])
+    size_xmin = Setting([0.0])
+    size_xmax = Setting([150.0])
+
     x_ib           = None
     labels_ib      = None
     annotations_ib = None
@@ -862,7 +866,7 @@ class OWFitter(OWGenericWidget):
             self.plot_ipf_fwhm[diffraction_pattern_index].addCurve(twotheta_fwhm, y, legend="fwhm", color="blue")
 
             if self.fwhm_autoscale[diffraction_pattern_index] == 0 and \
-                    self.fwhm_ymin[diffraction_pattern_index] < self.fwhm_xmax[diffraction_pattern_index]:
+                    self.fwhm_ymin[diffraction_pattern_index] < self.fwhm_ymax[diffraction_pattern_index]:
                 self.plot_ipf_fwhm[diffraction_pattern_index].setGraphYLimits(ymin=self.fwhm_ymin[diffraction_pattern_index],
                                                                               ymax=self.fwhm_ymax[diffraction_pattern_index])
 
@@ -873,7 +877,7 @@ class OWFitter(OWGenericWidget):
             if self.eta_autoscale[diffraction_pattern_index] == 1:
                 twotheta_eta = numpy.arange(0.0, 150.0, 0.5)
             else:
-                twotheta_eta = numpy.arange(self.eta_xmin, self.eta_xmax, 0.5)
+                twotheta_eta = numpy.arange(self.eta_xmin[diffraction_pattern_index], self.eta_xmax[diffraction_pattern_index], 0.5)
 
             y = caglioti_eta(instrumental_parameters.a.value,
                              instrumental_parameters.b.value,
@@ -883,7 +887,7 @@ class OWFitter(OWGenericWidget):
             self.plot_ipf_eta[diffraction_pattern_index].addCurve(twotheta_eta, y, legend="eta", color="blue")
 
             if self.eta_autoscale[diffraction_pattern_index] == 0 and \
-                    self.eta_ymin[diffraction_pattern_index] < self.eta_xmax[diffraction_pattern_index]:
+                    self.eta_ymin[diffraction_pattern_index] < self.eta_ymax[diffraction_pattern_index]:
                 self.plot_ipf_eta[diffraction_pattern_index].setGraphYLimits(ymin=self.eta_ymin[diffraction_pattern_index],
                                                                              ymax=self.eta_ymax[diffraction_pattern_index])
 
@@ -894,7 +898,7 @@ class OWFitter(OWGenericWidget):
             if self.lab6_autoscale[diffraction_pattern_index] == 1: 
                 twotheta_lab6 = numpy.arange(0.0, 150.0, 0.5)
             else:                        
-                twotheta_lab6 = numpy.arange(self.lab6_xmin, self.lab6_xmax, 0.5)
+                twotheta_lab6 = numpy.arange(self.lab6_xmin[diffraction_pattern_index], self.lab6_xmax[diffraction_pattern_index], 0.5)
 
             y = delta_two_theta_lab6(shift_parameters.ax.value,
                                      shift_parameters.bx.value,
@@ -906,7 +910,7 @@ class OWFitter(OWGenericWidget):
             self.plot_ipf_lab6[diffraction_pattern_index].addCurve(twotheta_lab6, y, legend="lab6", color="blue")
 
             if self.lab6_autoscale[diffraction_pattern_index] == 0 and \
-                    self.lab6_ymin[diffraction_pattern_index] < self.lab6_xmax[diffraction_pattern_index]: 
+                    self.lab6_ymin[diffraction_pattern_index] < self.lab6_ymax[diffraction_pattern_index]:
                 self.plot_ipf_lab6[diffraction_pattern_index].setGraphYLimits(ymin=self.lab6_ymin[diffraction_pattern_index], ymax=self.lab6_ymax[diffraction_pattern_index])
 
     # ------------------------------------------------------------------------
@@ -926,14 +930,18 @@ class OWFitter(OWGenericWidget):
 
             size_parameters = self.fitted_fit_global_parameters.get_size_parameters(phase_index)
 
-            if not size_parameters is None and self.show_size==1:
+            if not size_parameters is None and size_parameters.active and self.show_size==1:
                 self.plot_size[phase_index].setEnabled(True)
 
-                if self.distributions[phase_index] is None: self.distributions[phase_index] = size_parameters.get_distribution(auto=True)
-                else: self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
-                                                                                         D_min=self.distributions[phase_index].D_min,
-                                                                                         D_max=self.distributions[phase_index].D_max)
-
+                if self.size_autoscale[phase_index]==1:
+                    if self.distributions[phase_index] is None: self.distributions[phase_index] = size_parameters.get_distribution(auto=True)
+                    else: self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
+                                                                                             D_min=self.distributions[phase_index].D_min,
+                                                                                             D_max=self.distributions[phase_index].D_max)
+                else:
+                    self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
+                                                                                       D_min=self.size_xmin[phase_index],
+                                                                                       D_max=self.size_xmax[phase_index])
                 distribution = self.distributions[phase_index]
 
                 self.plot_size[phase_index].addCurve(distribution.x, distribution.y, legend="distribution", color="blue")
@@ -945,6 +953,31 @@ class OWFitter(OWGenericWidget):
             else:
                 self.plot_size[phase_index].setEnabled(False)
 
+    def refresh_size(self, size_parameters, phase_index):
+        if self.show_size==1:
+            self.__clear_text_size(phase_index)
+
+            if self.size_autoscale[phase_index] == 1:
+                if self.distributions[phase_index] is None:
+                    self.distributions[phase_index] = size_parameters.get_distribution(auto=True)
+                else:
+                    self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
+                                                                                       D_min=self.distributions[phase_index].D_min,
+                                                                                       D_max=self.distributions[phase_index].D_max)
+            else:
+                self.distributions[phase_index] = size_parameters.get_distribution(auto=False,
+                                                                                   D_min=self.size_xmin[phase_index],
+                                                                                   D_max=self.size_xmax[phase_index])
+
+            distribution = self.distributions[phase_index]
+
+            self.plot_size[phase_index].addCurve(distribution.x, distribution.y, legend="distribution", color="blue")
+            self.text_size[phase_index] = self.plot_size[phase_index]._backend.ax.text(numpy.max(distribution.x) * 0.65, numpy.max(distribution.y) * 0.7,
+                                                                                       "<D>        = " + str(round(distribution.D_avg, 3)) + " nm\n" + \
+                                                                                       "<D> s.w. = " + str(round(distribution.D_avg_surface_weighted, 3)) + " nm\n" + \
+                                                                                       "<D> v.w. = " + str(round(distribution.D_avg_volume_weighted, 3)) + " nm\n" + \
+                                                                                       "s.d.           = " + str(round(distribution.standard_deviation, 3)) + " nm", fontsize=12)
+
     # ------------------------------------------------------------------------
 
     def __refresh_strain(self, phases_number=0, is_init=False):
@@ -953,7 +986,7 @@ class OWFitter(OWGenericWidget):
         for phase_index in range(phases_number):
             strain_parameters = self.fitted_fit_global_parameters.get_strain_parameters(phase_index)
 
-            if not strain_parameters is None and self.show_warren==1:
+            if not strain_parameters is None and strain_parameters.active and self.show_warren==1:
                 if self.distributions is None or self.distributions[phase_index] is None: L_max = 20
                 else: L_max = 2*self.distributions[phase_index].D_avg
 
@@ -1008,12 +1041,12 @@ class OWFitter(OWGenericWidget):
                     strain_parameters = fit_global_parameters.get_strain_parameters(phase_index)
 
                     plot_instr = not instrumental_parameters is None
-                    plot_size = not size_parameters is None
-                    plot_strain = not strain_parameters is None
+                    plot_size = not size_parameters is None and size_parameters.active
+                    plot_strain = not strain_parameters is None and strain_parameters.active
 
                     ##########################################
 
-                    if not size_parameters is None and not size_parameters.shape == Shape.WULFF:
+                    if plot_size and not size_parameters.shape == Shape.WULFF:
                         y_ib_size = numpy.full(line_profile.get_reflections_number(phase_index), integral_breadth_size(None, size_parameters))
                     else:
                         y_ib_size = numpy.zeros(nr_points)
@@ -1026,15 +1059,15 @@ class OWFitter(OWGenericWidget):
                     for reflection in line_profile.get_reflections(phase_index):
                         i += 1
 
-                        if not size_parameters is None and size_parameters.shape == Shape.WULFF:
+                        if plot_size and size_parameters.shape == Shape.WULFF:
                             y_ib_size[i] = integral_breadth_size(reflection, size_parameters)
 
-                        if not strain_parameters is None:
+                        if plot_strain:
                             y_ib_strain[i] = integral_breadth_strain(reflection,
                                                                      lattice_parameter,
                                                                      strain_parameters)
 
-                        if not instrumental_parameters is None:
+                        if plot_instr:
                             y_ib_instr[i] = integral_breadth_instrumental_function(reflection,
                                                                                    lattice_parameter,
                                                                                    wavelength,
@@ -1129,6 +1162,7 @@ class OWFitter(OWGenericWidget):
         self.eta_box_array  = []
         self.lab6_box_array = []
 
+
         self.tabs_plot_ipf.clear()
 
         use_single_set, number_of_ipf_tabs = self.__get_number_of_ipf_tabs(fit_global_parameters)
@@ -1189,33 +1223,40 @@ class OWFitter(OWGenericWidget):
                                                    diffraction_pattern_index=diffraction_pattern_index))
 
 
-
             self.tab_plot_fwhm.append(tab_plot_fwhm)
             self.tab_plot_eta.append(tab_plot_eta)
             self.tab_plot_lab6.append(tab_plot_lab6)
 
-        self.dumpSettings()
+        self.dump_ipf()
 
     # ------------------------------------------------------------------------
 
     def __build_plot_size(self):
-        fit_global_parameter = self.__fit_global_parameters()
+        fit_global_parameters = self.__fit_global_parameters()
 
         self.plot_size = []
+        self.size_box_array = []
+
         self.tabs_plot_size.clear()
 
-        for phase_index in range(self.__phases_range(fit_global_parameter)):
-            tab_plot_size = gui.createTabPage(self.tabs_plot_size, OWGenericWidget.phase_name(fit_global_parameter, phase_index))
+        for phase_index in range(self.__phases_range(fit_global_parameters)):
+            tab_plot_size = gui.createTabPage(self.tabs_plot_size, OWGenericWidget.phase_name(fit_global_parameters, phase_index))
 
-            plot_size = PlotWindow()
-            plot_size.setDefaultPlotLines(True)
-            plot_size.setActiveCurveColor(color="#00008B")
-            plot_size.setGraphTitle("Crystalline Domains Size Distribution")
-            plot_size.setGraphXLabel(r"D [nm]")
-            plot_size.setGraphYLabel("Frequency")
+            if phase_index < len(self.size_autoscale):
+                self.size_box_array.append(SizeBox(widget=self,
+                                                   parent=tab_plot_size,
+                                                   fit_global_parameters=fit_global_parameters,
+                                                   phase_index=phase_index,
+                                                   size_autoscale=self.size_autoscale[phase_index],
+                                                   size_xmin=self.size_xmin[phase_index],
+                                                   size_xmax=self.size_xmax[phase_index]))
+            else:
+                self.size_box_array.append(SizeBox(widget=self,
+                                                   parent=tab_plot_size,
+                                                   fit_global_parameters=fit_global_parameters,
+                                                   phase_index=phase_index))
 
-            self.plot_size.append(plot_size)
-            tab_plot_size.layout().addWidget(plot_size)
+        self.dump_size()
 
     # ------------------------------------------------------------------------
 
@@ -1360,6 +1401,15 @@ class OWFitter(OWGenericWidget):
         if self.IS_DEVELOP: raise self.thread_exception
 
     def dumpSettings(self):
+        self.dump_ipf()
+        self.dump_size()
+
+    def dump_size(self):
+        self.dump_size_autoscale()
+        self.dump_size_xmin()
+        self.dump_size_xmax()
+
+    def dump_ipf(self):
         self.dump_fwhm_autoscale()
         self.dump_fwhm_xmin()
         self.dump_fwhm_xmax()
@@ -1387,6 +1437,9 @@ class OWFitter(OWGenericWidget):
     def get_parameter_box_array_lab6(self):
         return self.lab6_box_array
 
+    def get_parameter_box_array_size(self):
+        return self.size_box_array
+
     def dump_fwhm_variable(self, variable_name):
         self.get_parameter_box_array = self.get_parameter_box_array_fwhm
         self.dump_variable(variable_name)
@@ -1397,6 +1450,10 @@ class OWFitter(OWGenericWidget):
 
     def dump_lab6_variable(self, variable_name):
         self.get_parameter_box_array = self.get_parameter_box_array_lab6
+        self.dump_variable(variable_name)
+
+    def dump_size_variable(self, variable_name):
+        self.get_parameter_box_array = self.get_parameter_box_array_size
         self.dump_variable(variable_name)
 
     def dump_fwhm_autoscale(self): self.dump_fwhm_variable("fwhm_autoscale")
@@ -1416,6 +1473,10 @@ class OWFitter(OWGenericWidget):
     def dump_lab6_xmax(self): self.dump_lab6_variable("lab6_xmax")
     def dump_lab6_ymin(self): self.dump_lab6_variable("lab6_ymin")
     def dump_lab6_ymax(self): self.dump_lab6_variable("lab6_ymax")
+
+    def dump_size_autoscale(self): self.dump_size_variable("size_autoscale")
+    def dump_size_xmin(self): self.dump_size_variable("size_xmin")
+    def dump_size_xmax(self): self.dump_size_variable("size_xmax")
 
 from PyQt5.QtCore import Qt
 
@@ -1617,6 +1678,66 @@ class Lab6Box(InnerBox):
 
         boxl.layout().addWidget(plot_ipf_lab6)
         widget.plot_ipf_lab6.append(plot_ipf_lab6)
+
+        self.is_on_init = False
+
+
+class SizeBox(InnerBox):
+    is_on_init = True
+
+    def __init__(self,
+                 widget=None,
+                 parent=None,
+                 fit_global_parameters=None,
+                 phase_index=0,
+                 size_autoscale=1,
+                 size_xmin=0.0,
+                 size_xmax=150.0):
+        super(SizeBox, self).__init__()
+
+        self.setLayout(QVBoxLayout())
+        self.layout().setAlignment(Qt.AlignTop)
+
+        self.size_autoscale = size_autoscale
+        self.size_xmin = size_xmin
+        self.size_xmax = size_xmax
+
+        parent.layout().addWidget(self)
+        container = self
+
+        box = gui.widgetBox(container, "", orientation="horizontal")
+
+        boxl = gui.widgetBox(box, "", orientation="vertical")
+        boxr = gui.widgetBox(box, "", orientation="vertical", width=150)
+
+        def set_size_autoscale():
+            self.le_size_xmin.setEnabled(self.size_autoscale == 0)
+            self.le_size_xmax.setEnabled(self.size_autoscale == 0)
+
+            if not self.is_on_init: widget.dump_size_autoscale()
+
+        orangegui.checkBox(boxr, self, "size_autoscale", "Autoscale", callback=set_size_autoscale)
+
+        def refresh_size():
+            if not fit_global_parameters is None:
+                size_parameters = fit_global_parameters.get_size_parameters(phase_index)
+                if not size_parameters is None and size_parameters.active: widget.refresh_size(size_parameters, phase_index)
+
+        self.le_size_xmin = gui.lineEdit(boxr, self, "size_xmin", "D min", labelWidth=70, valueType=float, callback=widget.dump_size_xmin)
+        self.le_size_xmax = gui.lineEdit(boxr, self, "size_xmax", "D max", labelWidth=70, valueType=float, callback=widget.dump_size_xmax)
+        gui.button(boxr, self, "Refresh", height=40, callback=refresh_size)
+
+        set_size_autoscale()
+
+        plot_size = PlotWindow()
+        plot_size.setDefaultPlotLines(True)
+        plot_size.setActiveCurveColor(color="#00008B")
+        plot_size.setGraphTitle("Crystalline Domains Size Distribution")
+        plot_size.setGraphXLabel(r"D [nm]")
+        plot_size.setGraphYLabel("Frequency")
+
+        widget.plot_size.append(plot_size)
+        boxl.layout().layout().addWidget(plot_size)
 
         self.is_on_init = False
 # ------------------------------------------------------------------------

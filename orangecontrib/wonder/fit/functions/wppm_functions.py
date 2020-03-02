@@ -230,7 +230,7 @@ def fit_function_reciprocal(s, fit_global_parameters, diffraction_pattern_index 
 
         size_parameters = fit_global_parameters.get_size_parameters(phase_index)
 
-        if not size_parameters is None:
+        if not size_parameters is None and size_parameters.active:
             if size_parameters.distribution == Distribution.DELTA and size_parameters.add_saxs:
                 if not phase.use_structure: NotImplementedError("SAXS is available when the structural model is active")
 
@@ -415,7 +415,7 @@ def create_one_peak(diffraction_pattern_index,
 
     size_parameters = fit_global_parameters.get_size_parameters(phase_index)
 
-    if not size_parameters is None:
+    if not size_parameters is None and size_parameters.active:
         if size_parameters.distribution == Distribution.LOGNORMAL:
             if size_parameters.shape == Shape.SPHERE:
                 if fourier_amplitudes is None:
@@ -467,7 +467,7 @@ def create_one_peak(diffraction_pattern_index,
 
     strain_parameters = fit_global_parameters.get_strain_parameters(phase_index)
 
-    if not strain_parameters is None:
+    if not strain_parameters is None and strain_parameters.active:
         if isinstance(strain_parameters, InvariantPAH): # INVARIANT PAH
             if fourier_amplitudes is None:
                 fourier_amplitudes = strain_invariant_function_pah(fit_space_parameters.L,
@@ -1295,9 +1295,7 @@ def __instrumental_function(L, reflection, lattice_parameter, wavelength, instru
 
 
 def __size_function(L, reflection, size_parameters, ib_total=False):
-    if size_parameters is None:
-        return 1.0 if ib_total else 0.0
-    else:
+    if not size_parameters is None and size_parameters.active:
         if size_parameters.distribution == Distribution.LOGNORMAL:
             if size_parameters.shape == Shape.WULFF:
                 return size_function_wulff_solids_lognormal(L, reflection.h, reflection.k, reflection.l,
@@ -1311,11 +1309,11 @@ def __size_function(L, reflection, size_parameters, ib_total=False):
             return size_function_gamma(L, size_parameters.sigma.value, size_parameters.mu.value)
         else:
             return 1.0 if ib_total else 0.0
+    else:
+        return 1.0 if ib_total else 0.0
 
 def __strain_function(L, reflection, lattice_parameter, strain_parameters, ib_total=False):
-    if strain_parameters is None:
-        return 1.0 if ib_total else 0.0
-    else:
+    if not strain_parameters is None and strain_parameters.active:
         if isinstance(strain_parameters, InvariantPAH):
             return strain_invariant_function_pah(L,
                                                  reflection.h,
@@ -1341,16 +1339,22 @@ def __strain_function(L, reflection, lattice_parameter, strain_parameters, ib_to
                                             strain_parameters.Bs.value,
                                             strain_parameters.mix.value,
                                             strain_parameters.b.value)
+        else:
+            return 1.0 if ib_total else 0.0
+    else:
+        return 1.0 if ib_total else 0.0
 
 
 def integral_breadth_instrumental_function(reflection, lattice_parameter, wavelength, instrumental_parameters):
      return 1 / (2 * integrate.quad(lambda L: __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_parameters), 0, numpy.inf)[0])
 
 def integral_breadth_size(reflection, size_parameters):
-    return 1 / (2 * integrate.quad(lambda L: __size_function(L, reflection, size_parameters), 0, numpy.inf)[0])
+    if size_parameters.active: return 1 / (2 * integrate.quad(lambda L: __size_function(L, reflection, size_parameters), 0, numpy.inf)[0])
+    else: return numpy.nan
 
 def integral_breadth_strain(reflection, lattice_parameter, strain_parameters):
-    return 1 / (2 * integrate.quad(lambda L: __strain_function(L, reflection, lattice_parameter, strain_parameters), 0, numpy.inf)[0])
+    if strain_parameters.active: return 1 / (2 * integrate.quad(lambda L: __strain_function(L, reflection, lattice_parameter, strain_parameters), 0, numpy.inf)[0])
+    else: return numpy.nan
 
 def integral_breadth_total(reflection, lattice_parameter, wavelength, instrumental_parameters, size_parameters, strain_parameters):
     total_function = lambda L: __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_parameters, True) * \

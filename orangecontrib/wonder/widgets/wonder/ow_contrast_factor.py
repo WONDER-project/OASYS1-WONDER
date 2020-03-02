@@ -59,7 +59,7 @@ from orangecontrib.wonder.fit.parameters.microstructure.strain import KrivoglazW
 
 
 class OWContrastFactor(OWGenericPhaseParameterWidget):
-    name = "Contrast Factor Calculator"
+    name = "Cubic Metals\nContrast Factor Calculator"
     description = "Contrast Factor Calculator"
     icon = "icons/contrast_factor.png"
     priority = 18
@@ -163,9 +163,7 @@ class StrainBox(ParameterActivableBox):
         return KrivoglazWilkensModel.get_parameters_prefix()
 
     def get_strain_parameters(self):
-        if self.active == 0:
-            return None
-        else:
+        if self.active == 1:
             congruence.checkStrictlyPositiveNumber(self.c11, "c11")
             congruence.checkStrictlyPositiveNumber(self.c12, "c12")
             congruence.checkStrictlyPositiveNumber(self.c44, "c44")
@@ -185,6 +183,12 @@ class StrainBox(ParameterActivableBox):
                                          Be=FitParameter(parameter_name=self.get_parameters_prefix() + "Be", value=Be, fixed=True),
                                          As=FitParameter(parameter_name=self.get_parameters_prefix() + "As", value=As, fixed=True),
                                          Bs=FitParameter(parameter_name=self.get_parameters_prefix() + "Bs", value=Bs, fixed=True))
+        else:
+            return KrivoglazWilkensModel(Ae=FitParameter(parameter_name=self.get_parameters_prefix() + "Ae", value=0.0, fixed=True),
+                                         Be=FitParameter(parameter_name=self.get_parameters_prefix() + "Be", value=0.0, fixed=True),
+                                         As=FitParameter(parameter_name=self.get_parameters_prefix() + "As", value=0.0, fixed=True),
+                                         Bs=FitParameter(parameter_name=self.get_parameters_prefix() + "Bs", value=0.0, fixed=True),
+                                         active=False)
 
 from PyQt5.QtWidgets import QApplication
 

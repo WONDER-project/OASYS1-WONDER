@@ -512,21 +512,21 @@ class StrainBox(ParameterActivableBox):
             OWGenericWidget.populate_fields_in_widget(self, "b", strain_parameters.b)
 
     def get_strain_parameters(self):
-        if self.active == 0: return None
-        else:
+        if self.active == 1:
             if not self.rho_function == 1: congruence.checkStrictlyPositiveNumber(self.rho, "\u03c1")
             if not self.Re_function == 1: congruence.checkStrictlyPositiveNumber(self.Re, "Re")
             if not self.mix_function == 1: congruence.checkPositiveNumber(self.mix, "mix")
             if not self.b_function == 1: congruence.checkStrictlyPositiveNumber(self.b, "b")
 
-            return KrivoglazWilkensModel(rho=OWGenericWidget.get_fit_parameter_from_widget(self, "rho", self.get_parameters_prefix()),
-                                         Re =OWGenericWidget.get_fit_parameter_from_widget(self, "Re", self.get_parameters_prefix()),
-                                         Ae =OWGenericWidget.get_fit_parameter_from_widget(self, "Ae", self.get_parameters_prefix()),
-                                         Be =OWGenericWidget.get_fit_parameter_from_widget(self, "Be", self.get_parameters_prefix()),
-                                         As =OWGenericWidget.get_fit_parameter_from_widget(self, "As", self.get_parameters_prefix()),
-                                         Bs =OWGenericWidget.get_fit_parameter_from_widget(self, "Bs", self.get_parameters_prefix()),
-                                         mix=OWGenericWidget.get_fit_parameter_from_widget(self, "mix", self.get_parameters_prefix()),
-                                         b  =OWGenericWidget.get_fit_parameter_from_widget(self, "b", self.get_parameters_prefix()))
+        return KrivoglazWilkensModel(rho=OWGenericWidget.get_fit_parameter_from_widget(self, "rho", self.get_parameters_prefix()),
+                                     Re =OWGenericWidget.get_fit_parameter_from_widget(self, "Re", self.get_parameters_prefix()),
+                                     Ae =OWGenericWidget.get_fit_parameter_from_widget(self, "Ae", self.get_parameters_prefix()),
+                                     Be =OWGenericWidget.get_fit_parameter_from_widget(self, "Be", self.get_parameters_prefix()),
+                                     As =OWGenericWidget.get_fit_parameter_from_widget(self, "As", self.get_parameters_prefix()),
+                                     Bs =OWGenericWidget.get_fit_parameter_from_widget(self, "Bs", self.get_parameters_prefix()),
+                                     mix=OWGenericWidget.get_fit_parameter_from_widget(self, "mix", self.get_parameters_prefix()),
+                                     b  =OWGenericWidget.get_fit_parameter_from_widget(self, "b", self.get_parameters_prefix()),
+                                     active=self.active==1)
 
 from PyQt5.QtWidgets import QApplication
 

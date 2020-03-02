@@ -47,7 +47,7 @@
 
 import numpy
 
-from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, ParametersList
+from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter, ParametersList, ActivableParametersList
 
 class LaueGroup:
 
@@ -81,7 +81,7 @@ class LaueGroup:
     def tuple(cls):
         return ["-1", "2/m", "2/mmm", "4/m", "4/mmm", "-3R", "-31mR", "-3", "-3m1", "-31m", "6/m", "6/mmm", "m3", "m3m"]
 
-class InvariantPAH(ParametersList):
+class InvariantPAH(ActivableParametersList):
     @classmethod
     def get_parameters_prefix(cls):
         return "invariant_"
@@ -104,8 +104,9 @@ class InvariantPAH(ParametersList):
                  e12 = None,
                  e13 = None,
                  e14 = None,
-                 e15 = None):
-        super(InvariantPAH, self).__init__()
+                 e15 = None,
+                 active = True):
+        super(InvariantPAH, self).__init__(active)
 
         self.aa = aa
         self.bb = bb
@@ -158,66 +159,66 @@ class InvariantPAH(ParametersList):
         return L, DL
 
 class InvariantPAHLaueGroup1(InvariantPAH):
-    def __init__(self, aa, bb, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15):
-        super().__init__(aa, bb, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15)
+    def __init__(self, aa, bb, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, active=True):
+        super().__init__(aa, bb, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup2(InvariantPAH):
-    def __init__(self, aa, bb, e1, e2, e3, e4, e5, e6, e7, e9, e15):
-        super().__init__(aa, bb, 2, e1, e2, e3, e4, e5, e6, e7, e9=e9, e15=e15)
+    def __init__(self, aa, bb, e1, e2, e3, e4, e5, e6, e7, e9, e15, active=True):
+        super().__init__(aa, bb, 2, e1, e2, e3, e4, e5, e6, e7, e9=e9, e15=e15, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup3(InvariantPAH):
-    def __init__(self, aa, bb, e1, e2, e3, e4, e5, e6, e7):
-        super().__init__(aa, bb, 3, e1, e2, e3, e4, e5, e6, e7)
+    def __init__(self, aa, bb, e1, e2, e3, e4, e5, e6, e7, active=True):
+        super().__init__(aa, bb, 3, e1, e2, e3, e4, e5, e6, e7, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup4(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e4, e6, e7):
-        super().__init__(aa, bb, 4, e1, e3=e3, e4=e4, e6=e6, e7=e7)
+    def __init__(self, aa, bb, e1, e3, e4, e6, e7, active=True):
+        super().__init__(aa, bb, 4, e1, e3=e3, e4=e4, e6=e6, e7=e7, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup5(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e4, e6):
-        super().__init__(aa, bb, 5, e1, e3=e3, e4=e4, e6=e6)
+    def __init__(self, aa, bb, e1, e3, e4, e6, active=True):
+        super().__init__(aa, bb, 5, e1, e3=e3, e4=e4, e6=e6, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup6(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e4, e6, e7, e9, e15):
-        super().__init__(aa, bb, 6, e1, e3=e3, e4=e4, e6=e6, e7=e7, e9=e9, e15=e15)
+    def __init__(self, aa, bb, e1, e3, e4, e6, e7, e9, e15, active=True):
+        super().__init__(aa, bb, 6, e1, e3=e3, e4=e4, e6=e6, e7=e7, e9=e9, e15=e15, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup7(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e4, e6, e7, e9, e15):
-        super().__init__(aa, bb, 7, e1, e3=e3, e4=e4, e6=e6, e7=e7, e9=e9, e15=e15)
+    def __init__(self, aa, bb, e1, e3, e4, e6, e7, e9, e15, active=True):
+        super().__init__(aa, bb, 7, e1, e3=e3, e4=e4, e6=e6, e7=e7, e9=e9, e15=e15, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup8(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e4, e6, e7, e9, e15):
-        super().__init__(aa, bb, 8, e1, e3=e3, e4=e4, e6=e6, e7=e7, e9=e9, e15=e15)
+    def __init__(self, aa, bb, e1, e3, e4, e6, e7, e9, e15, active=True):
+        super().__init__(aa, bb, 8, e1, e3=e3, e4=e4, e6=e6, e7=e7, e9=e9, e15=e15, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup9(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e6, e13):
-        super().__init__(aa, bb, 9, e1, e3=e3, e6=e6, e13=e13)
+    def __init__(self, aa, bb, e1, e3, e6, e13, active=True):
+        super().__init__(aa, bb, 9, e1, e3=e3, e6=e6, e13=e13, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup10(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e6, e13):
-        super().__init__(aa, bb, 10, e1, e3=e3, e6=e6, e13=e13)
+    def __init__(self, aa, bb, e1, e3, e6, e13, active=True):
+        super().__init__(aa, bb, 10, e1, e3=e3, e6=e6, e13=e13, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup11(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e6):
-        super().__init__(aa, bb, 11, e1, e3=e3, e6=e6)
+    def __init__(self, aa, bb, e1, e3, e6, active=True):
+        super().__init__(aa, bb, 11, e1, e3=e3, e6=e6, active=active)
         raise NotImplementedError("TO BE CHECKED")
 
 class InvariantPAHLaueGroup12(InvariantPAH):
-    def __init__(self, aa, bb, e1, e3, e6):
-        super().__init__(aa, bb, 12, e1, e3=e3, e6=e6)
+    def __init__(self, aa, bb, e1, e3, e6, active=True):
+        super().__init__(aa, bb, 12, e1, e3=e3, e6=e6, active=active)
 
 class InvariantPAHCubic(InvariantPAH):
-    def __init__(self, aa, bb, laue_id, e1, e4):
+    def __init__(self, aa, bb, laue_id, e1, e4, active=True):
 
         if aa.parameter_name[-2:]=="aa":
             parameter_prefix = aa.parameter_name[:-2]
@@ -242,17 +243,18 @@ class InvariantPAHCubic(InvariantPAH):
                                                 e6=FitParameter(parameter_name=parameter_prefix+ "e6",
                                                                 value=e4.value,
                                                                 function=True,
-                                                                function_value=e4.parameter_name))
+                                                                function_value=e4.parameter_name),
+                                                active=active)
 
 class InvariantPAHLaueGroup13(InvariantPAHCubic):
-    def __init__(self, aa, bb, e1, e4):
-        super(InvariantPAHLaueGroup13, self).__init__(aa, bb, 13, e1, e4)
+    def __init__(self, aa, bb, e1, e4, active=True):
+        super(InvariantPAHLaueGroup13, self).__init__(aa, bb, 13, e1, e4, active=active)
 
 class InvariantPAHLaueGroup14(InvariantPAHCubic):
-    def __init__(self, aa, bb, e1, e4):
-        super(InvariantPAHLaueGroup14, self).__init__(aa, bb, 14, e1, e4)
+    def __init__(self, aa, bb, e1, e4, active=True):
+        super(InvariantPAHLaueGroup14, self).__init__(aa, bb, 14, e1, e4, active=active)
 
-class KrivoglazWilkensModel(ParametersList):
+class KrivoglazWilkensModel(ActivableParametersList):
     @classmethod
     def get_parameters_prefix(cls):
         return "kw_"
@@ -266,8 +268,8 @@ class KrivoglazWilkensModel(ParametersList):
                  Bs = None,
                  mix= None,
                  b  = None,
-                 ):
-        super(ParametersList, self).__init__()
+                 active = True):
+        super(KrivoglazWilkensModel, self).__init__(active)
 
         self.rho = rho
         self.Re  = Re
@@ -296,14 +298,15 @@ class KrivoglazWilkensModel(ParametersList):
         return L, DL
 
 
-class WarrenModel(ParametersList):
+class WarrenModel(ActivableParametersList):
     @classmethod
     def get_parameters_prefix(cls):
         return "warren_"
 
     def __init__(self,
-                 average_cell_parameter=None):
-        super(ParametersList, self).__init__()
+                 average_cell_parameter=None,
+                 active=True):
+        super(WarrenModel, self).__init__(active)
 
         self.average_cell_parameter = average_cell_parameter
 

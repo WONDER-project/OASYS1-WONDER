@@ -271,6 +271,10 @@ class ParametersList:
     def duplicate(self):
         return copy.deepcopy(self)
 
+class ActivableParametersList(ParametersList):
+    def __init__(self, active=True):
+        self.active = active
+
 class FreeInputParameters(ParametersList):
     def __init__(self):
         self.parameters_dictionary = {}

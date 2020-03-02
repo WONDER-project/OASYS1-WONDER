@@ -47,7 +47,7 @@
 
 import numpy
 
-from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
+from orangecontrib.wonder.fit.parameters.fit_parameter import ActivableParametersList
 from orangecontrib.wonder.fit.functions.wppm_functions import \
     Normalization, Distribution, WulffCubeFace, \
     lognormal_distribution, delta_distribution, gamma_distribution, york_distribution, \
@@ -64,15 +64,14 @@ class SizeDistribution:
     D_avg_volume_weighted  = None
     standard_deviation     = None
 
-
-class SizeParameters(ParametersList):
+class SizeParameters(ActivableParametersList):
 
     @classmethod
     def get_parameters_prefix(cls):
         return "size_"
 
-    def __init__(self, shape, distribution, mu, sigma, truncation=0.0, cube_face = WulffCubeFace.HEXAGONAL, add_saxs=False, normalize_to=Normalization.NORMALIZE_TO_N):
-        super(SizeParameters, self).__init__()
+    def __init__(self, shape, distribution, mu, sigma, truncation=0.0, cube_face = WulffCubeFace.HEXAGONAL, add_saxs=False, normalize_to=Normalization.NORMALIZE_TO_N, active=True):
+        super(SizeParameters, self).__init__(active)
 
         self.shape = shape
         self.distribution = distribution

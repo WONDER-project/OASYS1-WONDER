@@ -364,7 +364,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                if not size_parameters is None:
+                if not size_parameters is None and size_parameters.active:
                     parameters[last_index + 1] = size_parameters.mu
                     if size_parameters.distribution == Distribution.DELTA:
                         last_index += 1
@@ -378,7 +378,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if not strain_parameters is None:
+                if not strain_parameters is None and strain_parameters.active:
                     if isinstance(strain_parameters, InvariantPAH):
                         parameters[last_index + 1] = strain_parameters.aa
                         parameters[last_index + 2] = strain_parameters.bb
@@ -541,7 +541,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                if not size_parameters is None:
+                if not size_parameters is None and size_parameters.active:
                     size_parameters.mu.set_value(fitted_parameters[last_index + 1].value)
                     if size_parameters.distribution == Distribution.DELTA:
                         last_index += 1
@@ -555,7 +555,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if not strain_parameters is None:
+                if not strain_parameters is None and strain_parameters.active:
                     if isinstance(strain_parameters, InvariantPAH):
                         strain_parameters.aa.set_value(fitted_parameters[last_index + 1].value)
                         strain_parameters.bb.set_value(fitted_parameters[last_index + 2].value)
@@ -722,7 +722,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                if not size_parameters is None:
+                if not size_parameters is None and size_parameters.active:
                     size_parameters.mu.error    = errors[last_index + 1]
                     if size_parameters.distribution == Distribution.DELTA:
                         last_index += 1
@@ -736,7 +736,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if not strain_parameters is None:
+                if not strain_parameters is None and strain_parameters.active:
                     if isinstance(strain_parameters, InvariantPAH):
                         strain_parameters.aa.error = errors[last_index + 1]
                         strain_parameters.bb.error = errors[last_index + 2]
@@ -939,7 +939,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.size_parameters is None:
             for size_parameters in self.size_parameters:
-                if not size_parameters is None:
+                if not size_parameters is None and size_parameters.active:
                     size_parameters.mu.set_value(fitted_parameters[last_index + 1].value)
                     size_parameters.mu.error    = errors[last_index + 1]
                     if size_parameters.distribution == Distribution.DELTA:
@@ -956,7 +956,7 @@ class FitGlobalParameters(ParametersList):
 
         if not self.strain_parameters is None:
             for strain_parameters in self.strain_parameters:
-                if not strain_parameters is None:
+                if not strain_parameters is None and strain_parameters.active:
                     if isinstance(strain_parameters, InvariantPAH):
                         strain_parameters.aa.set_value(fitted_parameters[last_index + 1].value)
                         strain_parameters.bb.set_value(fitted_parameters[last_index + 2].value)
@@ -1063,6 +1063,8 @@ class FitGlobalParameters(ParametersList):
             parameters_dictionary = {}
             parameters_dictionary.update(parameters_dictionary_fit)
             parameters_dictionary.update(parameters_dictionary_out)
+
+            print(python_code)
 
             exec(python_code, parameters_dictionary)
 
