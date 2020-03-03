@@ -69,8 +69,8 @@ from orangecontrib.wonder.fit.fitters.fitter import FeedbackManager
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import InstrumentalParameters
-from wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
-from wonder.fit.parameters.instrument.caglioti import Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
+from orangecontrib.wonder.fit.parameters.instrument.caglioti import Caglioti
 from orangecontrib.wonder.fit.functions.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
 

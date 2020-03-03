@@ -53,7 +53,7 @@ from orangewidget import gui as orangegui
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
 from oasys.widgets import congruence
-from wonder.fit.parameters.instrument.polarization_parameters import Beampath, LorentzFormula, PolarizationParameters
+from orangecontrib.wonder.fit.parameters.instrument.polarization_parameters import Beampath, LorentzFormula, PolarizationParameters
 
 
 class OWLorentzPolarization(OWGenericInstrumentalDiffractionPatternParametersWidget):

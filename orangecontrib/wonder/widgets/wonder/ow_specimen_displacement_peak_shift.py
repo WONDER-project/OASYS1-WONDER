@@ -53,7 +53,7 @@ from orangewidget import gui as orangegui
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
 from oasys.widgets import congruence
-from wonder.fit.parameters.instrument.speciment_displacement import SpecimenDisplacement
+from orangecontrib.wonder.fit.parameters.instrument.speciment_displacement import SpecimenDisplacement
 
 
 class OWSpecimenDisplacementPeakShift(OWGenericDiffractionPatternParametersWidget):

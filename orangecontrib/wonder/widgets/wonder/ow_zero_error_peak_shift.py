@@ -50,7 +50,7 @@ import sys
 from orangewidget.settings import Setting
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
-from wonder.fit.parameters.instrument.zero_error import ZeroError
+from orangecontrib.wonder.fit.parameters.instrument.zero_error import ZeroError
 
 
 class OWZeroErrorPeakShift(OWGenericInstrumentalDiffractionPatternParametersWidget):

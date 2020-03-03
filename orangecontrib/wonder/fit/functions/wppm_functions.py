@@ -49,11 +49,11 @@ import warnings
 
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTTypes
-from wonder.fit.parameters.instrument.zero_error import ZeroError
-from wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
-from wonder.fit.parameters.instrument.caglioti import Caglioti
-from wonder.fit.parameters.instrument.polarization_parameters import Beampath, LorentzFormula, PolarizationParameters
-from wonder.fit.parameters.instrument.speciment_displacement import SpecimenDisplacement
+from orangecontrib.wonder.fit.parameters.instrument.zero_error import ZeroError
+from orangecontrib.wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
+from orangecontrib.wonder.fit.parameters.instrument.caglioti import Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.polarization_parameters import Beampath, LorentzFormula, PolarizationParameters
+from orangecontrib.wonder.fit.parameters.instrument.speciment_displacement import SpecimenDisplacement
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel

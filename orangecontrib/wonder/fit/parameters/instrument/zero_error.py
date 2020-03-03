@@ -1,4 +1,4 @@
-from wonder.fit.parameters.fit_parameter import ParametersList
+from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
 
 
 class ZeroError(ParametersList):

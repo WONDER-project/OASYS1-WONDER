@@ -52,7 +52,7 @@ from orangewidget import gui as orangegui
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
-from wonder.fit.parameters.instrument.incident_radiation import IncidentRadiation
+from orangecontrib.wonder.fit.parameters.instrument.incident_radiation import IncidentRadiation
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter
 
 class Wavelenght:

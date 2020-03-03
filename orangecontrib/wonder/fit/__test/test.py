@@ -1,5 +1,5 @@
 import os, numpy
-import wonder.fit.functions.wppm_functions as wf
+import orangecontrib.wonder.fit.functions.wppm_functions as wf
 
 def run_gsas_ii():
     datadir = "/Users/lrebuffi/Documents/Workspace/Wonder/GSAS-TEST"

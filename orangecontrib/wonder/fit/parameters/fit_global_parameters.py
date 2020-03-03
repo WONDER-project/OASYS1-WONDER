@@ -51,10 +51,10 @@ from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
 from orangecontrib.wonder.fit.parameters.fit_parameter import FreeInputParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import InstrumentalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
-from wonder.fit.parameters.instrument.zero_error import ZeroError
-from wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
-from wonder.fit.parameters.instrument.caglioti import Caglioti
-from wonder.fit.parameters.instrument.speciment_displacement import SpecimenDisplacement
+from orangecontrib.wonder.fit.parameters.instrument.zero_error import ZeroError
+from orangecontrib.wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
+from orangecontrib.wonder.fit.parameters.instrument.caglioti import Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.speciment_displacement import SpecimenDisplacement
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, KrivoglazWilkensModel, WarrenModel
 from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import SpuriousPeaks

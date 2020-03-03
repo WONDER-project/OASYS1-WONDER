@@ -50,7 +50,7 @@ import sys
 from orangewidget.settings import Setting
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
-from wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
+from orangecontrib.wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
 
 
 class OWCalibrationPeakShift(OWGenericInstrumentalDiffractionPatternParametersWidget):
