@@ -16,7 +16,7 @@ MICRO = 38
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 AUTHOR = 'Luca Rebuffi, Paolo Scardi'
-AUTHOR_EMAIL = 'lrebuffi@anl.gov; paolo.scardi@unitn.it'
+AUTHOR_EMAIL = 'lrebuffi@anl.gov, paolo.scardi@unitn.it'
 
 URL = 'https://github.com/WONDER-project/OASYS1-WONDER'
 DESCRIPTION = 'Whole POwder PatterN MoDEl in OASYS.'
