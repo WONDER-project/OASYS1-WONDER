@@ -271,6 +271,28 @@ class ParametersList:
     def duplicate(self):
         return copy.deepcopy(self)
 
+    @classmethod
+    def get_dict_parameters(cls, dict_parameters, key):
+        try: return dict_parameters[key]
+        except: return None
+
+    @classmethod
+    def get_dict_parameters_item(cls, dict_parameters, key, index):
+        try:
+            parameters_list = dict_parameters[key]
+            return parameters_list[0 if len(parameters_list) == 1 else index]
+        except: return None
+
+    @classmethod
+    def set_dict_parameters(cls, dict_parameters, parameters):
+        if not parameters is None: dict_parameters[parameters[0].__class__.__name__] = parameters
+
+    @classmethod
+    def get_list_parameters(cls, list_parameters, index):
+        try: return list_parameters[index]
+        except: return None
+
+
 class ActivableParametersList(ParametersList):
     def __init__(self, active=True):
         self.active = active

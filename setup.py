@@ -12,11 +12,11 @@ NAME = 'OASYS1-WONDER'
 
 MAJOR = 1
 MINOR = 0
-MICRO = 37
+MICRO = 38
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
-AUTHOR = 'Luca Rebuffi, Paolo Scardi, Alberto Flor'
-AUTHOR_EMAIL = 'paolo.scardi@unitn.ut'
+AUTHOR = 'Luca Rebuffi, Paolo Scardi'
+AUTHOR_EMAIL = 'lrebuffi@anl.gov; paolo.scardi@unitn.it'
 
 URL = 'https://github.com/WONDER-project/OASYS1-WONDER'
 DESCRIPTION = 'Whole POwder PatterN MoDEl in OASYS.'

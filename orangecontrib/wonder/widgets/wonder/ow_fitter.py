@@ -45,7 +45,7 @@
 # POSSIBILITY OF SUCH DAMAGE.                                             #
 # #########################################################################
 
-import sys, numpy, os
+import sys, numpy, os, copy
 
 from PyQt5.QtWidgets import QMessageBox, QScrollArea, QApplication, QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QFileDialog
 from PyQt5.QtCore import Qt, QMutex
@@ -68,6 +68,7 @@ from orangecontrib.wonder.fit.fitters.fitter import FeedbackManager
 
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import InstrumentalParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, Caglioti
 from orangecontrib.wonder.fit.functions.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
@@ -104,7 +105,8 @@ class OWFitter(OWGenericWidget):
     horizontal_headers = ["Name", "Value", "Min", "Max", "Fixed", "Function", "Expression", "e.s.d."]
 
     inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data')]
-    outputs = [("Fit Global Parameters", FitGlobalParameters)]
+    outputs = [("Fit Global Parameters", FitGlobalParameters),
+               ("Fitted Instrumental Parameters", InstrumentalParameters)]
 
     fit_global_parameters = None
     initial_fit_global_parameters = None
@@ -396,13 +398,13 @@ class OWFitter(OWGenericWidget):
 
         if not self.fit_global_parameters is None:
             if self.is_interactive == 1:
-                self.cb_show_ipf.setEnabled(not self.fit_global_parameters.instrumental_parameters is None)
+                self.cb_show_ipf.setEnabled(not self.fit_global_parameters.instrumental_profile_parameters is None)
                 self.cb_show_shift.setEnabled(not self.fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__) is None)
                 self.cb_show_size.setEnabled(not self.fit_global_parameters.size_parameters is None)
                 self.cb_show_warren.setEnabled(not self.fit_global_parameters.strain_parameters is None)
                 self.cb_show_integral_breadth.setEnabled(not (self.fit_global_parameters.strain_parameters is None and
                                                               self.fit_global_parameters.size_parameters is None and
-                                                              self.fit_global_parameters.instrumental_parameters is None))
+                                                              self.fit_global_parameters.instrumental_profile_parameters is None))
             else:
                 self.cb_show_ipf.setEnabled(False)
                 self.cb_show_shift.setEnabled(False)
@@ -455,7 +457,7 @@ class OWFitter(OWGenericWidget):
 
                 self.tabs.setCurrentIndex(0)
 
-                if self.fit_global_parameters.instrumental_parameters is None:
+                if self.fit_global_parameters.instrumental_profile_parameters is None:
                     self.show_ipf = 0
                     self.cb_show_ipf.setEnabled(False)
                     self.__set_enable_ipf_tabs(False)
@@ -489,7 +491,7 @@ class OWFitter(OWGenericWidget):
 
                 if self.fit_global_parameters.strain_parameters is None and \
                    self.fit_global_parameters.size_parameters is None and \
-                   self.fit_global_parameters.instrumental_parameters is None:
+                   self.fit_global_parameters.instrumental_profile_parameters is None:
                     self.show_integral_breadth = 0
                     self.cb_show_integral_breadth.setEnabled(False)
                     self.tab_plot_integral_breadth.setEnabled(False)
@@ -719,6 +721,8 @@ class OWFitter(OWGenericWidget):
         if not self.fit_global_parameters is None:
             self.fit_global_parameters.regenerate_parameters()
             self.send("Fit Global Parameters", self.fit_global_parameters.duplicate())
+            self.send("Fitted Instrumental Parameters", InstrumentalParameters(instrumental_profile_parameters=copy.deepcopy(self.fit_global_parameters.instrumental_profile_parameters),
+                                                                               shift_parameters=copy.deepcopy(self.fit_global_parameters.shift_parameters)))
 
     def save_data(self):
         try:
@@ -841,26 +845,26 @@ class OWFitter(OWGenericWidget):
         fit_global_parameters = self.__fit_global_parameters()
 
         for diffraction_pattern_index in range(self.__get_number_of_ipf_tabs(fit_global_parameters)[1]):
-            instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
-            if not instrumental_parameters is None:
-                self.refresh_caglioti_fwhm(instrumental_parameters, diffraction_pattern_index)
-                self.refresh_caglioti_eta(instrumental_parameters, diffraction_pattern_index)
+            instrumental_profile_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+            if not instrumental_profile_parameters is None:
+                self.refresh_caglioti_fwhm(instrumental_profile_parameters, diffraction_pattern_index)
+                self.refresh_caglioti_eta(instrumental_profile_parameters, diffraction_pattern_index)
 
             shift_parameters = fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
             if not shift_parameters is None: self.refresh_lab6(shift_parameters, diffraction_pattern_index)
 
     # ------------------------------------------------------------------------
 
-    def refresh_caglioti_fwhm(self, instrumental_parameters, diffraction_pattern_index):
+    def refresh_caglioti_fwhm(self, instrumental_profile_parameters, diffraction_pattern_index):
         if self.show_ipf==1:
             if self.fwhm_autoscale[diffraction_pattern_index] == 1:
                 twotheta_fwhm = numpy.arange(0.0, 150.0, 0.5)
             else:
                 twotheta_fwhm = numpy.arange(self.fwhm_xmin[diffraction_pattern_index], self.fwhm_xmax[diffraction_pattern_index], 0.5)
 
-            y = caglioti_fwhm(instrumental_parameters.U.value,
-                              instrumental_parameters.V.value,
-                              instrumental_parameters.W.value,
+            y = caglioti_fwhm(instrumental_profile_parameters.U.value,
+                              instrumental_profile_parameters.V.value,
+                              instrumental_profile_parameters.W.value,
                               numpy.radians(0.5*twotheta_fwhm))
 
             self.plot_ipf_fwhm[diffraction_pattern_index].addCurve(twotheta_fwhm, y, legend="fwhm", color="blue")
@@ -872,16 +876,16 @@ class OWFitter(OWGenericWidget):
 
     # ------------------------------------------------------------------------
 
-    def refresh_caglioti_eta(self, instrumental_parameters, diffraction_pattern_index):
+    def refresh_caglioti_eta(self, instrumental_profile_parameters, diffraction_pattern_index):
         if self.show_ipf==1:
             if self.eta_autoscale[diffraction_pattern_index] == 1:
                 twotheta_eta = numpy.arange(0.0, 150.0, 0.5)
             else:
                 twotheta_eta = numpy.arange(self.eta_xmin[diffraction_pattern_index], self.eta_xmax[diffraction_pattern_index], 0.5)
 
-            y = caglioti_eta(instrumental_parameters.a.value,
-                             instrumental_parameters.b.value,
-                             instrumental_parameters.c.value,
+            y = caglioti_eta(instrumental_profile_parameters.a.value,
+                             instrumental_profile_parameters.b.value,
+                             instrumental_profile_parameters.c.value,
                              numpy.radians(0.5*twotheta_eta))
 
             self.plot_ipf_eta[diffraction_pattern_index].addCurve(twotheta_eta, y, legend="eta", color="blue")
@@ -1017,14 +1021,14 @@ class OWFitter(OWGenericWidget):
 
         if not (fit_global_parameters.strain_parameters is None and \
                 fit_global_parameters.size_parameters is None and \
-                fit_global_parameters.instrumental_parameters is None) and \
+                fit_global_parameters.instrumental_profile_parameters is None) and \
                 self.show_integral_breadth==1:
             for diffraction_pattern_index in range(self.__get_number_of_ipf_tabs(fit_global_parameters)[1]):
                 line_profile       = fit_global_parameters.measured_dataset.get_line_profile(diffraction_pattern_index)
                 incident_radiation = fit_global_parameters.measured_dataset.get_incident_radiations_item(diffraction_pattern_index)
                 wavelength         = incident_radiation.wavelength.value
 
-                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                instrumental_profile_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
 
                 for phase_index in range(phases_number):
                     self.__clear_annotations(diffraction_pattern_index, phase_index)
@@ -1040,7 +1044,7 @@ class OWFitter(OWGenericWidget):
                     size_parameters   = fit_global_parameters.get_size_parameters(phase_index)
                     strain_parameters = fit_global_parameters.get_strain_parameters(phase_index)
 
-                    plot_instr = not instrumental_parameters is None
+                    plot_instr = not instrumental_profile_parameters is None
                     plot_size = not size_parameters is None and size_parameters.active
                     plot_strain = not strain_parameters is None and strain_parameters.active
 
@@ -1071,12 +1075,12 @@ class OWFitter(OWGenericWidget):
                             y_ib_instr[i] = integral_breadth_instrumental_function(reflection,
                                                                                    lattice_parameter,
                                                                                    wavelength,
-                                                                                   instrumental_parameters)
+                                                                                   instrumental_profile_parameters)
 
                         y_ib_total[i] = integral_breadth_total(reflection,
                                                                lattice_parameter,
                                                                wavelength,
-                                                               instrumental_parameters,
+                                                               instrumental_profile_parameters,
                                                                size_parameters,
                                                                strain_parameters)
 
@@ -1116,7 +1120,7 @@ class OWFitter(OWGenericWidget):
     def __get_number_of_ipf_tabs(self, fit_global_parameters):
         if fit_global_parameters is None: return False, 1
         else:
-            caglioti_list = fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)
+            caglioti_list = fit_global_parameters.get_instrumental_profile_parameters(Caglioti.__name__)
             shift_list    = fit_global_parameters.get_shift_parameters(Lab6TanCorrection.__name__)
 
             if not caglioti_list is None:
@@ -1384,6 +1388,8 @@ class OWFitter(OWGenericWidget):
             self.__populate_table(self.table_fit_out, parameters)
 
         self.send("Fit Global Parameters", self.fitted_fit_global_parameters)
+        self.send("Fitted Instrumental Parameters", InstrumentalParameters(instrumental_profile_parameters=copy.deepcopy(self.fitted_fit_global_parameters.instrumental_profile_parameters),
+                                                                           shift_parameters=copy.deepcopy(self.fitted_fit_global_parameters.shift_parameters)))
 
         self.fit_button.setEnabled(True)
         self.set_plot_options_enabled(True)
@@ -1527,8 +1533,8 @@ class FWHMBox(InnerBox):
 
         def refresh_caglioti_fwhm():
             if not fit_global_parameters is None:
-                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
-                if not instrumental_parameters is None: widget.refresh_caglioti_fwhm(instrumental_parameters, diffraction_pattern_index)
+                instrumental_profile_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                if not instrumental_profile_parameters is None: widget.refresh_caglioti_fwhm(instrumental_profile_parameters, diffraction_pattern_index)
 
         self.le_fwhm_xmin = gui.lineEdit(boxr, self, "fwhm_xmin", "2\u03b8 min", labelWidth=70, valueType=float, callback=widget.dump_fwhm_xmin)
         self.le_fwhm_xmax = gui.lineEdit(boxr, self, "fwhm_xmax", "2\u03b8 max", labelWidth=70, valueType=float, callback=widget.dump_fwhm_xmax)
@@ -1593,8 +1599,8 @@ class EtaBox(InnerBox):
 
         def refresh_caglioti_eta():
             if not fit_global_parameters is None:
-                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
-                if not instrumental_parameters is None: widget.refresh_caglioti_eta(instrumental_parameters, diffraction_pattern_index)
+                instrumental_profile_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                if not instrumental_profile_parameters is None: widget.refresh_caglioti_eta(instrumental_profile_parameters, diffraction_pattern_index)
 
         self.le_eta_xmin = gui.lineEdit(boxr, self, "eta_xmin", "2\u03b8 min", labelWidth=70, valueType=float, callback=widget.dump_eta_xmin)
         self.le_eta_xmax = gui.lineEdit(boxr, self, "eta_xmax", "2\u03b8 max", labelWidth=70, valueType=float, callback=widget.dump_eta_xmax)
@@ -1659,8 +1665,8 @@ class Lab6Box(InnerBox):
 
         def refresh_lab6():
             if not fit_global_parameters is None:
-                instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
-                if not instrumental_parameters is None: widget.refresh_lab6(instrumental_parameters, diffraction_pattern_index)
+                instrumental_profile_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+                if not instrumental_profile_parameters is None: widget.refresh_lab6(instrumental_profile_parameters, diffraction_pattern_index)
 
         self.le_lab6_xmin = gui.lineEdit(boxr, self, "lab6_xmin", "2\u03b8 min", labelWidth=70, valueType=float, callback=widget.dump_lab6_xmin)
         self.le_lab6_xmax = gui.lineEdit(boxr, self, "lab6_xmax", "2\u03b8 max", labelWidth=70, valueType=float, callback=widget.dump_lab6_xmax)

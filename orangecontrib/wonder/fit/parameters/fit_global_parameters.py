@@ -61,7 +61,7 @@ class FitGlobalParameters(ParametersList):
     def __init__(self,
                  fit_initialization = None,
                  masured_dataset=None,
-                 instrumental_parameters = {},
+                 instrumental_profile_parameters = {},
                  background_parameters = {},
                  shift_parameters = {},
                  thermal_parameters = {},
@@ -75,7 +75,7 @@ class FitGlobalParameters(ParametersList):
         self.fit_initialization = fit_initialization
         self.measured_dataset = masured_dataset
         self.background_parameters = background_parameters
-        self.instrumental_parameters = instrumental_parameters
+        self.instrumental_profile_parameters = instrumental_profile_parameters
         self.shift_parameters = shift_parameters
         self.thermal_parameters = thermal_parameters
         self.size_parameters = size_parameters
@@ -136,74 +136,53 @@ class FitGlobalParameters(ParametersList):
     def space_parameters(self):
         return FitSpaceParameters(self)
 
-    @classmethod
-    def __get_dict_parameters(cls, dict_parameters, key):
-        try: return dict_parameters[key]
-        except: return None
-
-    @classmethod
-    def __get_dict_parameters_item(cls, dict_parameters, key, index):
-        try:
-            parameters_list = dict_parameters[key]
-            return parameters_list[0 if len(parameters_list) == 1 else index]
-        except: return None
-
-    @classmethod
-    def __set_dict_parameters(cls, dict_parameters, parameters):
-        if not parameters is None: dict_parameters[parameters[0].__class__.__name__] = parameters
-
-    @classmethod
-    def __get_list_parameters(cls, list_parameters, index):
-        try: return list_parameters[index]
-        except: return None
-        
     # INSTRUMENTAL -------------------------------
 
-    def get_instrumental_parameters(self, key):
-        return FitGlobalParameters.__get_dict_parameters(self.instrumental_parameters, key)
+    def get_instrumental_profile_parameters(self, key):
+        return ParametersList.get_dict_parameters(self.instrumental_profile_parameters, key)
 
-    def get_instrumental_parameters_item(self, key, diffraction_pattern_index):
-        return FitGlobalParameters.__get_dict_parameters_item(self.instrumental_parameters, key, diffraction_pattern_index)
+    def get_instrumental_profile_parameters_item(self, key, diffraction_pattern_index):
+        return ParametersList.get_dict_parameters_item(self.instrumental_profile_parameters, key, diffraction_pattern_index)
 
-    def set_instrumental_parameters(self, instrumental_parameters):
-        if self.instrumental_parameters is None: self.instrumental_parameters = {}
-        FitGlobalParameters.__set_dict_parameters(self.instrumental_parameters, instrumental_parameters)
+    def set_instrumental_profile_parameters(self, instrumental_profile_parameters):
+        if self.instrumental_profile_parameters is None: self.instrumental_profile_parameters = {}
+        ParametersList.set_dict_parameters(self.instrumental_profile_parameters, instrumental_profile_parameters)
     
     # BACKGROUND -------------------------------
     
     def get_background_parameters(self, key):
-        return FitGlobalParameters.__get_dict_parameters(self.background_parameters, key)
+        return ParametersList.get_dict_parameters(self.background_parameters, key)
 
     def get_background_parameters_item(self, key, diffraction_pattern_index):
-        return FitGlobalParameters.__get_dict_parameters_item(self.background_parameters, key, diffraction_pattern_index)
+        return ParametersList.get_dict_parameters_item(self.background_parameters, key, diffraction_pattern_index)
 
     def set_background_parameters(self, background_parameters):
         if self.background_parameters is None: self.background_parameters = {}
-        FitGlobalParameters.__set_dict_parameters(self.background_parameters, background_parameters)
+        ParametersList.set_dict_parameters(self.background_parameters, background_parameters)
 
     # SHIFT -------------------------------
 
     def get_shift_parameters(self, key):
-        return FitGlobalParameters.__get_dict_parameters(self.shift_parameters, key)
+        return ParametersList.get_dict_parameters(self.shift_parameters, key)
 
     def get_shift_parameters_item(self, key, diffraction_pattern_index):
-        return FitGlobalParameters.__get_dict_parameters_item(self.shift_parameters, key, diffraction_pattern_index)
+        return ParametersList.get_dict_parameters_item(self.shift_parameters, key, diffraction_pattern_index)
 
     def set_shift_parameters(self, shift_parameters):
         if self.shift_parameters is None: self.shift_parameters = {}
-        FitGlobalParameters.__set_dict_parameters(self.shift_parameters, shift_parameters)
+        ParametersList.set_dict_parameters(self.shift_parameters, shift_parameters)
 
     # THERMAL -------------------------------
 
     def get_thermal_parameters(self, key):
-        return FitGlobalParameters.__get_dict_parameters(self.thermal_parameters, key)
+        return ParametersList.get_dict_parameters(self.thermal_parameters, key)
 
     def get_thermal_parameters_item(self, key, diffraction_pattern_index):
-        return FitGlobalParameters.__get_dict_parameters_item(self.thermal_parameters, key, diffraction_pattern_index)
+        return ParametersList.get_dict_parameters_item(self.thermal_parameters, key, diffraction_pattern_index)
 
     def set_thermal_parameters(self, thermal_parameters):
         if self.thermal_parameters is None: self.thermal_parameters = {}
-        FitGlobalParameters.__set_dict_parameters(self.thermal_parameters, thermal_parameters)
+        ParametersList.set_dict_parameters(self.thermal_parameters, thermal_parameters)
         
     # SIZE -------------------------------
 
@@ -211,7 +190,7 @@ class FitGlobalParameters(ParametersList):
         self.size_parameters = size_parameters
 
     def get_size_parameters(self, phase_index):
-        return FitGlobalParameters.__get_list_parameters(self.size_parameters, phase_index)
+        return ParametersList.get_list_parameters(self.size_parameters, phase_index)
 
     # STRAIN -------------------------------
 
@@ -219,19 +198,19 @@ class FitGlobalParameters(ParametersList):
         self.strain_parameters = strain_parameters
 
     def get_strain_parameters(self, phase_index):
-        return FitGlobalParameters.__get_list_parameters(self.strain_parameters, phase_index)
+        return ParametersList.get_list_parameters(self.strain_parameters, phase_index)
 
     # ADDITIONAL -------------------------------
 
     def get_additional_parameters(self, key):
-        return FitGlobalParameters.__get_dict_parameters(self.additional_parameters, key)
+        return ParametersList.get_dict_parameters(self.additional_parameters, key)
 
     def get_additional_parameters_item(self, key, diffraction_pattern_index):
-        return FitGlobalParameters.__get_dict_parameters_item(self.additional_parameters, key, diffraction_pattern_index)
+        return ParametersList.get_dict_parameters_item(self.additional_parameters, key, diffraction_pattern_index)
 
     def set_additional_parameters(self, additional_parameters):
         if self.additional_parameters is None: self.additional_parameters = {}
-        FitGlobalParameters.__set_dict_parameters(self.additional_parameters, additional_parameters)
+        ParametersList.set_dict_parameters(self.additional_parameters, additional_parameters)
 
     # ----------------------------------------
 
@@ -287,19 +266,19 @@ class FitGlobalParameters(ParametersList):
 
                         last_index += reflections_number
 
-        if not self.instrumental_parameters is None:
-            for key in self.instrumental_parameters.keys():
-                instrumental_parameters_list = self.get_instrumental_parameters(key)
+        if not self.instrumental_profile_parameters is None:
+            for key in self.instrumental_profile_parameters.keys():
+                instrumental_profile_parameters_list = self.get_instrumental_profile_parameters(key)
 
-                if not instrumental_parameters_list is None:
-                    for instrumental_parameters in instrumental_parameters_list:
+                if not instrumental_profile_parameters_list is None:
+                    for instrumental_profile_parameters in instrumental_profile_parameters_list:
                         if key == Caglioti.__name__:
-                            parameters[last_index + 1] = instrumental_parameters.U
-                            parameters[last_index + 2] = instrumental_parameters.V
-                            parameters[last_index + 3] = instrumental_parameters.W
-                            parameters[last_index + 4] = instrumental_parameters.a
-                            parameters[last_index + 5] = instrumental_parameters.b
-                            parameters[last_index + 6] = instrumental_parameters.c
+                            parameters[last_index + 1] = instrumental_profile_parameters.U
+                            parameters[last_index + 2] = instrumental_profile_parameters.V
+                            parameters[last_index + 3] = instrumental_profile_parameters.W
+                            parameters[last_index + 4] = instrumental_profile_parameters.a
+                            parameters[last_index + 5] = instrumental_profile_parameters.b
+                            parameters[last_index + 6] = instrumental_profile_parameters.c
                             last_index += 6
 
         if not self.background_parameters is None:
@@ -464,19 +443,19 @@ class FitGlobalParameters(ParametersList):
 
                         last_index += reflections_number
 
-        if not self.instrumental_parameters is None:
-            for key in self.instrumental_parameters.keys():
-                instrumental_parameters_list = self.get_instrumental_parameters(key)
+        if not self.instrumental_profile_parameters is None:
+            for key in self.instrumental_profile_parameters.keys():
+                instrumental_profile_parameters_list = self.get_instrumental_profile_parameters(key)
 
-                if not instrumental_parameters_list is None:
-                    for instrumental_parameters in instrumental_parameters_list:
+                if not instrumental_profile_parameters_list is None:
+                    for instrumental_profile_parameters in instrumental_profile_parameters_list:
                         if key == Caglioti.__name__:
-                            instrumental_parameters.U.set_value(fitted_parameters[last_index + 1].value)
-                            instrumental_parameters.V.set_value(fitted_parameters[last_index + 2].value)
-                            instrumental_parameters.W.set_value(fitted_parameters[last_index + 3].value)
-                            instrumental_parameters.a.set_value(fitted_parameters[last_index + 4].value)
-                            instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
-                            instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
+                            instrumental_profile_parameters.U.set_value(fitted_parameters[last_index + 1].value)
+                            instrumental_profile_parameters.V.set_value(fitted_parameters[last_index + 2].value)
+                            instrumental_profile_parameters.W.set_value(fitted_parameters[last_index + 3].value)
+                            instrumental_profile_parameters.a.set_value(fitted_parameters[last_index + 4].value)
+                            instrumental_profile_parameters.b.set_value(fitted_parameters[last_index + 5].value)
+                            instrumental_profile_parameters.c.set_value(fitted_parameters[last_index + 6].value)
                             last_index += 6
 
         if not self.background_parameters is None:
@@ -645,19 +624,19 @@ class FitGlobalParameters(ParametersList):
 
                         last_index += reflection_number
 
-        if not self.instrumental_parameters is None:
-            for key in self.instrumental_parameters.keys():
-                instrumental_parameters_list = self.get_instrumental_parameters(key)
+        if not self.instrumental_profile_parameters is None:
+            for key in self.instrumental_profile_parameters.keys():
+                instrumental_profile_parameters_list = self.get_instrumental_profile_parameters(key)
 
-                if not instrumental_parameters_list is None:
-                    for instrumental_parameters in instrumental_parameters_list:
+                if not instrumental_profile_parameters_list is None:
+                    for instrumental_profile_parameters in instrumental_profile_parameters_list:
                         if key == Caglioti.__name__:
-                            instrumental_parameters.U.error = errors[last_index + 1]
-                            instrumental_parameters.V.error = errors[last_index + 2]
-                            instrumental_parameters.W.error = errors[last_index + 3]
-                            instrumental_parameters.a.error = errors[last_index + 4]
-                            instrumental_parameters.b.error = errors[last_index + 5]
-                            instrumental_parameters.c.error = errors[last_index + 6]
+                            instrumental_profile_parameters.U.error = errors[last_index + 1]
+                            instrumental_profile_parameters.V.error = errors[last_index + 2]
+                            instrumental_profile_parameters.W.error = errors[last_index + 3]
+                            instrumental_profile_parameters.a.error = errors[last_index + 4]
+                            instrumental_profile_parameters.b.error = errors[last_index + 5]
+                            instrumental_profile_parameters.c.error = errors[last_index + 6]
                             last_index += 6
 
         if not self.background_parameters is None:
@@ -832,25 +811,25 @@ class FitGlobalParameters(ParametersList):
 
                         last_index += reflection_number
 
-        if not self.instrumental_parameters is None:
-            for key in self.instrumental_parameters.keys():
-                instrumental_parameters_list = self.get_instrumental_parameters(key)
+        if not self.instrumental_profile_parameters is None:
+            for key in self.instrumental_profile_parameters.keys():
+                instrumental_profile_parameters_list = self.get_instrumental_profile_parameters(key)
 
-                if not instrumental_parameters_list is None:
-                    for instrumental_parameters in instrumental_parameters_list:
+                if not instrumental_profile_parameters_list is None:
+                    for instrumental_profile_parameters in instrumental_profile_parameters_list:
                         if key == Caglioti.__name__:
-                            instrumental_parameters.U.set_value(fitted_parameters[last_index + 1].value)
-                            instrumental_parameters.V.set_value(fitted_parameters[last_index + 2].value)
-                            instrumental_parameters.W.set_value(fitted_parameters[last_index + 3].value)
-                            instrumental_parameters.a.set_value(fitted_parameters[last_index + 4].value)
-                            instrumental_parameters.b.set_value(fitted_parameters[last_index + 5].value)
-                            instrumental_parameters.c.set_value(fitted_parameters[last_index + 6].value)
-                            instrumental_parameters.U.error = errors[last_index + 1]
-                            instrumental_parameters.V.error = errors[last_index + 2]
-                            instrumental_parameters.W.error = errors[last_index + 3]
-                            instrumental_parameters.a.error = errors[last_index + 4]
-                            instrumental_parameters.b.error = errors[last_index + 5]
-                            instrumental_parameters.c.error = errors[last_index + 6]
+                            instrumental_profile_parameters.U.set_value(fitted_parameters[last_index + 1].value)
+                            instrumental_profile_parameters.V.set_value(fitted_parameters[last_index + 2].value)
+                            instrumental_profile_parameters.W.set_value(fitted_parameters[last_index + 3].value)
+                            instrumental_profile_parameters.a.set_value(fitted_parameters[last_index + 4].value)
+                            instrumental_profile_parameters.b.set_value(fitted_parameters[last_index + 5].value)
+                            instrumental_profile_parameters.c.set_value(fitted_parameters[last_index + 6].value)
+                            instrumental_profile_parameters.U.error = errors[last_index + 1]
+                            instrumental_profile_parameters.V.error = errors[last_index + 2]
+                            instrumental_profile_parameters.W.error = errors[last_index + 3]
+                            instrumental_profile_parameters.a.error = errors[last_index + 4]
+                            instrumental_profile_parameters.b.error = errors[last_index + 5]
+                            instrumental_profile_parameters.c.error = errors[last_index + 6]
                             last_index += 6
 
         if not self.background_parameters is None:
@@ -1063,8 +1042,6 @@ class FitGlobalParameters(ParametersList):
             parameters_dictionary = {}
             parameters_dictionary.update(parameters_dictionary_fit)
             parameters_dictionary.update(parameters_dictionary_out)
-
-            print(python_code)
 
             exec(python_code, parameters_dictionary)
 

@@ -47,8 +47,7 @@
 
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTTypes
-from orangecontrib.wonder.fit.parameters.instrument.polarization_parameters import PolarizationParameters, Beampath, LorentzFormula
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import PolarizationParameters, Beampath, LorentzFormula, Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
@@ -130,7 +129,7 @@ def fit_function_direct(twotheta, fit_global_parameters, diffraction_pattern_ind
 
     # POLARIZATION FACTOR --------------------------------------------------------------------------------------
 
-    polarization_parameters = fit_global_parameters.get_instrumental_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
+    polarization_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
 
     if not polarization_parameters is None:
         if polarization_parameters.use_polarization_factor:
@@ -381,9 +380,9 @@ def create_one_peak(diffraction_pattern_index,
     fourier_amplitudes = None
 
     # INSTRUMENTAL PROFILE ---------------------------------------------------------------------------------------------
-    instrumental_parameters = fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+    instrumental_profile_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
 
-    if not instrumental_parameters is None:
+    if not instrumental_profile_parameters is None:
         if fourier_amplitudes is None:
             fourier_amplitudes = instrumental_function(fit_space_parameters.L,
                                                        reflection.h,
@@ -391,12 +390,12 @@ def create_one_peak(diffraction_pattern_index,
                                                        reflection.l,
                                                        lattice_parameter,
                                                        wavelength,
-                                                       instrumental_parameters.U.value,
-                                                       instrumental_parameters.V.value,
-                                                       instrumental_parameters.W.value,
-                                                       instrumental_parameters.a.value,
-                                                       instrumental_parameters.b.value,
-                                                       instrumental_parameters.c.value)
+                                                       instrumental_profile_parameters.U.value,
+                                                       instrumental_profile_parameters.V.value,
+                                                       instrumental_profile_parameters.W.value,
+                                                       instrumental_profile_parameters.a.value,
+                                                       instrumental_profile_parameters.b.value,
+                                                       instrumental_profile_parameters.c.value)
         else:
             fourier_amplitudes *= instrumental_function(fit_space_parameters.L,
                                                         reflection.h,
@@ -404,12 +403,12 @@ def create_one_peak(diffraction_pattern_index,
                                                         reflection.l,
                                                         lattice_parameter,
                                                         wavelength,
-                                                        instrumental_parameters.U.value,
-                                                        instrumental_parameters.V.value,
-                                                        instrumental_parameters.W.value,
-                                                        instrumental_parameters.a.value,
-                                                        instrumental_parameters.b.value,
-                                                        instrumental_parameters.c.value)
+                                                        instrumental_profile_parameters.U.value,
+                                                        instrumental_profile_parameters.V.value,
+                                                        instrumental_profile_parameters.W.value,
+                                                        instrumental_profile_parameters.a.value,
+                                                        instrumental_profile_parameters.b.value,
+                                                        instrumental_profile_parameters.c.value)
 
     # SIZE -------------------------------------------------------------------------------------------------------------
 
@@ -599,8 +598,8 @@ def create_one_peak(diffraction_pattern_index,
 
     # LORENTZ FACTOR --------------------------------------------------------------------------------------
 
-    if not fit_global_parameters.instrumental_parameters is None:
-        polarization_parameters = fit_global_parameters.get_instrumental_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
+    if not fit_global_parameters.instrumental_profile_parameters is None:
+        polarization_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
 
         if not polarization_parameters is None:
             if polarization_parameters.use_lorentz_factor:
@@ -1276,8 +1275,8 @@ def instrumental_function(L, h, k, l, lattice_parameter, wavelength, U, V, W, a,
 # CALCULATION OF INTEGRAL BREADTH
 ######################################################################
 
-def __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_parameters, ib_total=False):
-    if instrumental_parameters is None:
+def __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_profile_parameters, ib_total=False):
+    if instrumental_profile_parameters is None:
         return 1.0 if ib_total else 0.0
     else:
         return instrumental_function(L,
@@ -1286,12 +1285,12 @@ def __instrumental_function(L, reflection, lattice_parameter, wavelength, instru
                                      reflection.l,
                                      lattice_parameter,
                                      wavelength,
-                                     instrumental_parameters.U.value,
-                                     instrumental_parameters.V.value,
-                                     instrumental_parameters.W.value,
-                                     instrumental_parameters.a.value,
-                                     instrumental_parameters.b.value,
-                                     instrumental_parameters.c.value)
+                                     instrumental_profile_parameters.U.value,
+                                     instrumental_profile_parameters.V.value,
+                                     instrumental_profile_parameters.W.value,
+                                     instrumental_profile_parameters.a.value,
+                                     instrumental_profile_parameters.b.value,
+                                     instrumental_profile_parameters.c.value)
 
 
 def __size_function(L, reflection, size_parameters, ib_total=False):
@@ -1345,8 +1344,8 @@ def __strain_function(L, reflection, lattice_parameter, strain_parameters, ib_to
         return 1.0 if ib_total else 0.0
 
 
-def integral_breadth_instrumental_function(reflection, lattice_parameter, wavelength, instrumental_parameters):
-     return 1 / (2 * integrate.quad(lambda L: __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_parameters), 0, numpy.inf)[0])
+def integral_breadth_instrumental_function(reflection, lattice_parameter, wavelength, instrumental_profile_parameters):
+     return 1 / (2 * integrate.quad(lambda L: __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_profile_parameters), 0, numpy.inf)[0])
 
 def integral_breadth_size(reflection, size_parameters):
     if size_parameters.active: return 1 / (2 * integrate.quad(lambda L: __size_function(L, reflection, size_parameters), 0, numpy.inf)[0])
@@ -1356,8 +1355,8 @@ def integral_breadth_strain(reflection, lattice_parameter, strain_parameters):
     if strain_parameters.active: return 1 / (2 * integrate.quad(lambda L: __strain_function(L, reflection, lattice_parameter, strain_parameters), 0, numpy.inf)[0])
     else: return numpy.nan
 
-def integral_breadth_total(reflection, lattice_parameter, wavelength, instrumental_parameters, size_parameters, strain_parameters):
-    total_function = lambda L: __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_parameters, True) * \
+def integral_breadth_total(reflection, lattice_parameter, wavelength, instrumental_profile_parameters, size_parameters, strain_parameters):
+    total_function = lambda L: __instrumental_function(L, reflection, lattice_parameter, wavelength, instrumental_profile_parameters, True) * \
                                __size_function(L, reflection, size_parameters, True) * \
                                __strain_function(L, reflection, lattice_parameter, strain_parameters, True)
 

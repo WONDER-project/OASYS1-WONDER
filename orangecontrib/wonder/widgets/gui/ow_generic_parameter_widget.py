@@ -51,6 +51,9 @@ from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 from orangewidget.widget import OWAction
 
+from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import InstrumentalParameters
+
 from orangecontrib.wonder.widgets.gui.ow_generic_widget import OWGenericWidget
 from orangecontrib.wonder.util.gui_utility import gui
 
@@ -239,6 +242,38 @@ class OWGenericDiffractionPatternParametersWidget(OWGenericParametersWidget):
             raise ValueError("Previous " + self.get_parameter_name() + " parameters are incongruent with the current choice of using a single set")
 
 
+class OWGenericInstrumentalDiffractionPatternParametersWidget(OWGenericDiffractionPatternParametersWidget):
+
+    inputs = [("Fit Global Parameters", FitGlobalParameters, 'set_data'),
+              ("Fitted Instrumental Parameters", InstrumentalParameters, 'set_instrumental_parameter')]
+
+    def get_instrumental_parameter_array(self, instrumental_parameters):
+        raise NotImplementedError("Abstract Method")
+
+    def get_instrumental_parameter_item(self, instrumental_parameters, diffraction_pattern_index):
+        raise NotImplementedError("Abstract Method")
+
+    def set_instrumental_parameter(self, instrumental_parameters):
+        if not instrumental_parameters is None:
+            try:
+                input_parameters = self.get_instrumental_parameter_array(instrumental_parameters.duplicate())
+
+                if not input_parameters is None:
+                    for diffraction_pattern_index in range(len(self.parameter_box_array)):
+                        try:
+                            parameters_item = self.get_instrumental_parameter_item(instrumental_parameters, diffraction_pattern_index)
+                        except:
+                            parameters_item = self.get_instrumental_parameter_item(instrumental_parameters, 0)
+
+                        if not parameters_item is None: self.parameter_box_array[diffraction_pattern_index].set_data(parameters_item)
+
+                    self.dumpSettings()
+            except Exception as e:
+                QMessageBox.critical(self, "Error",
+                                     str(e),
+                                     QMessageBox.Ok)
+
+                if self.IS_DEVELOP: raise e
 
 # -----------------------------------------------------------------
 # Widget with Parameters related to Phase(s)

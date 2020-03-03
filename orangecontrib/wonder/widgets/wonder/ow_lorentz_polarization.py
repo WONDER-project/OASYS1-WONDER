@@ -50,13 +50,13 @@ import sys
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 
-from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
 from oasys.widgets import congruence
-from orangecontrib.wonder.fit.parameters.instrument.polarization_parameters import PolarizationParameters, Beampath, LorentzFormula
+from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import PolarizationParameters, Beampath, LorentzFormula
 
 
-class OWLorentzPolarization(OWGenericDiffractionPatternParametersWidget):
+class OWLorentzPolarization(OWGenericInstrumentalDiffractionPatternParametersWidget):
     name = "Lorentz-Polarization Factors"
     description = "Define Lorentz-Polarization Factor"
     icon = "icons/lorentz_polarization.png"
@@ -98,13 +98,19 @@ class OWLorentzPolarization(OWGenericDiffractionPatternParametersWidget):
         return PolarizationParametersBox(widget=self, parent=parameter_tab, index=index)
 
     def set_parameter_data(self):
-        self.fit_global_parameters.set_instrumental_parameters([self.get_parameter_box(index).get_lorentz_polarization() for index in range(self.get_current_dimension())])
+        self.fit_global_parameters.set_instrumental_profile_parameters([self.get_parameter_box(index).get_lorentz_polarization() for index in range(self.get_current_dimension())])
 
     def get_parameter_array(self):
-        return self.fit_global_parameters.get_instrumental_parameters(PolarizationParameters.__name__)
+        return self.fit_global_parameters.get_instrumental_profile_parameters(PolarizationParameters.__name__)
 
     def get_parameter_item(self, diffraction_pattern_index):
-        return self.fit_global_parameters.get_instrumental_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
+        return self.fit_global_parameters.get_instrumental_profile_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
+
+    def get_instrumental_parameter_array(self, instrumental_parameters):
+        return instrumental_parameters.get_instrumental_profile_parameters(PolarizationParameters.__name__)
+
+    def get_instrumental_parameter_item(self, instrumental_parameters, diffraction_pattern_index):
+        return instrumental_parameters.get_instrumental_profile_parameters_item(PolarizationParameters.__name__, diffraction_pattern_index)
 
     def dumpSettings(self):
         self.dump_use_lorentz_factor()

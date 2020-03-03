@@ -49,11 +49,11 @@ import sys
 
 from orangewidget.settings import Setting
 
-from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection
 
 
-class OWCalibrationPeakShift(OWGenericDiffractionPatternParametersWidget):
+class OWCalibrationPeakShift(OWGenericInstrumentalDiffractionPatternParametersWidget):
     name = "Calibration Peak Shift"
     description = "Calibration Peak Shift"
     icon = "icons/calibration_peak_shift.png"
@@ -168,6 +168,12 @@ class OWCalibrationPeakShift(OWGenericDiffractionPatternParametersWidget):
 
     def get_parameter_item(self, diffraction_pattern_index):
         return self.fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
+
+    def get_instrumental_parameter_array(self, instrumental_parameters):
+        return instrumental_parameters.get_shift_parameters(Lab6TanCorrection.__name__)
+
+    def get_instrumental_parameter_item(self, instrumental_parameters, diffraction_pattern_index):
+        return instrumental_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
 
     def dumpSettings(self):
         self.dump_ax()

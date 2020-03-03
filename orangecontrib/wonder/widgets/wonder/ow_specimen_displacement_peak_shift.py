@@ -50,13 +50,13 @@ import sys
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 
-from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
 from oasys.widgets import congruence
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import SpecimenDisplacement
 
 
-class OWSpecimenDisplacementPeakShift(OWGenericDiffractionPatternParametersWidget):
+class OWSpecimenDisplacementPeakShift(OWGenericInstrumentalDiffractionPatternParametersWidget):
 
     name = "Specimen Displacement Peak Shift"
     description = "Specimen Displacement Peak Shift"
@@ -111,6 +111,12 @@ class OWSpecimenDisplacementPeakShift(OWGenericDiffractionPatternParametersWidge
 
     def get_parameter_item(self, diffraction_pattern_index):
         return self.fit_global_parameters.get_shift_parameters_item(SpecimenDisplacement.__name__, diffraction_pattern_index)
+
+    def get_instrumental_parameter_array(self, instrumental_parameters):
+        return instrumental_parameters.get_shift_parameters(SpecimenDisplacement.__name__)
+
+    def get_instrumental_parameter_item(self, instrumental_parameters, diffraction_pattern_index):
+        return instrumental_parameters.get_shift_parameters_item(SpecimenDisplacement.__name__, diffraction_pattern_index)
 
     def dumpSettings(self):
         self.dump_goniometer_radius()

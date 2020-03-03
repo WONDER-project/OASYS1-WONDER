@@ -49,12 +49,12 @@ import sys, copy
 
 from orangewidget.settings import Setting
 
-from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Caglioti
 
 
-class OWInstrumentalProfile(OWGenericDiffractionPatternParametersWidget):
+class OWInstrumentalProfile(OWGenericInstrumentalDiffractionPatternParametersWidget):
     name = "Instrumental Profile"
     description = "Define Instrumental Profile Parameters"
     icon = "icons/instrumental_profile.png"
@@ -178,13 +178,19 @@ class OWInstrumentalProfile(OWGenericDiffractionPatternParametersWidget):
         return InstrumentalProfileBox(widget=self, parent=parameter_tab, index=index)
 
     def set_parameter_data(self):
-        self.fit_global_parameters.set_instrumental_parameters([self.get_parameter_box(index).get_instrumental_profile() for index in range(self.get_current_dimension())])
+        self.fit_global_parameters.set_instrumental_profile_parameters([self.get_parameter_box(index).get_instrumental_profile() for index in range(self.get_current_dimension())])
 
     def get_parameter_array(self):
-        return self.fit_global_parameters.get_instrumental_parameters(Caglioti.__name__)
+        return self.fit_global_parameters.get_instrumental_profile_parameters(Caglioti.__name__)
 
     def get_parameter_item(self, diffraction_pattern_index):
-        return self.fit_global_parameters.get_instrumental_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+        return self.fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
+
+    def get_instrumental_parameter_array(self, instrumental_parameters):
+        return instrumental_parameters.get_instrumental_profile_parameters(Caglioti.__name__)
+
+    def get_instrumental_parameter_item(self, instrumental_parameters, diffraction_pattern_index):
+        return instrumental_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
 
     def dumpSettings(self):
         self.dump_U()
@@ -392,13 +398,15 @@ class InstrumentalProfileBox(ParameterBox):
     def get_basic_parameter_prefix(self):
         return Caglioti.get_parameters_prefix()
 
-    def set_data(self, instrumental_parameters):
-        OWGenericWidget.populate_fields_in_widget(self, "U", instrumental_parameters.U, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "V", instrumental_parameters.V, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "W", instrumental_parameters.W, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "a", instrumental_parameters.a, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "b", instrumental_parameters.b, value_only=True)
-        OWGenericWidget.populate_fields_in_widget(self, "c", instrumental_parameters.c, value_only=True)
+    def set_data(self, instrumental_profile_parameters):
+        OWGenericWidget.populate_fields_in_widget(self, "U", instrumental_profile_parameters.U, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "V", instrumental_profile_parameters.V, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "W", instrumental_profile_parameters.W, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "a", instrumental_profile_parameters.a, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "b", instrumental_profile_parameters.b, value_only=True)
+        OWGenericWidget.populate_fields_in_widget(self, "c", instrumental_profile_parameters.c, value_only=True)
+
+
 
     def get_instrumental_profile(self):
         return Caglioti(U=OWGenericWidget.get_fit_parameter_from_widget(self, "U", self.get_parameters_prefix()),
