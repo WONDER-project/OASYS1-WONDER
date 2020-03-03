@@ -51,7 +51,7 @@ from orangewidget.settings import Setting
 
 from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Caglioti
+from wonder.fit.parameters.instrument.caglioti import Caglioti
 
 
 class OWInstrumentalProfile(OWGenericInstrumentalDiffractionPatternParametersWidget):

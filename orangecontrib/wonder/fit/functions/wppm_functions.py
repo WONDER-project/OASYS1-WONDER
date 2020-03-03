@@ -45,9 +45,15 @@
 # POSSIBILITY OF SUCH DAMAGE.                                             #
 # #########################################################################
 
+import warnings
+
 from orangecontrib.wonder.fit.parameters.measured_data.phase import Phase
 from orangecontrib.wonder.fit.parameters.initialization.fft_parameters import FFTTypes
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import PolarizationParameters, Beampath, LorentzFormula, Lab6TanCorrection, ZeroError, SpecimenDisplacement, Caglioti
+from wonder.fit.parameters.instrument.zero_error import ZeroError
+from wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
+from wonder.fit.parameters.instrument.caglioti import Caglioti
+from wonder.fit.parameters.instrument.polarization_parameters import Beampath, LorentzFormula, PolarizationParameters
+from wonder.fit.parameters.instrument.speciment_displacement import SpecimenDisplacement
 from orangecontrib.wonder.fit.parameters.thermal.thermal_parameters import ThermalParameters
 from orangecontrib.wonder.fit.parameters.instrument.background_parameters import ChebyshevBackground, ExpDecayBackground
 from orangecontrib.wonder.fit.parameters.microstructure.strain import InvariantPAH, WarrenModel, KrivoglazWilkensModel
@@ -57,6 +63,8 @@ from orangecontrib.wonder.fit.parameters.additional.pseudo_voigt_peak import Spu
 
 from orangecontrib.wonder.fit.functions.chemical_formula_parser import ChemicalFormulaParser
 from orangecontrib.wonder.util.fit_utilities import Utilities, Symmetry
+
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 class Distribution:
     DELTA = "delta"

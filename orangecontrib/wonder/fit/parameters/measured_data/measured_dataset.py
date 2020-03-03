@@ -137,25 +137,14 @@ class MeasuredDataset(ParametersList):
         except:
             return None
 
-    @classmethod
-    def __duplicate_attributes_list(cls, attributes_list):
-        if attributes_list is None: attributes_list_copy = None
-        else:
-            dimension = len(attributes_list)
-            attributes_list_copy = [None]*dimension
-            for index in range(dimension):
-                attributes_list_copy[index] = attributes_list[index].duplicate()
-
-        return attributes_list_copy
-
     def duplicate_diffraction_patterns(self):
-        return MeasuredDataset.__duplicate_attributes_list(self.diffraction_patterns)
+        return ParametersList.duplicate_attributes_list(self.diffraction_patterns)
 
     def duplicate(self):
-        diffraction_patterns = MeasuredDataset.__duplicate_attributes_list(self.diffraction_patterns)
-        incident_radiations  = MeasuredDataset.__duplicate_attributes_list(self.incident_radiations)
-        phases               = MeasuredDataset.__duplicate_attributes_list(self.phases)
-        line_profiles        = MeasuredDataset.__duplicate_attributes_list(self.line_profiles)
+        diffraction_patterns =  ParametersList.duplicate_attributes_list(self.diffraction_patterns)
+        incident_radiations  =  ParametersList.duplicate_attributes_list(self.incident_radiations)
+        phases               =  ParametersList.duplicate_attributes_list(self.phases)
+        line_profiles        =  ParametersList.duplicate_attributes_list(self.line_profiles)
 
         dataset = MeasuredDataset(diffraction_patterns=diffraction_patterns,
                                   incident_radiations=incident_radiations,

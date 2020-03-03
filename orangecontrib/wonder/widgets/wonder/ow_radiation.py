@@ -50,11 +50,10 @@ import os, sys
 from orangewidget.settings import Setting
 from orangewidget import gui as orangegui
 
-from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericDiffractionPatternParametersWidget, ParameterBox
+from orangecontrib.wonder.widgets.gui.ow_generic_parameter_widget import OWGenericWidget, OWGenericInstrumentalDiffractionPatternParametersWidget, ParameterBox
 from orangecontrib.wonder.util.gui_utility import gui
-from orangecontrib.wonder.fit.parameters.measured_data.incident_radiation import IncidentRadiation
+from wonder.fit.parameters.instrument.incident_radiation import IncidentRadiation
 from orangecontrib.wonder.fit.parameters.fit_parameter import FitParameter
-
 
 class Wavelenght:
     wavelength = 0.0
@@ -104,7 +103,7 @@ def load_data_files():
 
 load_data_files()
 
-class OWRadiation(OWGenericDiffractionPatternParametersWidget):
+class OWRadiation(OWGenericInstrumentalDiffractionPatternParametersWidget):
 
     name = "Incident Radiation"
     description = "Incident Radiation"
@@ -310,6 +309,13 @@ class OWRadiation(OWGenericDiffractionPatternParametersWidget):
 
     def get_parameter_item(self, diffraction_pattern_index):
         return self.fit_global_parameters.measured_dataset.incident_radiations[diffraction_pattern_index]
+
+    def get_instrumental_parameter_array(self, instrumental_parameters):
+        return instrumental_parameters.incident_radiations
+
+    def get_instrumental_parameter_item(self, instrumental_parameters, diffraction_pattern_index):
+        return instrumental_parameters.get_incident_radiations_item(diffraction_pattern_index)
+
 
     ##############################
     # SINGLE FIELDS SIGNALS

@@ -272,6 +272,17 @@ class ParametersList:
         return copy.deepcopy(self)
 
     @classmethod
+    def duplicate_attributes_list(cls, attributes_list):
+        if attributes_list is None: attributes_list_copy = None
+        else:
+            dimension = len(attributes_list)
+            attributes_list_copy = [None]*dimension
+            for index in range(dimension):
+                attributes_list_copy[index] = attributes_list[index].duplicate()
+
+        return attributes_list_copy
+
+    @classmethod
     def get_dict_parameters(cls, dict_parameters, key):
         try: return dict_parameters[key]
         except: return None

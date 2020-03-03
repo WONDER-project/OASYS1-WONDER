@@ -45,128 +45,22 @@
 # POSSIBILITY OF SUCH DAMAGE.                                             #
 # #########################################################################
 
+import copy
 from orangecontrib.wonder.fit.parameters.fit_parameter import ParametersList
-
-class Caglioti(ParametersList):
-    U = None
-    V = None
-    W = None
-    a = None
-    b = None
-    c = None
-
-    @classmethod
-    def get_parameters_prefix(cls):
-        return "caglioti_"
-
-    def __init__(self, U, V, W, a, b, c):
-        super(Caglioti, self).__init__()
-
-        self.U = U
-        self.V = V
-        self.W = W
-        self.a = a
-        self.b = b
-        self.c = c
-
-class Lab6TanCorrection(ParametersList):
-    ax = None
-    bx = None
-    cx = None
-    dx = None
-    ex = None
-
-    @classmethod
-    def get_parameters_prefix(cls):
-        return "lab6_tancorrection_"
-
-    def __init__(self, ax, bx, cx, dx, ex):
-        super(Lab6TanCorrection, self).__init__()
-
-        self.ax = ax
-        self.bx = bx
-        self.cx = cx
-        self.dx = dx
-        self.ex = ex
-
-class ZeroError(ParametersList):
-    shift = None
-
-    @classmethod
-    def get_parameters_prefix(cls):
-        return "zero_error_"
-
-    def __init__(self, shift):
-        super(ZeroError, self).__init__()
-
-        self.shift = shift
-
-class SpecimenDisplacement(ParametersList):
-    goniometer_radius = 1.0
-    displacement = None
-
-    @classmethod
-    def get_parameters_prefix(cls):
-        return "sd_"
-
-    def __init__(self, goniometer_radius=1.0, displacement=None):
-        super(SpecimenDisplacement, self).__init__()
-
-        self.goniometer_radius = goniometer_radius
-        self.displacement = displacement
-
-class Beampath:
-    PRIMARY = 0
-    SECONDARY = 1
-
-    @classmethod
-    def tuple(cls):
-        return ["Primary", "Secondary"]
-
-class LorentzFormula:
-    S_Shkl = 0
-    Shkl_Shkl = 1
-
-    @classmethod
-    def tuple(cls):
-        return ["1/[s\u22c5s(hkl)]", "1/s(hkl)\u00b2"]
-
-class PolarizationParameters(ParametersList):
-    use_lorentz_factor = False
-    lorentz_formula = LorentzFormula.Shkl_Shkl
-    use_polarization_factor = False
-    beampath = Beampath.PRIMARY
-    degree_of_polarization = 0.5
-    twotheta_mono = None
-
-    def __init__(self,
-                 use_lorentz_factor = False,
-                 lorentz_formula = LorentzFormula.Shkl_Shkl,
-                 use_polarization_factor=False,
-                 beampath = Beampath.PRIMARY,
-                 degree_of_polarization=0.0,
-                 twotheta_mono=None):
-        self.use_lorentz_factor = use_lorentz_factor
-        self.lorentz_formula = lorentz_formula
-        self.use_polarization_factor = use_polarization_factor
-        self.beampath = beampath
-        self.degree_of_polarization = degree_of_polarization
-        self.twotheta_mono = twotheta_mono
-
-        if degree_of_polarization < 0: self.degree_of_polarization = 0.0
-        elif degree_of_polarization> 1: self.degree_of_polarization = 1.0
-
-    @classmethod
-    def get_parameters_prefix(cls):
-        return "lp_"
 
 
 class InstrumentalParameters(ParametersList):
     def __init__(self,
+                 incident_radiations = None,
                  instrumental_profile_parameters = {},
                  shift_parameters = {}):
+        self.incident_radiations = incident_radiations
         self.instrumental_profile_parameters = instrumental_profile_parameters
         self.shift_parameters = shift_parameters
+
+    def get_incident_radiations_item(self, diffraction_pattern_index):
+        try:    return self.incident_radiations[0 if len(self.incident_radiations) == 1 else diffraction_pattern_index]
+        except: return None
 
     # INSTRUMENTAL -------------------------------
 
@@ -192,3 +86,9 @@ class InstrumentalParameters(ParametersList):
         if self.shift_parameters is None: self.shift_parameters = {}
         ParametersList.set_dict_parameters(self.shift_parameters, shift_parameters)
 
+    def duplicate(self):
+        incident_radiations = ParametersList.duplicate_attributes_list(self.incident_radiations)
+        instrumental_profile_parameters = copy.deepcopy(self.instrumental_profile_parameters)
+        shift_parameters = copy.deepcopy(self.shift_parameters)
+
+        return InstrumentalParameters(incident_radiations, instrumental_profile_parameters, shift_parameters)

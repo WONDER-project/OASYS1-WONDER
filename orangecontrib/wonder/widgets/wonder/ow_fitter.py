@@ -69,7 +69,8 @@ from orangecontrib.wonder.fit.fitters.fitter import FeedbackManager
 from orangecontrib.wonder.fit.parameters.fit_parameter import PARAM_HWMAX, PARAM_HWMIN
 from orangecontrib.wonder.fit.parameters.fit_global_parameters import FitGlobalParameters, FreeOutputParameters
 from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import InstrumentalParameters
-from orangecontrib.wonder.fit.parameters.instrument.instrumental_parameters import Lab6TanCorrection, Caglioti
+from wonder.fit.parameters.instrument.lab6_tan_correction import Lab6TanCorrection
+from wonder.fit.parameters.instrument.caglioti import Caglioti
 from orangecontrib.wonder.fit.functions.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
 
@@ -721,8 +722,7 @@ class OWFitter(OWGenericWidget):
         if not self.fit_global_parameters is None:
             self.fit_global_parameters.regenerate_parameters()
             self.send("Fit Global Parameters", self.fit_global_parameters.duplicate())
-            self.send("Fitted Instrumental Parameters", InstrumentalParameters(instrumental_profile_parameters=copy.deepcopy(self.fit_global_parameters.instrumental_profile_parameters),
-                                                                               shift_parameters=copy.deepcopy(self.fit_global_parameters.shift_parameters)))
+            self.send("Fitted Instrumental Parameters", self.fit_global_parameters.get_instrumental_parameters())
 
     def save_data(self):
         try:
@@ -1388,8 +1388,7 @@ class OWFitter(OWGenericWidget):
             self.__populate_table(self.table_fit_out, parameters)
 
         self.send("Fit Global Parameters", self.fitted_fit_global_parameters)
-        self.send("Fitted Instrumental Parameters", InstrumentalParameters(instrumental_profile_parameters=copy.deepcopy(self.fitted_fit_global_parameters.instrumental_profile_parameters),
-                                                                           shift_parameters=copy.deepcopy(self.fitted_fit_global_parameters.shift_parameters)))
+        self.send("Fitted Instrumental Parameters", self.fitted_fit_global_parameters.get_instrumental_parameters())
 
         self.fit_button.setEnabled(True)
         self.set_plot_options_enabled(True)
