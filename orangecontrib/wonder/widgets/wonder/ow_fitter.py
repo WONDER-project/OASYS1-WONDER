@@ -48,7 +48,7 @@
 import sys, numpy, os, copy
 
 from PyQt5.QtWidgets import QMessageBox, QScrollArea, QApplication, QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QFileDialog
-from PyQt5.QtCore import Qt, QMutex
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QFont, QTextCursor, QIntValidator
 
 from silx.gui.plot.PlotWindow import PlotWindow
@@ -1748,7 +1748,7 @@ class SizeBox(InnerBox):
 # ------------------------------------------------------------------------
 
 import time
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, QMutex, pyqtSignal
 
 class FitThread(QThread, FeedbackManager):
 
