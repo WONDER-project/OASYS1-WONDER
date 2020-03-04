@@ -48,7 +48,7 @@
 import sys, numpy, os, copy
 
 from PyQt5.QtWidgets import QMessageBox, QScrollArea, QApplication, QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QFileDialog
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSettings
 from PyQt5.QtGui import QColor, QFont, QTextCursor, QIntValidator
 
 from silx.gui.plot.PlotWindow import PlotWindow
@@ -74,6 +74,8 @@ from orangecontrib.wonder.fit.parameters.instrument.caglioti import Caglioti
 from orangecontrib.wonder.fit.functions.wppm_functions import Shape, caglioti_fwhm, caglioti_eta, delta_two_theta_lab6, \
     integral_breadth_instrumental_function, integral_breadth_size, integral_breadth_strain, integral_breadth_total
 
+AUTOMATIC_RUNTIME_ONLY = 0
+AUTOMATIC_OASYS_SETTING = 1
 
 class OWFitter(OWGenericWidget):
     name = "Fitter"
@@ -82,6 +84,13 @@ class OWFitter(OWGenericWidget):
     priority = 60
 
     want_main_area = True
+
+    automatic_mode = QSettings().value("output/wonder-default-automatic", AUTOMATIC_OASYS_SETTING, int)
+
+    if automatic_mode == AUTOMATIC_OASYS_SETTING:
+        is_automatic_run = Setting(False)
+    else:
+        is_automatic_run = False
 
     if OW_IS_DEVELOP:
         fitter_name = Setting(1)

@@ -111,19 +111,11 @@ class QMaxValueValidator(QDoubleValidator):
         else:
             return (QValidator.Invalid, string, pos)
 
-AUTOMATIC_RUNTIME_ONLY = 0
-AUTOMATIC_OASYS_SETTING = 1
-
 class OWGenericWidget(widget.OWWidget):
 
     want_main_area=1
 
-    automatic_mode = QSettings().value("output/wonder-default-automatic", AUTOMATIC_RUNTIME_ONLY, int)
-
-    if automatic_mode == AUTOMATIC_OASYS_SETTING:
-        is_automatic_run = Setting(False)
-    else:
-        is_automatic_run = False
+    is_automatic_run = Setting(True)
 
     error_id = 0
     warning_id = 0
