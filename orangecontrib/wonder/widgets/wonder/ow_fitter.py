@@ -1664,8 +1664,8 @@ class Lab6Box(InnerBox):
 
         def refresh_lab6():
             if not fit_global_parameters is None:
-                instrumental_profile_parameters = fit_global_parameters.get_instrumental_profile_parameters_item(Caglioti.__name__, diffraction_pattern_index)
-                if not instrumental_profile_parameters is None: widget.refresh_lab6(instrumental_profile_parameters, diffraction_pattern_index)
+                shift_parameters = fit_global_parameters.get_shift_parameters_item(Lab6TanCorrection.__name__, diffraction_pattern_index)
+                if not shift_parameters is None: widget.refresh_lab6(shift_parameters, diffraction_pattern_index)
 
         self.le_lab6_xmin = gui.lineEdit(boxr, self, "lab6_xmin", "2\u03b8 min", labelWidth=70, valueType=float, callback=widget.dump_lab6_xmin)
         self.le_lab6_xmax = gui.lineEdit(boxr, self, "lab6_xmax", "2\u03b8 max", labelWidth=70, valueType=float, callback=widget.dump_lab6_xmax)

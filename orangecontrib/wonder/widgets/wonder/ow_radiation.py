@@ -585,10 +585,13 @@ class RadiationBox(ParameterBox):
 
         orangegui.comboBox(box, self, "is_multiple_wavelength", label="Incident Radiation", items=["Single Wavelenght", "X-ray Tube"], orientation="horizontal", callback=self.set_is_multiple_wavelength)
 
-        self.secondary_box = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
+        self.secondary_box = gui.widgetBox(container, "", orientation="horizontal", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
 
         orangegui.comboBox(self.secondary_box, self, "xray_tube_key", label="X-ray Tube Dataset", items=self.get_xray_tube_keys(),
                            sendSelectedValue=True, orientation="horizontal", callback=self.set_xray_tube_key)
+
+        orangegui.separator(self.secondary_box)
+        gui.button(self.secondary_box, self, "Reset", width=70, callback=self.set_xray_tube_key)
 
         self.secondary_box_empty = gui.widgetBox(container, "", orientation="vertical", width=self.CONTROL_AREA_WIDTH-5, spacing=0)
 
