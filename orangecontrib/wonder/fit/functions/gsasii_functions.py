@@ -73,13 +73,10 @@ sys.path.insert(0, gsasii_dirname)
 
 project_file = os.path.join(gsasii_temp_dir, "temp.gpx")
 
-GSASII_MODE_ONLINE   = 1
-GSASII_MODE_EXTERNAL = 2
+from PyQt5.QtCore import Qt, QSettings
 
-if sys.platform == "darwin":
-    GSASII_MODE = GSASII_MODE_EXTERNAL
-else:
-    GSASII_MODE = GSASII_MODE_ONLINE
+GSASII_MODE_ONLINE   = 0
+GSASII_MODE_EXTERNAL = 1
 
 try:
     import GSASIIscriptable as G2sc
@@ -87,7 +84,7 @@ try:
     G2sc.SetPrintLevel("none")
 
     print("GSAS-II found in ", gsasii_dirname)
-except:
+except Exception as e:
     print("GSAS-II not available")
 
 class GSASIIReflectionData:
@@ -121,6 +118,8 @@ class GSASIIReflectionData:
 class GSASIIReflectionList:
     def __init__(self, cif_file, wavelength, twotheta_min=0.0, twotheta_max=180.0):
         self.__data = {}
+
+        GSASII_MODE = QSettings().value("output/wonder-default-gsasii-mode", GSASII_MODE_ONLINE, int)
 
         if GSASII_MODE == GSASII_MODE_ONLINE:
             gpx = G2sc.G2Project(newgpx=project_file)
@@ -239,8 +238,23 @@ class GSASIIReflectionList:
 
         return python_script_file_name
 
+from PyQt5.QtCore import QMutex
+
+mutex = QMutex()
+
 def gsasii_load_reflections(cif_file, wavelength, twotheta_min=0.0, twotheta_max=180.0):
-    return GSASIIReflectionList(cif_file, wavelength, twotheta_min, twotheta_max)
+    try:
+        mutex.lock()
+
+        gsasii_reflections = GSASIIReflectionList(cif_file, wavelength, twotheta_min, twotheta_max)
+
+        mutex.unlock()
+
+        return gsasii_reflections
+    except Exception as e:
+        mutex.unlock()
+
+        raise e
 
 def gsasii_intensity_factor(h, k, l, reflections):
     try:
